@@ -2,7 +2,7 @@
 
 **Domra Tech** is a comprehensive bilingual technical lexicon bridging **English** and **Khmer** terminology in **Computer Science**, **Artificial Intelligence**, and **emerging technologies**. Named after the traditional Khmer word _Domra_ (តម្រា), this project harmonizes modern technology with Khmer linguistic heritage.
 
----
+
 
 ## 📚 Project Overview
 
@@ -11,7 +11,7 @@ Domra Tech aims to:
 - Promote digital literacy and inclusivity in Cambodia.
 - Serve as a resource hub for educators, developers, and researchers.
 
----
+
 
 ## ✨ Features
 
@@ -29,7 +29,7 @@ Domra Tech aims to:
 - 📚 **Manage Words** – Add, edit, or delete terms.
 - 👥 **Manage Users** – View and manage user accounts.
 
----
+
 
 ## 🛠️ Technology Stack
 
@@ -60,11 +60,11 @@ Make sure you have the following installed:
 - Node.js (v18 or later)
 - npm
 
----
+
 
 ## 📂 Folder Structure
 
----
+
 
 ## 🚀 Installation
 
@@ -87,7 +87,7 @@ cd frontend // Navigate to the frontend folder
 npm install // Install dependencies
 npm run dev // To run the backend
 ```
----
+
 
 ## 👥 Team Members & Roles
 
@@ -101,4 +101,3 @@ npm run dev // To run the backend
 | Linna    | Database Design       |
 | Nika     | Data Collection       |
 
----
