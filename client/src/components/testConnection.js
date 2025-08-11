@@ -7,7 +7,7 @@ const TestConnection = () => {
   const [error, setError] = useState('');
   
   // NOTE: You'll need to replace this with a real token from a successful login
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzU0ODk0NTU4LCJleHAiOjE3NTQ4OTgxNTh9.N4QWj1a7iRhn4SUlmlV28fs81UZ9YXcIoU2hIi2lun8';
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzU0ODk4MjgzLCJleHAiOjE3NTQ5MDE4ODN9.tyDx5Ev_WKTDiArYWUp0QZn8k5vyZMUdEJxLkdWeHzY';
 
   useEffect(() => {
     // This function makes the API call to your backend
