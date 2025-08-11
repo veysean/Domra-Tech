@@ -13,6 +13,10 @@ export default (sequelize, DataTypes) => {
             unique: true,
             allowNull: true
         },
+        profileURL: {
+            type: DataTypes.STRING(255),
+            allowNull: true
+        },
         firstName: {
             type: DataTypes.STRING(100),
             allowNull: true
