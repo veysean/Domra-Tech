@@ -7,9 +7,8 @@ export const validate = (req, res, next) => {
     return next();
   }
 
-  // Correct: Map the errors into a clean key-value pair
+  // Map the errors into a clean key-value pair
   const extractedErrors = errors.array().reduce((acc, err) => {
-    // If the error has a parameter name, use it; otherwise, just use a generic 'message'
     acc[err.param || 'general'] = err.msg;
     return acc;
   }, {});
