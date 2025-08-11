@@ -15,19 +15,18 @@ export default (sequelize, DataTypes) => sequelize.define('CorrectionRequest', {
   correctEnglishWord: {
     type: DataTypes.STRING(255)
   },
+  correctFrenchWord: {
+    type: DataTypes.STRING(255)
+  },
   correctKhmerWord: {
     type: DataTypes.STRING(255)
   },
   reference: {
     type: DataTypes.TEXT
   },
-  image: {
-    type: DataTypes.STRING(255)
-  },
   status: {
     type: DataTypes.ENUM('pending', 'accepted', 'denied')
   }
 }, {
-  timestamps: false,
   tableName: 'CorrectionRequest'
 });
