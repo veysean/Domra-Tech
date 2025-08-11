@@ -7,23 +7,20 @@ export default (sequelize, DataTypes) => sequelize.define('WordRequest', {
   newEnglishWord: {
     type: DataTypes.STRING(255)
   },
+  newFrenchWord: {
+    type: DataTypes.STRING(255)
+  },
   newKhmerWord: {
     type: DataTypes.STRING(255)
   },
-  newmeaning: {
+  newDefinition: {
     type: DataTypes.TEXT
   },
-  newEnglishEx: {
-    type: DataTypes.TEXT
-  },
-  newKhmerEx: {
+  newExample: {
     type: DataTypes.TEXT
   },
   reference: {
     type: DataTypes.TEXT
-  },
-  image: {
-    type: DataTypes.STRING(255)
   },
   userId: {
     type: DataTypes.INTEGER,
@@ -33,6 +30,5 @@ export default (sequelize, DataTypes) => sequelize.define('WordRequest', {
     type: DataTypes.ENUM('pending', 'accepted', 'denied')
   }
 }, {
-  timestamps: false,
   tableName: 'WordRequest'
 });

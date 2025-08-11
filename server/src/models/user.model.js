@@ -8,23 +8,28 @@ export default (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
+        googleId: {
+            type: DataTypes.STRING(255),
+            unique: true,
+            allowNull: true
+        },
         firstName: {
             type: DataTypes.STRING(100),
-            allowNull: false
+            allowNull: true
         },
         lastName: {
             type: DataTypes.STRING(100),
-            allowNull: false
+            allowNull: true
         },
         email: {
             type: DataTypes.STRING(255),
-            allowNull: false,
+            allowNull: true,
             unique: true,
             validate: { isEmail: true }
         },
         password: {
             type: DataTypes.STRING(255),
-            allowNull: false
+            allowNull: true
         },
         role: {
             type: DataTypes.ENUM('admin', 'user'),
