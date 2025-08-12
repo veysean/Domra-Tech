@@ -10,6 +10,5 @@ export default (sequelize, DataTypes) => sequelize.define('Favorite', {
     primaryKey: true
   }
 }, {
-  timestamps: false,
   tableName: 'Favorite'
 });

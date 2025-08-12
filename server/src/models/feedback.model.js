@@ -13,6 +13,5 @@ export default (sequelize, DataTypes) => sequelize.define('Feedback', {
     type: DataTypes.TEXT
   }
 }, {
-  timestamps: false,
   tableName: 'Feedback'
 });
