@@ -70,20 +70,20 @@ Make sure you have the following installed:
 
 ### 1. Clone Repository
 ```
-git clone https://github.com/yourusername/Domra-Tech.git
+git clone https://github.com/veysean/Domra-Tech.git
 cd Domra-Tech
 ```
 ### 2. 🔧 Backend Setup (Node.js + Express)
 
 ```
-cd backend // Navigate to the backend folder
+cd server // Navigate to the backend folder
 npm install // Install dependencies
 node server.js // To run the backend
 ```
 ### 3. 🖥️ Frontend Setup (React)
 
 ```
-cd frontend // Navigate to the frontend folder
+cd client // Navigate to the frontend folder
 npm install // Install dependencies
 npm run dev // To run the backend
 ```
