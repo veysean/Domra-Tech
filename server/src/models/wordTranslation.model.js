@@ -6,7 +6,6 @@ export default (sequelize, DataTypes) => sequelize.define('WordTranslation', {
   },
   EnglishWord: {
     type: DataTypes.STRING(255),
-    allowNull: false
   },
   FrenchWord: {
     type: DataTypes.STRING(255),
@@ -14,6 +13,9 @@ export default (sequelize, DataTypes) => sequelize.define('WordTranslation', {
   KhmerWord: {
     type: DataTypes.STRING(255),
     allowNull: false
+  },
+  normalizedWord: {
+    type: DataTypes.STRING(255),
   },
   definition: {
     type: DataTypes.TEXT
