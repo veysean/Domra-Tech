@@ -1,10 +1,19 @@
 import './index.css';
-
+import { useTranslation } from 'react-i18next';
 
 function App() {
+    const { t, i18n } = useTranslation();
+
+  const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang);
+  };
   return (
-    <div className="bg-blue-500 text-white p-4 rounded">
-      Tailwind is working!
+    <div>
+      <h1>{t('welcome')}</h1>
+      <h1>{t('login')}</h1>
+      <h1>{t('logout')}</h1>
+      <button onClick={() => changeLanguage('en')}>English</button>
+      <button className='bg-amber-300 p-1.5' onClick={() => changeLanguage('kh')}>Khmer</button>
     </div>
     
   );
