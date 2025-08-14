@@ -11,7 +11,8 @@ export default (sequelize, DataTypes) => sequelize.define('WordRequest', {
     type: DataTypes.STRING(255)
   },
   newKhmerWord: {
-    type: DataTypes.STRING(255)
+    type: DataTypes.STRING(255),
+    allowNull: false
   },
   newDefinition: {
     type: DataTypes.TEXT
