@@ -9,7 +9,8 @@ export default (sequelize, DataTypes) => sequelize.define('Category', {
     allowNull: false
   },
   description: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
+    allowNull: false
   }
 }, {
   tableName: 'Category'
