@@ -1,0 +1,13 @@
+{
+    "vision" : "Vsion",
+    "visionDes" : "A world where knowledge is accessible in every language",
+    "mission" : "Mission",
+    "missionDes" : "To help researchers and students translate complex technical terms between English, Khmer, and French with accuracy and ease",
+    "search" : "Search",
+    "searchDes" : "Find a technical term",
+    "translate" : "Translate",
+    "translateDes" : "View its meaning in English, Khmer, and French",
+    "contribute" : "Contribute",
+    "contributeDes" : "Suggest new terms to improve our dictionary"
+
+}

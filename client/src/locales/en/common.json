@@ -1,0 +1,16 @@
+{
+  "home": "Home",
+  "catgorie": "Catgories",
+  "contributeTerm": "Contribute term",
+  "aboutUs" : "About Us",
+  "login" : "Login",
+  "signup" : "Sign Up", 
+  "eng" : "ENG",
+  "profile" : "Profile",
+  "seeMore" : "See more",
+  "feature" : "Features",
+  "contactUs" : "Contact Us",
+  "header" : "Khmer Technical Lexicon",
+  "desc" : "Bridging English Khmer and French terminology in Computer Science, AI, and emerging technologies",
+  "login_des" : "Translate technical terms between English Khmer and French — faster, smarter, and easier."
+}
