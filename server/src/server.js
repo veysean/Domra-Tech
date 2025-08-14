@@ -5,7 +5,7 @@ console.log("Attempting to run server...");
 import express from 'express';
 import { Sequelize } from 'sequelize';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocs from '../src/config/swagger.js'; 
+import swaggerDocs from './swagger.js'; 
 import dbConfig from './config/db.config.js';
 import db from './models/index.js'; 
 import authRoutes from './routes/authRoutes.js'; 
