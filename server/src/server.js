@@ -9,8 +9,8 @@ import db from './models/index.js';
 import authRoutes from './routes/authRoutes.js'; 
 import userRoutes from './routes/userRoutes.js';
 import wordTranslationRoutes from './routes/wordTranslationRoutes.js'; 
-// import passport from './config/passport.config.js';
-// import session from 'express-session';
+import passport from './config/passport.config.js';
+import session from 'express-session';
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -26,8 +26,8 @@ app.use(express.json());
 // app.use(passport.initialize());
 // app.use(passport.session());
 
-// app.use('/api/auth', authRoutes);
-// app.use('/api', userRoutes); 
+app.use('/api/auth', authRoutes);
+app.use('/api', userRoutes); 
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use('/api', wordTranslationRoutes);

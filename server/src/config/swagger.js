@@ -68,7 +68,7 @@ const swaggerOptions = {
       },
     },
   },
-  apis: ['./routes/*.js'],
+  apis: ['./routes/*.js', './controllers/*.js'],
 };
 
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
