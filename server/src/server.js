@@ -1,5 +1,8 @@
 // server/src/server.js
 
+import dotenv from 'dotenv'; // <-- Add this import
+dotenv.config({ path: '../.env' }); // <-- And this config call
+
 console.log("Attempting to run server...");
 
 import express from 'express';
@@ -17,14 +20,9 @@ const PORT = process.env.PORT || 3002;
 
 app.use(express.json());
 
-// Correct order: Passport must be configured before the routes
-// app.use(session({ secret: 'some_secret_key', resave: false, saveUninitialized: false, 
-// cookie: {
-//     maxAge: null, // session cookie
-//   },
-//  }));
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(session({ secret: 'some_secret_key', resave: false, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/api/auth', authRoutes);
 app.use('/api', userRoutes); 

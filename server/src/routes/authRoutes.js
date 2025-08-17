@@ -11,13 +11,37 @@ router.post('/register', validation.registerValidationRules(), validation.valida
 router.post('/login',validation.loginValidationRules(), validation.validate, authController.login);
 
 // Route to redirect to Google's login page
+/**
+ * @swagger
+ * /auth/google:
+ *   get:
+ *     summary: Redirect to Google's OAuth 2.0 login page
+ *     tags: [Auth]
+ *     responses:
+ *       302:
+ *         description: Redirects user to Google for authentication
+ */
+
 router.get('/google',
     passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
 // Route to handle the callback from Google
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
-    // Redirect to your frontend on success
-    res.redirect('http://localhost:3000');
+/**
+ * @swagger
+ * /auth/google/callback:
+ *   get:
+ *     summary: Handle callback from Google OAuth 2.0
+ *     tags: [Auth]
+ *     responses:
+ *       302:
+ *         description: Redirects user to frontend on successful authentication
+ *       401:
+ *         description: Authentication failed, redirects to /login
+ */
+
+router.get('/google/callback', passport.authenticate('google'), (req, res) => {
+    // Redirect to the frontend on success
+    res.redirect('http://localhost:5173');
 });
 export default router;

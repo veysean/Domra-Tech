@@ -145,7 +145,7 @@ const updateProfile = async (req, res) => {
  * @swagger
  * /profile:
  *   delete:
- *     summary: Soft-delete the authenticated user's account
+ *     summary: delete the authenticated user's account
  *     tags: [User]
  *     security:
  *       - bearerAuth: []
