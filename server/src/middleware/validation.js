@@ -28,10 +28,16 @@ export const registerValidationRules = () => {
   ];
 };
 
-// Validation rules for user login
+// Corrected: Validation rules for user login (now supports Google ID)
 export const loginValidationRules = () => {
   return [
     body('email').isEmail().withMessage('Please provide a valid email'),
-    body('password').notEmpty().withMessage('Password is required'),
+    // This custom validator checks if EITHER password OR googleId is present
+    body('password').custom((value, { req }) => {
+        if (!req.body.password && !req.body.googleId) {
+            throw new Error('Either a password or googleId is required for login');
+        }
+        return true;
+    })
   ];
 };

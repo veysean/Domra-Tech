@@ -25,7 +25,7 @@ export default (sequelize, DataTypes) => sequelize.define('CorrectionRequest', {
     type: DataTypes.TEXT
   },
   status: {
-    type: DataTypes.ENUM('pending', 'accepted', 'denied', 'deleted')
+    type: DataTypes.ENUM('pending', 'accepted', 'denied')
   }
 }, {
   tableName: 'CorrectionRequest'

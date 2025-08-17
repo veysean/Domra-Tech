@@ -1,7 +1,5 @@
 import swaggerJSDoc from 'swagger-jsdoc';
 
-// This file sets up the basic API information and tells the tool to look for 
-// documentation comments in all .js files within your server/routes directory.
 const swaggerOptions = {
   swaggerDefinition: {
     openapi: '3.0.0',
@@ -12,10 +10,65 @@ const swaggerOptions = {
       contact: {
         name: 'Your Team',
       },
-      servers: ['http://localhost:3001']
-    }
+    },
+    servers: [
+      {
+        url: 'http://localhost:3002/api',
+        description: 'Local development server',
+      },
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+      schemas: {
+        WordTranslation: {
+          type: 'object',
+          required: ['EnglishWord', 'KhmerWord'],
+          properties: {
+            wordId: {
+              type: 'integer',
+              example: 1,
+            },
+            EnglishWord: {
+              type: 'string',
+              example: 'Hello',
+            },
+            FrenchWord: {
+              type: 'string',
+              example: 'Bonjour',
+            },
+            KhmerWord: {
+              type: 'string',
+              example: 'សួស្តី',
+            },
+            definition: {
+              type: 'string',
+              example: 'A greeting used when meeting someone.',
+            },
+            example: {
+              type: 'string',
+              example: 'Hello, how are you?',
+            },
+            reference: {
+              type: 'string',
+              example: 'Oxford Dictionary',
+            },
+            status: {
+              type: 'string',
+              enum: ['active', 'deleted'],
+              example: 'active',
+            },
+          },
+        },
+      },
+    },
   },
-  apis: ['./routes/*.js']
+  apis: ['./routes/*.js'],
 };
 
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
