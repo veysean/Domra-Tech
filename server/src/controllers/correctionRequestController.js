@@ -112,8 +112,6 @@ const getAllCorrectionRequests = async (req, res) => {
   }
 };
 
-
-// Fixing
 /**
  * @swagger
  * /correction-requests/{id}:
@@ -140,9 +138,7 @@ const getAllCorrectionRequests = async (req, res) => {
 const getCorrectionRequestById = async (req, res) => {
   try {
     const { id } = req.params;
-    const request = await CorrectionRequest.findOne({
-      where: { correctionId: id }
-    });
+    const request = await CorrectionRequest.findByPk(id);
 
     if (!request) {
       return res.status(404).json({ message: 'Correction request not found.' });
@@ -175,7 +171,24 @@ const getCorrectionRequestById = async (req, res) => {
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/CorrectionRequest'
+ *             type: object
+ *             properties:
+ *               correctEnglishWord:
+ *                 type: string
+ *                 example: "updated example"
+ *               correctFrenchWord:
+ *                 type: string
+ *                 example: "exemple mis à jour"
+ *               correctKhmerWord:
+ *                 type: string
+ *                 example: "ឧទាហរណ៍ថ្មី"
+ *               reference:
+ *                 type: string
+ *                 example: "https://merriam-webster.com/"
+ *               status:
+ *                 type: string
+ *                 enum: [pending, accepted, denied, deleted]
+ *                 example: "accepted"
  *     responses:
  *       200:
  *         description: Correction request updated successfully.
@@ -187,24 +200,21 @@ const getCorrectionRequestById = async (req, res) => {
 const updateCorrectionRequest = async (req, res) => {
   try {
     const { id } = req.params;
-    const [updated] = await CorrectionRequest.update(req.body, {
-      where: { correctionId: id }
-    });
+    const request = await CorrectionRequest.findByPk(id);
 
-    if (!updated) {
+    if (!request) {
       return res.status(404).json({ message: 'Correction request not found.' });
     }
 
-    const updatedRequest = await CorrectionRequest.findOne({
-      where: { correctionId: id }
-    });
+    await request.update(req.body);
 
-    return res.status(200).json(updatedRequest);
+    return res.status(200).json(request);
   } catch (error) {
     console.error('Update correction request error:', error);
     return res.status(400).json({ message: 'Failed to update correction request.' });
   }
 };
+
 
 /**
  * @swagger
