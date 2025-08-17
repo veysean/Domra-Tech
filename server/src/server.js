@@ -8,7 +8,8 @@ import swaggerDocs from './config/swagger.js';
 import db from './models/index.js'; 
 import authRoutes from './routes/authRoutes.js'; 
 import userRoutes from './routes/userRoutes.js';
-import wordTranslationRoutes from './routes/wordTranslationRoutes.js'; 
+import wordTranslationRoutes from './routes/wordTranslationRoutes.js';
+import CategoryRouter from './routes/categoryRoutes.js';
 // import passport from './config/passport.config.js';
 // import session from 'express-session';
 
@@ -31,6 +32,9 @@ app.use(express.json());
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use('/api', wordTranslationRoutes);
+
+
+app.use('/api/categories', CategoryRouter);
 
 const startServer = async () => {
     try {
