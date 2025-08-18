@@ -15,6 +15,8 @@ const { CorrectionRequest } = db;
  *   post:
  *     tags:
  *       - CorrectionRequests
+ *     security:
+ *       - bearerAuth: []
  *     summary: Create a new correction request
  *     description: Allows a user to submit a correction request for a word.
  *     requestBody:
@@ -94,6 +96,8 @@ const createCorrectionRequest = async (req, res) => {
  *   get:
  *     tags:
  *       - CorrectionRequests
+ *     security:
+ *       - bearerAuth: []
  *     summary: Get all correction requests
  *     description: Retrieve a paginated list of correction requests.
  *     parameters:
@@ -160,6 +164,8 @@ const getAllCorrectionRequests = async (req, res) => {
  *   get:
  *     tags:
  *       - CorrectionRequests
+ *     security:
+ *       - bearerAuth: []
  *     summary: Get a correction request by ID
  *     description: Retrieve a single correction request by its unique ID.
  *     parameters:
@@ -199,6 +205,8 @@ const getCorrectionRequestById = async (req, res) => {
  *   put:
  *     tags:
  *       - CorrectionRequests
+ *     security:
+ *       - bearerAuth: []
  *     summary: Update a correction request
  *     description: Modify an existing correction request by ID.
  *     parameters:
@@ -264,6 +272,8 @@ const updateCorrectionRequest = async (req, res) => {
  *   delete:
  *     tags:
  *       - CorrectionRequests
+ *     security:
+ *       - bearerAuth: []
  *     summary: Delete a correction request
  *     description: Remove a correction request by ID.
  *     parameters:
