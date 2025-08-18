@@ -95,17 +95,59 @@ const createCorrectionRequest = async (req, res) => {
  *     tags:
  *       - CorrectionRequests
  *     summary: Get all correction requests
- *     description: Retrieve a list of all submitted correction requests.
+ *     description: Retrieve a paginated list of correction requests.
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of items per page
  *     responses:
  *       200:
- *         description: A list of correction requests.
+ *         description: A paginated list of correction requests.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 totalItems:
+ *                   type: integer
+ *                 totalPages:
+ *                   type: integer
+ *                 currentPage:
+ *                   type: integer
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/CorrectionRequest'
  *       500:
  *         description: Failed to retrieve correction requests.
  */
 const getAllCorrectionRequests = async (req, res) => {
   try {
-    const requests = await CorrectionRequest.findAll();
-    return res.status(200).json(requests);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    const { count, rows } = await CorrectionRequest.findAndCountAll({
+      limit,
+      offset,
+      order: [['createdAt', 'DESC']]
+    });
+
+    return res.status(200).json({
+      totalItems: count,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+      data: rows
+    });
   } catch (error) {
     console.error('Get all correction requests error:', error);
     return res.status(500).json({ message: 'Failed to retrieve correction requests.' });
