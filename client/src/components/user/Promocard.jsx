@@ -37,7 +37,7 @@ const PromoCard = ({ isSignUp, handleToggle }) => {
         className="w-52 h-11 p-2.5 left-[276px] top-[523px] absolute rounded-xl border border-indigo-500 flex justify-center items-center gap-2.5 gradient-text hover:bg-indigo-500/80 hover:text-white"
       >
         <span className=" text-2xl font-['Righteous']">
-          {isSignUp ? "Sign up" : "Login"}
+          {isSignUp ? "Login" : "Sign up"}
         </span>
       </button>
     </div>

@@ -1,24 +1,33 @@
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc"; // Google icon
 import { FaUser } from "react-icons/fa";   // Guest/User icon
-import { HiArrowLeft } from "react-icons/hi"; // Heroicons
+import { HiArrowLeft } from "react-icons/hi"; // arrow icon
+import { authServices } from "../../api";
 
 const SignUpCard = () => {
   const [step, setStep] = useState(1);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [formData, setFormData] = useState({ 
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: ""
+  });
 
   const handleNext = (e) => {
     e.preventDefault();
     setStep(2);
   };
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
-    console.log("Sign Up data:", { firstName, lastName, email, password });
+   // console.log("Sign Up data:", { firstName, lastName, email, password });
     // connect to sign-up API here
+    try{
+      await authServices.register(formData);
+    } catch (error) {
+      console.error("Error during sign-up:", error);
+    }
+
   };
 
   const handleBack = () => {
@@ -42,8 +51,8 @@ const SignUpCard = () => {
           <input
             type="email"
             placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light"
           />
         </div>
@@ -54,8 +63,8 @@ const SignUpCard = () => {
           <input
             type="password"
             placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formData.password}
+            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
             className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light"
           />
         </div>
@@ -112,8 +121,8 @@ const SignUpCard = () => {
               <input
                 type="text"
                 placeholder="Enter your first name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                value={formData.firstName}
+                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                 className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light leading-snug"
               />
             </div>
@@ -124,8 +133,8 @@ const SignUpCard = () => {
               <input
                 type="text"
                 placeholder="Enter your last name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                value={formData.lastName}
+                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                 className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light leading-snug"
               />
             </div>
