@@ -1,14 +1,23 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function NavBar() {
 
     const [open, setOPen] = useState(false);
     const [language, setLanguage] = useState("ENG");
+    const [activeMenu, setActiveMenu] = useState("Home");
 
     const handleSelect = (lang) => {
         setLanguage(lang);
         setOPen(false);
     };
+
+    const navItems = [
+        { label: "Home", path: "/", width: "w-[64px]" },
+        { label: "Categories", path: "/categories", width: "w-[115px]" },
+        { label: "Contribute terms", path: "/contribute-term", width: "w-[167px]" },
+        { label: "About us", path: "/about-us", width: "w-[96px]" }
+    ];
 
     return (
         <>
@@ -21,11 +30,23 @@ export default function NavBar() {
 
                 {/* Menu & Actions */}
                 <div className="flex items-center gap-5">
-                    {/* Menu Links */}
-                    <div className="w-[64px] h-[28px] text-[#667EEA] text-[20px] font-inter">Home</div>
-                    <div className="w-[115px] h-[28px] text-[#667EEA] text-[20px] font-inter">Categories</div>
-                    <div className="w-[167px] h-[28px] text-[#667EEA] text-[20px] font-inter">Contribute terms</div>
-                    <div className="w-[96px] h-[28px] text-[#667EEA] text-[20px] font-inter">About us</div>
+                    {/* Nav Links */}
+                    <div className="flex items-center gap-5 mr-50">
+                        {navItems.map((item) => (
+                            <Link
+                                key={item.label}
+                                to={item.path}
+                                className={`${item.width} h-[28px] text-[#667EEA] text-[20px] font-inter cursor-pointer ${
+                                activeMenu === item.label
+                                    ? "underline underline-offset-4 decoration-[#667EEA]"
+                                    : ""
+                                }`}
+                                onClick={() => setActiveMenu(item.label)}
+                            >
+                                {item.label}
+                            </Link>
+                        ))}
+                    </div>
 
                     {/* LogIn / Sign up button */}
                     <div className="w-[165px] px-2.5 py-2 bg-[#667EEA] rounded-[30px] flex justify-center items-center">
