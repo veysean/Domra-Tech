@@ -1,5 +1,6 @@
 import './index.css';
 import { useTranslation } from 'react-i18next';
+import GoogleLoginButton from './component/googleLoginButton';
 import React from 'react';
 import AuthPage from './pages/user/AuthPage';
 function App() {
