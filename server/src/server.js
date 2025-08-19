@@ -10,6 +10,7 @@ import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import wordTranslationRoutes from './routes/wordTranslationRoutes.js';
 import CategoryRouter from './routes/categoryRoutes.js';
+import WordRequestRouter from './routes/wordRequestRoutes.js';
 // import passport from './config/passport.config.js';
 // import session from 'express-session';
 
@@ -35,6 +36,7 @@ app.use('/api', wordTranslationRoutes);
 
 
 app.use('/api/categories', CategoryRouter);
+app.use('/api/word-requests',WordRequestRouter);
 
 const startServer = async () => {
     try {
