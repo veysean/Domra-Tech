@@ -1,20 +1,62 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import './index.css';
-import { useTranslation } from 'react-i18next';
-import GoogleLoginButton from './component/googleLoginButton';
+import NavBar from './components/NavBar';
+import Footer from './components/Footer';
+import MainLayout from './layouts/MainLayout';
+import Home from './pages/user/Home';
+import ContributeTerm from './pages/user/ContributeTerm';
+import Categories from './pages/user/Categories';
+import AboutUs from './pages/user/AboutUs';
 import React from 'react';
-import AuthPage from './pages/user/AuthPage';
-function App() {
-    const { t, i18n } = useTranslation();
-
-  const changeLanguage = (lang) => {
-    i18n.changeLanguage(lang);
-  };
+function AppRoutes() {
   return (
-    <div>
-      <AuthPage/>
-    </div>
-   
+    <>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <MainLayout>
+              <Home />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/contribute-term"
+          element={
+            <MainLayout>
+              <ContributeTerm />
+            </MainLayout>
+          }
+        />
+
+         <Route
+          path="/categories"
+          element={
+            <MainLayout>
+              <Categories />
+            </MainLayout>
+          }
+        />
+
+         <Route
+          path="/about-us"
+          element={
+            <MainLayout>
+              <AboutUs />
+            </MainLayout>
+          }
+        />
+
+      </Routes>
+    </>
   );
 }
 
-export default App;
+export default function App(){
+  return (  
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+  );
+}
