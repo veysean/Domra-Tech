@@ -1,15 +1,47 @@
 import React, { useState } from "react";
-
+import { authServices } from "../../api";
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({ 
+    email: "", 
+    password: "" 
+  });
+
+  const { login } = useContext(AuthContext);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login data:", { email, password });
+    setError("");
+    setLoading(true);
+    console.log("Login data:", formData);
    //connect to authentication API 
-   
-  };
+   try {
+      const res = await authServices.login(formData);
+      const {token} = res.data;
+      if(token) {
+        login(token);
+        //navigate to main
+        console.log("Login successful");
+      }else{
+        setError("Login failed. Please check your credentials.");
+      }
+   } catch (error) {
+      if (error.response?.data?.message) {
+
+        setError(error.response.data.message);
+        
+      } else {
+        setError("Login failed. Please try again.");
+      }
+   }
+   finally{
+    setLoading(false);
+   }
+  }
 
   return (
     <div className="w-[505px] h-[549px] relative rounded-[30px]">
@@ -32,8 +64,8 @@ const Login = () => {
             <input
               type="email"
               placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light leading-snug"
             />
           </div>
@@ -46,8 +78,8 @@ const Login = () => {
             <input
               type="password"
               placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light leading-snug"
             />
           </div>

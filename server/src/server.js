@@ -1,7 +1,6 @@
 // server/src/server.js
-
 console.log("Attempting to run server...");
-
+import cors from 'cors';
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocs from './config/swagger.js'; 
@@ -18,7 +17,7 @@ const app = express();
 const PORT = process.env.PORT || 3002;
 
 app.use(express.json());
-
+app.use(cors());
 // Correct order: Passport must be configured before the routes
 // app.use(session({ secret: 'some_secret_key', resave: false, saveUninitialized: false, 
 // cookie: {

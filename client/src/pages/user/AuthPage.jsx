@@ -12,24 +12,24 @@ const AuthPage = () => {
   };
 
   const promoVariants = {
-    initialLeft: { x: -50, opacity: 0 },
+    initialLeft: { x: -50, opacity: 1 },
     animateLeft: { x: 0, opacity: 1 },
     exitLeft: { x: -50, opacity: 0 },
 
-    initialRight: { x: 50, opacity: 0 },
+    initialRight: { x: 50, opacity: 1 },
     animateRight: { x: 0, opacity: 1 },
     exitRight: { x: 50, opacity: 0 },
   };
 
   const formVariants = {
-    hiddenLeft: { x: -50, opacity: 0 },
+    hiddenLeft: { x: -50, opacity: 1 },
     visibleLeft: { x: 0, opacity: 1 },
-    hiddenRight: { x: 50, opacity: 0 },
+    hiddenRight: { x: 50, opacity: 1 },
     visibleRight: { x: 0, opacity: 1 },
   };
 
   return (
-    <div className="flex w-screen h-screen items-center justify-center bg-gradient-to-r from-indigo-500/50 to-purple-800/30 overflow-hidden">
+    <div className="flex w-screen h-screen items-center justify-center bg-gradient-to-l from-indigo-500/50 to-purple-800/50 overflow-hidden">
       <div className="flex relative">
         <AnimatePresence mode="wait">
           {isSignUp ? (
@@ -41,7 +41,7 @@ const AuthPage = () => {
                 initial="initialRight"
                 animate="animateRight"
                 exit="exitRight"
-                transition={{ duration: 0.6}}
+                transition={{ duration: 2}}
               >
                 <PromoCard isSignUp={isSignUp} handleToggle={handleToggle} />
               </motion.div>
@@ -54,7 +54,7 @@ const AuthPage = () => {
                 initial="hiddenLeft"
                 animate="visibleLeft"
                 exit="hiddenLeft"
-                transition={{ duration: 0.6}}
+                transition={{ duration: 1}}
               >
                 <SignUp />
               </motion.div>
@@ -69,7 +69,7 @@ const AuthPage = () => {
                 initial="hiddenRight"
                 animate="visibleRight"
                 exit="hiddenRight"
-                transition={{ duration: 0.6}}
+                transition={{ duration: 1}}
               >
                 <Login />
               </motion.div>
@@ -81,7 +81,7 @@ const AuthPage = () => {
                 initial="initialLeft"
                 animate="animateLeft"
                 exit="exitLeft"
-                transition={{ duration: 0.6}}
+                transition={{ duration: 2}}
               >
                 <PromoCard isSignUp={isSignUp} handleToggle={handleToggle} />
               </motion.div>
