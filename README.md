@@ -62,9 +62,7 @@ Make sure you have the following installed:
 
 
 
-## 📂 Folder Structure
-
-
+## 📂 Folder Structur
 
 ## 🚀 Installation
 
