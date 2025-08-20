@@ -3,6 +3,7 @@ import { FcGoogle } from "react-icons/fc"; // Google icon
 import { FaUser } from "react-icons/fa";   // Guest/User icon
 import { HiArrowLeft } from "react-icons/hi"; // arrow icon
 import { authServices } from "../../api";
+import { Link } from "react-router-dom";
 
 const SignUpCard = () => {
   const [step, setStep] = useState(1);
@@ -86,12 +87,14 @@ const SignUpCard = () => {
         </div>
 
         {/* Continue as Guest */}
+        <Link to={"/"}>
         <div className="w-96 px-5 py-2.5 bg-slate-200 rounded-xl flex items-center gap-20 cursor-pointer">
          <FaUser className="w-5 h-5 text-gray-600" />
           <span className="text-gray-600 text-sm font-['Inter']">
             Continue as guest
           </span>
         </div>
+        </Link>
 
         {/* Sign up Button */}
         <button
