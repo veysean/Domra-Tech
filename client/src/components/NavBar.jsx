@@ -49,9 +49,9 @@ export default function NavBar() {
                     </div>
 
                     {/* LogIn / Sign up button */}
-                    <div className="w-[165px] px-2.5 py-2 bg-[#667EEA] rounded-[30px] flex justify-center items-center">
+                    <Link to={"/auth"} className="w-[165px] px-2.5 py-2 bg-[#667EEA] rounded-[30px] flex justify-center items-center">
                     <div className="text-white text-[20px] font-medium font-inter">LogIn / sign up</div>
-                    </div>
+                    </Link>
 
                     {/* Language Selector */}
                     <div className="relative">
@@ -79,7 +79,7 @@ export default function NavBar() {
 
                         {/* Dropdown */}
                         {open && (
-                            <div className="absolute right-0 mt-2 w-[113px] bg-[#F8F9FA] shadow-md rounded-2xl overflow-hidden">
+                            <div className="absolute right-0 mt-2 w-[113px] bg-[#F8F9FA] shadow-md rounded-2xl overflow-hidden z-50">
                             {["ENG", "KH"].map((lang) => (
                                 <div
                                 key={lang}

@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Footer() {
 
@@ -90,10 +90,10 @@ export default function Footer() {
                 <div className="w-[161px] flex flex-col items-start gap-7">
                 <div className="w-full text-[#2D3748] text-[20px] font-bold font-inter">Feature</div>
                 <div className="w-full flex flex-col items-start gap-5">
-                    <div className="text-[#2D3748] text-[20px] font-inter">Home</div>
-                    <div className="text-[#2D3748] text-[20px] font-inter">Categories</div>
-                    <div className="text-[#2D3748] text-[20px] font-inter">Contribute terms</div>
-                    <div className="text-[#2D3748] text-[20px] font-inter">About us</div>
+                    <Link to={"/"} className="text-[#2D3748] text-[20px] font-inter">Home</Link>
+                    <Link to={"/categories"} className="text-[#2D3748] text-[20px] font-inter">Categories</Link>
+                    <Link to={"/contribute-term"} className="text-[#2D3748] text-[20px] font-inter">Contribute terms</Link>
+                    <Link to={"/about-us"} className="text-[#2D3748] text-[20px] font-inter">About us</Link>
                 </div>
                 </div>
 
