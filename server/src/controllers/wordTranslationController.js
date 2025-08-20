@@ -59,27 +59,57 @@ const searchWords = async (req, res) => {
   }
 };
 
-// Function to find all word translations
+// Function to find all word translations with pagination
+
 /**
  * @swagger
  * /words:
  *   get:
  *     summary: Get all word translations
  *     tags: [WordTranslations]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         description: Page number for pagination
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         description: Number of items per page
+ *         schema:
+ *           type: integer
  *     responses:
  *       200:
- *         description: List of all words
+ *         description: Paginated list of word translations
+ *       500:
+ *         description: Failed to retrieve words
  */
 
 const findAll = async (req, res) => {
   try {
-    const words = await WordTranslation.findAll();
-    return res.status(200).json(words);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    const words = await WordTranslation.findAndCountAll({
+      limit: limit,
+      offset: offset,
+    });
+
+    return res.status(200).json({
+      totalItems: words.count,
+      totalPages: Math.ceil(words.count / limit),
+      currentPage: page,
+      words: words.rows,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Failed to retrieve words' });
   }
 };
+
 
 // Function to find a single word translation by ID
 /**
@@ -117,7 +147,7 @@ const findById = async (req, res) => {
 // Function to create a new word translation
 /**
  * @swagger
- * /words:
+ * /admin/words:
  *   post:
  *     summary: Create a new word translation
  *     tags: [WordTranslations]
@@ -147,7 +177,7 @@ const create = async (req, res) => {
 // Function to update a word translation
 /**
  * @swagger
- * /words/{wordId}:
+ * /admin/words/{wordId}:
  *   put:
  *     summary: Update a word translation
  *     tags: [WordTranslations]
@@ -189,7 +219,7 @@ const update = async (req, res) => {
 // Function to perform a hard delete
 /**
  * @swagger
- * /words/{wordId}:
+ * /admin/words/{wordId}:
  *   delete:
  *     summary: Delete a word translation
  *     tags: [WordTranslations]
