@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { BsGlobe } from "react-icons/bs";
 
 const Header = ({ i18n }) => {
   const [langOpen, setLangOpen] = useState(false);
@@ -14,7 +15,7 @@ const Header = ({ i18n }) => {
             className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 transition"
             onClick={() => setLangOpen((v) => !v)}
           >
-            <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>
+            <BsGlobe size={22}/>
             <span className="hidden md:inline font-medium text-gray-700">{i18n.language === 'en' ? 'English' : 'Khmer'}</span>
           </button>
           {langOpen && (
