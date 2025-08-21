@@ -1,6 +1,6 @@
 import react from "react";
-import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
+import NavBar from "../components/user/NavBar";
+import Footer from "../components/user/Footer";
 
 export default function MainLayout({ children }) {
   return (

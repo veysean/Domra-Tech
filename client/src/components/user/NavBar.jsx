@@ -59,7 +59,7 @@ export default function NavBar() {
                         {/* Button */}
                         <button 
                             onClick={() => setOPen(!open)}
-                            className="w-[113px] h-[44px] bg-[#F8F9FA] rounded-[30px] outline outline-[1px] outline-[#E2E8F0] outline-offset-[-1px] flex justify-center items-center"
+                            className="w-[113px] h-[44px] bg-[#F8F9FA] rounded-[30px] outline-[1px] outline-[#E2E8F0] outline-offset-[-1px] flex justify-center items-center"
                         >
                             <div className="flex justify-center items-center">
                                 <div className="w-[55px] text-[#667EEA]/80 text-[20px] font-semibold font-inter"> {language} </div>
