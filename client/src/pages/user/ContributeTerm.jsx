@@ -1,8 +1,11 @@
+import HomeHeroSection from "../../components/user/HomeHeroSection";
+import { useTranslation } from 'react-i18next';
+
 export default function ContributeTerm() {
+    const { t } = useTranslation('contributeTerm');
     return (
         <div className="contribute-term-page">
-            <h1>Contribute a Term</h1>
-            {/* Additional content for contributing terms can be added here */}
-        </div>
-    );
+           <HomeHeroSection header={t("contributeHeader")} desc={t("contributeDesc")} />
+            </div>
+        );
 }
