@@ -2,15 +2,17 @@ import React from 'react';
 import PictureCard from '../../components/user/PictureCard';
 import image from '../../assets/loginPic.png'; 
 import UserProfile from '../../components/user/UserProfile';
+import { useTranslation } from 'react-i18next';
 
 export default function AboutUs(){
- 
+    const { t } = useTranslation();
+
     return (
         <div className="flex flex-col items-center justify-start gap-10">
             <div className="h-24 w-full flex justify-around items-center bg-gradient-to-l from-indigo-500/80 to-purple-800/80 overflow-hidden">
-                <div className="h-10  opacity-30 text-white text-3xl font-extrabold font-['Inter']">About Domra<br/></div>
-                <div className="h-10  opacity-30 text-white text-3xl font-extrabold font-['Inter']">About Domra<br/></div>
-                <div className="h-10  opacity-30 text-white text-3xl font-extrabold font-['Inter']">About Domra<br/></div>
+                <div className="h-10  opacity-30 text-white text-3xl font-extrabold font-['Inter']">{t('aboutUs')}<br/></div>
+                <div className="h-10  opacity-30 text-white text-3xl font-extrabold font-['Inter']">{t('aboutUs')}<br/></div>
+                <div className="h-10  opacity-30 text-white text-3xl font-extrabold font-['Inter']">{t('aboutUs')}<br/></div>
             </div>
             {/* vision and mission part*/}
             <div className="w-[1156px] px-5 inline-flex flex-col justify-center items-center gap-20">
