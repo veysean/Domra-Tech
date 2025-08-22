@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-    baseURL: 'http://localhost:4000/api', //backend URL
+    baseURL: 'http://localhost:3000/api', //backend URL
 });
 
 const token = localStorage.getItem('token');
@@ -13,6 +13,10 @@ if (token) {
 export const authServices = {
   register: (userData) => API.post('/auth/register', userData),
   login: (credentials) => API.post('/auth/login', credentials),
+};
+
+export const WordTranslationServices = {
+  findAll: () => API.get('/words')
 };
 
 
