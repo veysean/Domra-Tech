@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import i18n from "../i18n";
+import i18n from "../../i18n";
+import { t } from "i18next";
 export default function NavBar() {
 
     const [open, setOpen] = useState(false);
@@ -19,10 +20,10 @@ export default function NavBar() {
         };
 
     const navItems = [
-        { label: "Home", path: "/", width: "w-[64px]" },
-        { label: "Categories", path: "/categories", width: "w-[115px]" },
-        { label: "Contribute terms", path: "/contribute-term", width: "w-[167px]" },
-        { label: "About us", path: "/about-us", width: "w-[96px]" }
+        { label: t("home"), path: "/" },
+        { label: t("categories"), path: "/categories" },
+        { label: t("contributeTerm"), path: "/contribute-term" },
+        { label: t("aboutUs"), path: "/about-us" }
     ];
 
     return (
@@ -35,14 +36,14 @@ export default function NavBar() {
                 </div>
 
                 {/* Menu & Actions */}
-                <div className="flex items-center gap-5">
+                <div className="flex justify-between items-center w-full max-w-[1200px]">
                     {/* Nav Links */}
-                    <div className="flex items-center gap-5 mr-50">
+                    <div className="ml-50 flex gap-10 w-auto">
                         {navItems.map((item) => (
                             <Link
                                 key={item.label}
                                 to={item.path}
-                                className={`${item.width} h-[28px] text-[#667EEA] text-[20px] font-inter cursor-pointer ${
+                                className={`h-[28px] text-[#667EEA] text-[20px] font-inter cursor-pointer ${
                                 activeMenu === item.label
                                     ? "underline underline-offset-4 decoration-[#667EEA]"
                                     : ""
@@ -54,11 +55,12 @@ export default function NavBar() {
                         ))}
                     </div>
 
+                    <div className="flex items-center gap-2.5">
                     {/* LogIn / Sign up button */}
-                    <Link to={"/auth"} className="w-[165px] px-2.5 py-2 bg-[#667EEA] rounded-[30px] flex justify-center items-center">
-                    <div className="text-white text-[20px] font-medium font-inter">LogIn / sign up</div>
+                    <Link to={"/auth"} className="px-2.5 py-2 bg-[#667EEA] rounded-[30px] flex justify-center items-center">
+                    <div className="text-white text-[20px] font-medium font-inter">{t("login")} / {t("signup")}</div>
                     </Link>
-
+                   
                     {/* Language Selector */}
                     <div className="relative">
 
@@ -104,7 +106,9 @@ export default function NavBar() {
                                 </div>
                             ))}
                             </div>
+                            
                         )}
+                         </div>
                     </div>
                 </div>
                 </div>

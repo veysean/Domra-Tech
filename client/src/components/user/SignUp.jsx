@@ -4,8 +4,10 @@ import { FaUser } from "react-icons/fa";   // Guest/User icon
 import { HiArrowLeft } from "react-icons/hi"; // arrow icon
 import { authServices } from "../../api";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const SignUpCard = () => {
+  const { t } = useTranslation();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({ 
     email: "",
@@ -38,7 +40,7 @@ const SignUpCard = () => {
   return (
     <div className="w-[505px] h-[549px] relative bg-white rounded-[30px] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.25)] overflow-hidden">
       <h2 className="absolute left-[217px] top-[47px] text-3xl font-['Righteous'] gradient-text">
-        Sign up
+        {t("signup")}
       </h2>
     {/* step one for sign up */}
     {step === 1 && (
@@ -48,7 +50,7 @@ const SignUpCard = () => {
       >
         {/* Email */}
         <div className="flex flex-col gap-2.5">
-          <label className="text-indigo-500 text-xl font-['Inter']">Email:</label>
+          <label className="text-indigo-500 text-xl font-['Inter']">{t("email")}: </label>
           <input
             type="email"
             placeholder="Enter your email"
@@ -60,7 +62,7 @@ const SignUpCard = () => {
 
         {/* Password */}
         <div className="flex flex-col gap-2.5">
-          <label className="text-indigo-500 text-xl font-['Inter']">Password:</label>
+          <label className="text-indigo-500 text-xl font-['Inter']">{t("password")}: </label>
           <input
             type="password"
             placeholder="Enter your password"
