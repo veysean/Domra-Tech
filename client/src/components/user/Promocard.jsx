@@ -1,13 +1,16 @@
 import React from "react";
 import { motion } from "framer-motion";
 import img from "../../assets/loginPic.png";
+import { useTranslation } from "react-i18next";
 
 const PromoCard = ({ isSignUp, handleToggle }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="w-[700px] h-[690px] relative bg-white/50 rounded-[30px] shadow-lg overflow-hidden">
       {/* Tagline */}
       <div className="w-[519px] h-16 left-[90px] top-[588px] absolute text-center text-indigo-500 text-xl font-['Inter']">
-        Translate technical terms between English Khmer and French — faster, smarter, and easier.
+       {t("login_des")}
       </div>
 
       {/* Floating Image */}
@@ -37,7 +40,7 @@ const PromoCard = ({ isSignUp, handleToggle }) => {
         className="w-52 h-11 p-2.5 left-[276px] top-[523px] absolute rounded-xl border border-indigo-500 flex justify-center items-center gap-2.5 gradient-text hover:bg-indigo-500/80 hover:text-white"
       >
         <span className=" text-2xl font-['Righteous']">
-          {isSignUp ? "Login" : "Sign up"}
+          {isSignUp ? t("login") : t("signup")}
         </span>
       </button>
     </div>
