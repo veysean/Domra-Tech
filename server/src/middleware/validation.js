@@ -1,7 +1,7 @@
 import { validationResult, body } from 'express-validator';
 
 // A reusable middleware function to check for validation errors
-export const validate = (req, res, next) => {
+const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     return next();
@@ -19,7 +19,7 @@ export const validate = (req, res, next) => {
 };
 
 // Validation rules for a 'create user' request
-export const registerValidationRules = () => {
+const registerValidationRules = () => {
   return [
     body('firstName').notEmpty().withMessage('First name is required'),
     body('lastName').notEmpty().withMessage('Last name is required'),
@@ -28,16 +28,18 @@ export const registerValidationRules = () => {
   ];
 };
 
-// Corrected: Validation rules for user login (now supports Google ID)
-export const loginValidationRules = () => {
+// Validation rules for user login (supports Google ID)
+const loginValidationRules = () => {
   return [
     body('email').isEmail().withMessage('Please provide a valid email'),
-    // This custom validator checks if EITHER password OR googleId is present
     body('password').custom((value, { req }) => {
-        if (!req.body.password && !req.body.googleId) {
-            throw new Error('Either a password or googleId is required for login');
-        }
-        return true;
-    })
+      if (!req.body.password && !req.body.googleId) {
+        throw new Error('Either a password or googleId is required for login');
+      }
+      return true;
+    }),
   ];
 };
+
+
+export default {validate, registerValidationRules, loginValidationRules};
