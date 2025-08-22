@@ -7,7 +7,7 @@ import {
     deleteCategory,
 }
 from "../controllers/categotyController.js"
-import { verifyAuth, checkAdminRole } from '../middleware/authMiddleware.js';
+//import { verifyAuth, checkAdminRole } from '../middleware/authMiddleware.js';
 
 
 const CategoryRouter = express.Router();

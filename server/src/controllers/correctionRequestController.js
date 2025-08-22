@@ -11,7 +11,7 @@ const { CorrectionRequest } = db;
 
 /**
  * @swagger
- * /correction-requests:
+ * /correctionRequests:
  *   post:
  *     tags:
  *       - CorrectionRequests
@@ -92,7 +92,7 @@ const createCorrectionRequest = async (req, res) => {
 
 /**
  * @swagger
- * /correction-requests:
+ * /correctionRequests:
  *   get:
  *     tags:
  *       - CorrectionRequests
@@ -160,7 +160,7 @@ const getAllCorrectionRequests = async (req, res) => {
 
 /**
  * @swagger
- * /correction-requests/{id}:
+ * /correctionRequests/{id}:
  *   get:
  *     tags:
  *       - CorrectionRequests
@@ -201,7 +201,7 @@ const getCorrectionRequestById = async (req, res) => {
 
 /**
  * @swagger
- * /correction-requests/{id}:
+ * /correctionRequests/{id}:
  *   put:
  *     tags:
  *       - CorrectionRequests
@@ -268,7 +268,7 @@ const updateCorrectionRequest = async (req, res) => {
 
 /**
  * @swagger
- * /correction-requests/{id}:
+ * /correctionRequests/{id}:
  *   delete:
  *     tags:
  *       - CorrectionRequests

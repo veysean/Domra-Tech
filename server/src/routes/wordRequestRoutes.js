@@ -6,7 +6,7 @@ import {
     updateWordRequest,
 }
 from "../controllers/wordRequestController.js"
-import { verifyAuth, checkAdminRole } from '../middleware/authMiddleware.js';
+//import { verifyAuth, checkAdminRole } from '../middleware/authMiddleware.js';
 
 
 const WordRequestRouter = express.Router();
