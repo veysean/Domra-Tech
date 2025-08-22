@@ -1,4 +1,8 @@
+import { useState } from "react";
+
 export default function WordDetailCard({word}) {
+    const [showReference, setShowReference] = useState(false);
+
     return (
         <div className="w-[565px] p-7 bg-white rounded-[30px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] border-t-[5px] border-indigo-500 inline-flex flex-col justify-center items-center gap-7">
             <div className="self-stretch inline-flex justify-between items-start">
@@ -37,17 +41,83 @@ export default function WordDetailCard({word}) {
             </div>
 
             {/* Reference */}
-            <div className="w-[493px] h-10 p-5 bg-gray-50 rounded-[20px] border-l-[3px] border-indigo-500 inline-flex justify-start items-center gap-7">
-                <div className="justify-start text-slate-600 text-base font-medium font-['Inter']">Reference</div>
-                <div className="w-1.5 h-4">
-                    <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 1C3.73367 4.12419 5.26633 5.87581 8 9L1 17" stroke="#4A5568" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
+            <div
+                onClick={() => setShowReference(!showReference)}
+                className="cursor-pointer"
+            >
+                {!showReference ? (
+                // BEFORE CLICK
+                <div className="w-[493px] h-10 p-5 bg-gray-50 rounded-[20px] border-l-[3px] border-indigo-500 inline-flex justify-start items-center gap-7">
+                    <div className="justify-start text-slate-600 text-base font-medium font-['Inter']">Reference</div>
+                    <div className="w-1.5 h-4">
+                        <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1C3.73367 4.12419 5.26633 5.87581 8 9L1 17" stroke="#4A5568" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
                 </div>
-            </div>
-            <div className="self-stretch pt-7 border-t border-slate-200 inline-flex justify-between items-start">
-                <div className="w-[505px] flex justify-between items-center">
-                    <div className="justify-start text-slate-500 text-base font-medium font-['Inter']">Added: {word?.createdAt?.slice(0, 10) || "N/A"}</div>
+                ) : (
+                     // AFTER CLICK
+                    <div className="w-[493px] h-36 p-5 bg-gray-200 rounded-[20px] border-l-[3px] border-indigo-500 inline-flex flex-col justify-center items-start gap-5">
+                        <div className="inline-flex justify-start items-center gap-7">
+                        <div className="justify-start text-slate-500 text-base font-medium font-['Inter']">Reference</div>
+                        <div className="w-5 h-2">
+                            <svg width="21" height="11" viewBox="0 0 21 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 1.5C4.02687 4.29641 7.14268 6.70359 10.1695 9.5L20.0002 2" stroke="#718096" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+
+                        </div>
+                        </div>
+                        <div className="w-96 flex flex-col justify-start items-start gap-3.5">
+                        <div className="self-stretch justify-start text-indigo-500 text-base font-normal font-['Inter']">
+                            {word?.reference ? (() => {
+                                const ref = word.reference.trim();
+
+                                if (ref.startsWith("https")) {
+                                // Case 1: direct link (Facebook, etc.)
+                                return (
+                                    <a
+                                    href={ref}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-sm break-words w-full underline text-blue-600"
+                                    onClick={(e) => e.stopPropagation()}
+                                    >
+                                    {ref}
+                                    </a>
+                                );
+                                }
+
+                                // Case 2: APA style with a link at the end
+                                const parts = ref.split("https");
+                                if (parts.length > 1) {
+                                const text = parts[0].trim();
+                                const link = "https" + parts[1].trim();
+                                return (
+                                    <a
+                                    href={link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-sm break-words w-full text-indigo-500 hover:underline"
+                                    onClick={(e) => e.stopPropagation()}
+                                    >
+                                    {text}
+                                    </a>
+                                );
+                                }
+
+                                // fallback
+                                return <p className="text-sm text-gray-500">{ref}</p>;
+                            })() : (
+                                <p className="text-sm text-gray-500">No Reference</p>
+                            )}
+                        </div>
+                        </div>
+                    </div>
+                )}
+                </div>
+                <div className="self-stretch pt-7 border-t border-slate-200 inline-flex justify-between items-start">
+                    <div className="w-[505px] flex justify-between items-center">
+                        <div className="justify-start text-slate-500 text-base font-medium font-['Inter']">Added: {word?.createdAt?.slice(0, 10) || "N/A"}</div>
                     <div className="w-60 flex justify-end items-center gap-2.5">
                         <div data-property-1="Default" className="h-10 px-2.5 py-5 bg-yellow-400 rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 flex justify-center items-center gap-2.5">
                             <div className="w-4 h-4 relative">
