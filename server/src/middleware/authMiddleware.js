@@ -30,4 +30,5 @@ const checkAdminRole = (req, res, next) => {
   next();
 };
 
-export { verifyAuth, checkAdminRole };
+export default { verifyAuth, checkAdminRole };
+
