@@ -25,47 +25,6 @@ const swaggerOptions = {
           bearerFormat: 'JWT',
         },
       },
-      schemas: {
-        WordTranslation: {
-          type: 'object',
-          required: ['EnglishWord', 'KhmerWord'],
-          properties: {
-            wordId: {
-              type: 'integer',
-              example: 1,
-            },
-            EnglishWord: {
-              type: 'string',
-              example: 'Hello',
-            },
-            FrenchWord: {
-              type: 'string',
-              example: 'Bonjour',
-            },
-            KhmerWord: {
-              type: 'string',
-              example: 'សួស្តី',
-            },
-            definition: {
-              type: 'string',
-              example: 'A greeting used when meeting someone.',
-            },
-            example: {
-              type: 'string',
-              example: 'Hello, how are you?',
-            },
-            reference: {
-              type: 'string',
-              example: 'Oxford Dictionary',
-            },
-            status: {
-              type: 'string',
-              enum: ['active', 'deleted'],
-              example: 'active',
-            },
-          },
-        },
-      },
     },
   },
   apis: ['./routes/*.js', './controllers/*.js'],

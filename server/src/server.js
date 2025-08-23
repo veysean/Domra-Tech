@@ -1,6 +1,8 @@
 // server/src/server.js
+
 import dotenv from 'dotenv'; // <-- Add this import
-dotenv.config(); // <-- And this config call
+dotenv.config({ path: '../.env' }); // <-- And this config call
+
 console.log("Attempting to run server...");
 import cors from 'cors';
 import express from 'express';
@@ -10,10 +12,9 @@ import db from './models/index.js';
 import authRoutes from './routes/authRoutes.js'; 
 import userRoutes from './routes/userRoutes.js';
 import wordTranslationRoutes from './routes/wordTranslationRoutes.js'; 
-import CategoryRouter from './routes/categoryRoutes.js';
-import correctionRequestRoutes from './routes/correctionRequestRoutes.js';
-//import passport from './config/passport.config.js';
-//import session from 'express-session';
+import passport from './config/passport.config.js';
+import session from 'express-session';
+import favWordRoutes from './routes/favWordRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -27,12 +28,11 @@ app.use(cors());
 app.use('/api/auth', authRoutes);
 app.use('/api', userRoutes); 
 app.use('/api', wordTranslationRoutes);
-app.use('/api/correction-requests', correctionRequestRoutes);
-app.use('/api/categories', CategoryRouter);
-
+app.use('/api', favWordRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-app.use('/api', wordTranslationRoutes);
+
+
 const startServer = async () => {
     try {
         await db.sequelize.authenticate();
