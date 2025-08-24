@@ -20,7 +20,7 @@ export default function WordList() {
     }, []);
 
     return (
-        <div className="flex flex-col items-center">
+        <div className="inline-flex justify-center gap-x-10 items-start flex-wrap gap-y-20">
             {words.map((word) => (
                 <WordCard key={word.wordId} word={word} />
             ))}
