@@ -1,9 +1,12 @@
 import { useState } from "react";
+import RequestChangeCard from "./RequestChangeCard";
 
 export default function WordDetailCard({word}) {
     const [showReference, setShowReference] = useState(false);
+    const [showRequestCard, setShowRequestCard] = useState(false);
 
     return (
+        <div className="flex justify-center items-center">
         <div className="w-[565px] p-7 bg-white rounded-[30px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] border-t-[5px] border-indigo-500 inline-flex flex-col justify-center items-center gap-7">
             <div className="self-stretch inline-flex justify-between items-start">
                 <div className="w-80 inline-flex flex-col justify-start items-start gap-3">
@@ -21,9 +24,9 @@ export default function WordDetailCard({word}) {
                             </div>
                         <div/>
                     </div>
+                    </div>
                 </div>
             </div>
-        </div>
             {/* Definition */}
             <div className="self-stretch p-5 bg-gray-200 rounded-[20px] border-l-[3px] border-indigo-500 flex flex-col justify-start items-start gap-5">
                 <div className="self-stretch justify-start text-slate-500 text-base font-medium font-['Inter']">Definition</div>
@@ -57,7 +60,7 @@ export default function WordDetailCard({word}) {
                 </div>
                 ) : (
                      // AFTER CLICK
-                    <div className="w-[493px] h-36 p-5 bg-gray-200 rounded-[20px] border-l-[3px] border-indigo-500 inline-flex flex-col justify-center items-start gap-5">
+                    <div className="w-[493px] min-h-36 p-5 bg-gray-200 rounded-[20px] border-l-[3px] border-indigo-500 inline-flex flex-col justify-center items-start gap-5">
                         <div className="inline-flex justify-start items-center gap-7">
                         <div className="justify-start text-slate-500 text-base font-medium font-['Inter']">Reference</div>
                         <div className="w-5 h-2">
@@ -119,6 +122,7 @@ export default function WordDetailCard({word}) {
                     <div className="w-[505px] flex justify-between items-center">
                         <div className="justify-start text-slate-500 text-base font-medium font-['Inter']">Added: {word?.createdAt?.slice(0, 10) || "N/A"}</div>
                     <div className="w-60 flex justify-end items-center gap-2.5">
+                        <button onClick={() =>  setShowRequestCard(true)}>
                         <div data-property-1="Default" className="h-10 px-2.5 py-5 bg-yellow-400 rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 flex justify-center items-center gap-2.5">
                             <div className="w-4 h-4 relative">
                                 <div className="w-4 h-3 left-[0.13px] top-[2px] absolute">
@@ -130,9 +134,15 @@ export default function WordDetailCard({word}) {
                             </div>
                             <div className="justify-start text-white text-base font-medium font-['Inter']">Request</div>
                         </div>
+                        </button>
                     </div>
                 </div>
             </div>
+            {showRequestCard && (
+            <RequestChangeCard onClose={() => setShowRequestCard(false)} />
+            )}
+
+        </div>
         </div>
     );
 }
