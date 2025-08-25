@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { authServices } from "../../api";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
 const Login = () => {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
   const [formData, setFormData] = useState({ 
     email: "", 
     password: "" 
@@ -25,7 +28,9 @@ const Login = () => {
       if(token) {
         login(token);
         //navigate to main
+        navigate(location.state?.from || "/");
         console.log("Login successful");
+
       }else{
         setError("Login failed. Please check your credentials.");
       }

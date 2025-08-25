@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { FcGoogle } from "react-icons/fc"; // Google icon
 import { FaUser } from "react-icons/fa";   // Guest/User icon
 import { HiArrowLeft } from "react-icons/hi"; // arrow icon
 import { authServices } from "../../api";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
+import { AuthContext } from "../../contexts/AuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
 const SignUpCard = () => {
   const { t } = useTranslation();
   const [step, setStep] = useState(1);
+  const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({ 
     email: "",
     password: "",
@@ -26,7 +29,9 @@ const SignUpCard = () => {
    // console.log("Sign Up data:", { firstName, lastName, email, password });
     // connect to sign-up API here
     try{
-      await authServices.register(formData);
+      const res = await authServices.register(formData);
+      login(res.data.token); // decode and store token
+      navigate("/");
     } catch (error) {
       console.error("Error during sign-up:", error);
     }
