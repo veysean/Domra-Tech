@@ -1,7 +1,6 @@
 import React from 'react';
 import PictureCard from '../../components/user/PictureCard';
 import image from '../../assets/loginPic.png'; 
-import UserProfile from '../../components/user/UserProfile';
 import { useTranslation } from 'react-i18next';
 
 export default function AboutUs(){
@@ -30,7 +29,7 @@ export default function AboutUs(){
             </div>
             {/* about domra part */}
             <div className="w-[1156px] inline-flex flex-col justify-center items-center gap-20">
-                <div className="self-stretch text-center justify-start"><span class="gradient-text text-4xl font-extrabold font-['Inter']">How </span><span class="text-indigo-500 text-4xl font-extrabold font-['Inter']">Domra</span><span class="gradient-text text-4xl font-extrabold font-['Inter']"> Work</span></div>
+                <div className="self-stretch text-center justify-start"><span class="gradient-text text-4xl font-extrabold font-['Inter']">How </span><span class="text-indigo-500 text-4xl font-extrabold font-['Righteous']">Domra</span><span class="gradient-text text-4xl font-extrabold font-['Inter']"> Work</span></div>
                 <div className="self-stretch px-5 flex flex-col justify-start items-end gap-5">
                     <div data-property-1="Default" className="group self-stretch p-5 bg-white rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 inline-flex justify-between items-center hover:shadow-lg duration-300">
                         <div className="justify-start gradient-text text-3xl font-medium font-['Inter'] group-hover:font-bold">{t('search')}</div>
@@ -48,12 +47,12 @@ export default function AboutUs(){
             </div>
             {/* domra team part */}
             <div className="w-[1156px] inline-flex flex-col justify-center items-center gap-20">
-                <div className="text-center justify-start"><span class="gradient-text text-4xl font-extrabold font-['Inter']">Meet </span><span class="text-indigo-500 text-4xl font-extrabold font-['Inter']">Domra</span><span class="gradient-text text-4xl font-extrabold font-['Inter']"> Team</span></div>
-                <PictureCard imageSrc={image} name="Ms. hello lala" role="Frontend developer" />
+                <div className="text-center justify-start"><span class="gradient-text text-4xl font-extrabold font-['Inter']">Meet </span><span class="text-indigo-500 text-4xl font-extrabold font-['Righteous']">Domra</span><span class="gradient-text text-4xl font-extrabold font-['Inter']"> Team</span></div>
                 <div className="mb-10 flex flex-wrap justify-between items-center gap-10">
                     <PictureCard imageSrc={image} name="Mr. John Doe" role="Project Manager" />
                     <PictureCard imageSrc={image} name="Ms. Jane Smith" role="Backend Developer" />
                     <PictureCard imageSrc={image} name="Dr. Alice Johnson" role="Data Scientist" />
+                    <PictureCard imageSrc={image} name="Ms. hello lala" role="Frontend developer" />
                 </div>
                 <div className="mb-10 flex flex-wrap justify-between items-center gap-10">
                     <PictureCard imageSrc={image} name="Dr. Alice Johnson" role="Data Scientist" />
@@ -62,7 +61,6 @@ export default function AboutUs(){
                     <PictureCard imageSrc={image} name="Dr. Alice Johnson" role="Data Scientist" />
                 </div>
             </div>
-            <UserProfile profileURL={image} firstName="oeng" lastName="gechty" email="gechty@gmail.com"/>
         </div>
     );
 }
