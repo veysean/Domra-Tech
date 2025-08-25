@@ -19,5 +19,9 @@ export const WordTranslationServices = {
   findAll: () => API.get('/words')
 };
 
+export const searchWords = (query) => {
+  return API.get('/words/search', { params: { q: query } });
+}
+
 
 export default API;
