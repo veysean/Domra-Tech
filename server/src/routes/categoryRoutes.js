@@ -4,7 +4,6 @@ import {
     getCategoryById,
 }
 from "../controllers/categotyController.js"
-import { verifyAuth, checkAdminRole } from '../middleware/authMiddleware.js';
 
 
 const CategoryRouter = express.Router();
