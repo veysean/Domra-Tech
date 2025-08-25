@@ -130,6 +130,13 @@ const searchWords = async (req, res) => {
  *         description: Number of items per page
  *         schema:
  *           type: integer
+ *       - in: query
+ *         name: sort
+ *         required: false
+ *         description: Sort order for EnglishWord (asc or desc)
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
  *     responses:
  *       200:
  *         description: Paginated list of word translations
@@ -142,10 +149,12 @@ const findAll = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
+    const sortOrder = req.query.sort === 'desc' ? 'DESC' : 'ASC';
 
     const words = await WordTranslation.findAndCountAll({
       limit: limit,
       offset: offset,
+      order: [['EnglishWord', sortOrder]],
     });
 
     return res.status(200).json({
