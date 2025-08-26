@@ -1,15 +1,18 @@
 import { useState } from "react";
+import RequestChangeCard from "./RequestChangeCard";
 
 export default function WordDetailCard({word}) {
     const [showReference, setShowReference] = useState(false);
+    const [showRequestCard, setShowRequestCard] = useState(false);
 
     return (
-        <div className="w-[565px] p-7 bg-white rounded-[30px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] border-t-[5px] border-indigo-500 inline-flex flex-col justify-center items-center gap-7">
+        <div className="w-[565px] flex justify-center items-start max-h-[100vh] overflow-y-auto scrollbar-hide rounded-[30px] pt-[5px] bg-gradient-to-r to-[#764BA2] from-[#667EEA]">
+        <div className="w-[565px] p-7 bg-white rounded-[30px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] inline-flex flex-col justify-center items-center gap-7 overflow-y-auto">
             <div className="self-stretch inline-flex justify-between items-start">
                 <div className="w-80 inline-flex flex-col justify-start items-start gap-3">
-                    <div className="self-stretch justify-start text-gray-700 text-3xl font-medium font-['Inter']">{word?.EnglishWord}</div>
-                    <div className="justify-start text-indigo-500 text-3xl font-normal font-['Inter']">{word?.KhmerWord}</div>
-                    <div className="justify-start text-indigo-500 text-3xl font-normal font-['Inter']"> {word?.FrenchWord}</div>
+                    <div className="self-stretch justify-start text-[#2D3748] text-3xl font-medium font-['Inter']">{word?.EnglishWord}</div>
+                    <div className="justify-start text-[#667EEA] text-3xl font-normal font-['Inter']">{word?.KhmerWord}</div>
+                    <div className="justify-start text-[#667EEA] text-3xl font-normal font-['Inter']"> {word?.FrenchWord}</div>
                 </div>
                 <div data-property-1="fav" className="flex justify-start items-center gap-2.5">
                     <div className="w-4 h-4 relative">
@@ -21,22 +24,22 @@ export default function WordDetailCard({word}) {
                             </div>
                         <div/>
                     </div>
+                    </div>
                 </div>
             </div>
-        </div>
             {/* Definition */}
-            <div className="self-stretch p-5 bg-gray-200 rounded-[20px] border-l-[3px] border-indigo-500 flex flex-col justify-start items-start gap-5">
-                <div className="self-stretch justify-start text-slate-500 text-base font-medium font-['Inter']">Definition</div>
+            <div className="self-stretch p-5 bg-[#E9ECEF] rounded-[20px] border-l-[3px] border-indigo-500 flex flex-col justify-start items-start gap-5">
+                <div className="self-stretch justify-start text-[#4A5568] text-base font-medium font-['Inter']">Definition</div>
                 <div className="self-stretch flex flex-col justify-start items-start gap-3.5">
-                    <div className="self-stretch justify-start text-indigo-500 text-base font-normal font-['Inter']">{word?.definition}</div>
+                    <div className="self-stretch justify-start text-[#667EEA]  text-base font-normal font-['Inter']">{word?.definition }</div>
                 </div>
             </div>
 
             {/* Example */}
-            <div className="self-stretch p-5 bg-gray-200 rounded-[20px] border-l-[3px] border-indigo-500 flex flex-col justify-start items-start gap-5">
-                <div className="self-stretch justify-start text-slate-500 text-base font-medium font-['Inter']">Example</div>
+            <div className="self-stretch p-5 bg-[#E9ECEF] rounded-[20px] border-l-[3px] border-indigo-500 flex flex-col justify-start items-start gap-5">
+                <div className="self-stretch justify-start text-[#4A5568] text-base font-medium font-['Inter']">Example</div>
                 <div className="self-stretch flex flex-col justify-start items-start gap-3.5">
-                    <div className="self-stretch justify-start text-indigo-500 text-base font-normal font-['Inter']">{word?.example || "No Example"}</div>
+                    <div className="self-stretch justify-start text-[#667EEA]  text-base font-normal font-['Inter']">{word?.example || "No Example"}</div>
                 </div>
             </div>
 
@@ -48,7 +51,7 @@ export default function WordDetailCard({word}) {
                 {!showReference ? (
                 // BEFORE CLICK
                 <div className="w-[493px] h-10 p-5 bg-gray-50 rounded-[20px] border-l-[3px] border-indigo-500 inline-flex justify-start items-center gap-7">
-                    <div className="justify-start text-slate-600 text-base font-medium font-['Inter']">Reference</div>
+                    <div className="justify-start text-[#4A5568] text-base font-medium font-['Inter']">Reference</div>
                     <div className="w-1.5 h-4">
                         <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1 1C3.73367 4.12419 5.26633 5.87581 8 9L1 17" stroke="#4A5568" stroke-width="2" stroke-linecap="round"/>
@@ -57,7 +60,7 @@ export default function WordDetailCard({word}) {
                 </div>
                 ) : (
                      // AFTER CLICK
-                    <div className="w-[493px] h-36 p-5 bg-gray-200 rounded-[20px] border-l-[3px] border-indigo-500 inline-flex flex-col justify-center items-start gap-5">
+                    <div className="w-[493px] min-h-36 p-5 bg-[#E9ECEF] rounded-[20px] border-l-[3px] border-indigo-500 inline-flex flex-col justify-center items-start gap-5">
                         <div className="inline-flex justify-start items-center gap-7">
                         <div className="justify-start text-slate-500 text-base font-medium font-['Inter']">Reference</div>
                         <div className="w-5 h-2">
@@ -68,7 +71,7 @@ export default function WordDetailCard({word}) {
                         </div>
                         </div>
                         <div className="w-96 flex flex-col justify-start items-start gap-3.5">
-                        <div className="self-stretch justify-start text-indigo-500 text-base font-normal font-['Inter']">
+                        <div className="self-stretch justify-start text-[#667EEA] text-base font-normal font-['Inter']">
                             {word?.reference ? (() => {
                                 const ref = word.reference.trim();
 
@@ -79,7 +82,7 @@ export default function WordDetailCard({word}) {
                                     href={ref}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-sm break-words w-full underline text-blue-600"
+                                    className="text-sm break-words w-full underline text-[#667EEA]"
                                     onClick={(e) => e.stopPropagation()}
                                     >
                                     {ref}
@@ -97,7 +100,7 @@ export default function WordDetailCard({word}) {
                                     href={link}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-sm break-words w-full text-indigo-500 hover:underline"
+                                    className="text-sm break-words w-full text-[#667EEA] hover:underline"
                                     onClick={(e) => e.stopPropagation()}
                                     >
                                     {text}
@@ -119,7 +122,8 @@ export default function WordDetailCard({word}) {
                     <div className="w-[505px] flex justify-between items-center">
                         <div className="justify-start text-slate-500 text-base font-medium font-['Inter']">Added: {word?.createdAt?.slice(0, 10) || "N/A"}</div>
                     <div className="w-60 flex justify-end items-center gap-2.5">
-                        <div data-property-1="Default" className="h-10 px-2.5 py-5 bg-yellow-400 rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 flex justify-center items-center gap-2.5">
+                        <button onClick={() =>  setShowRequestCard(true)}>
+                        <div data-property-1="Default" className="h-10 px-2.5 py-5 bg-[#FFC107] rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 flex justify-center items-center gap-2.5">
                             <div className="w-4 h-4 relative">
                                 <div className="w-4 h-3 left-[0.13px] top-[2px] absolute">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -130,9 +134,15 @@ export default function WordDetailCard({word}) {
                             </div>
                             <div className="justify-start text-white text-base font-medium font-['Inter']">Request</div>
                         </div>
+                        </button>
                     </div>
                 </div>
             </div>
+            {showRequestCard && (
+            <RequestChangeCard onClose={() => setShowRequestCard(false)} />
+            )}
+
+        </div>
         </div>
     );
 }

@@ -3,10 +3,16 @@ import { useState } from "react";
 
 export default function WordCard({word}){
     const [open, setOpen] = useState(false);
+    const [isFav, setIsFav] = useState(false);
 
     const handleCardClick = (e) => {
         if (e.target.closest(".fav-btn")) return;
         setOpen(true);
+    };
+
+    const toggleFav = (e) => {
+        e.stopPropagation();
+        setIsFav((prev) => !prev);
     };
 
     return (
@@ -14,7 +20,7 @@ export default function WordCard({word}){
             {/*Word Card*/}
             <div 
                 onClick={handleCardClick}
-                className="w-[565px] rounded-[20px] pt-1 bg-gradient-to-r from-purple-800/80 to-indigo-500/80"
+                className="w-[565px] rounded-[20px] pt-1 bg-gradient-to-r to-[#764BA2]/80 from-[#667EEA]/80"
             >
                 <div data-property-1="Default" className="w-[565px] p-9 bg-white rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] flex flex-col justify-start items-start gap-7">
                     <div className="self-stretch inline-flex justify-between items-start"> 
@@ -25,21 +31,23 @@ export default function WordCard({word}){
                         {/* Fav */}
                         <div 
                             data-property-1="fav" 
-                            className="flex justify-start items-center gap-2.5"
-                            onClick={(e)=> {
-                                e.stopPropagation();
-                                console.log("Fav clicked");
-                            }}
+                            className="flex justify-start items-center gap-2.5 cursor-pointer"
+                            onClick={toggleFav}
                         >
                             <div className="w-4 h-4 relative">
-                                <div className="w-4 h-4 left-0 top-0 absolute">
+                                {isFav? (
+                                    <div className="w-4 h-3.5 left-0 top-0 absolute">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8 1.314C12.4384 -3.24799 23.5343 4.7355 8 15C-7.53427 4.7355 3.56164 -3.24799 8 1.314Z" fill="#DC3545"/>
+                                        </svg>
+                                    </div>
+                                ) : (
                                     <div className="w-4 h-3.5 left-0 top-0 absolute">
                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M8 2.74805L7.28325 2.01133C5.5989 0.280067 2.51415 0.877695 1.40036 3.05284C0.876534 4.07583 0.75875 5.55246 1.71429 7.43758C2.63457 9.25313 4.54767 11.4265 8 13.7946C11.4523 11.4265 13.3654 9.25313 14.2857 7.43758C15.2413 5.55246 15.1235 4.07583 14.5996 3.05284C13.4859 0.877695 10.4011 0.280067 8.71675 2.01133L8 2.74805ZM8 15C-7.33313 4.86841 3.27876 -3.04087 7.82432 1.14308C7.88395 1.19797 7.94253 1.25493 8 1.314C8.05747 1.25494 8.11605 1.19797 8.17567 1.14309C12.7212 -3.04088 23.3331 4.8684 8 15Z" fill="#667EEA"/>
                                         </svg>
-
                                     </div>
-                                </div>
+                                )}
                             </div>
                         </div>
                     </div>
