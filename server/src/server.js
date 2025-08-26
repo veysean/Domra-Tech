@@ -12,16 +12,13 @@ import db from './models/index.js';
 import authRoutes from './routes/authRoutes.js'; 
 import userRoutes from './routes/userRoutes.js';
 import wordTranslationRoutes from './routes/wordTranslationRoutes.js'; 
-<<<<<<<<< Temporary merge branch 1
 import passport from './config/passport.config.js';
 import session from 'express-session';
 import favWordRoutes from './routes/favWordRoutes.js';
-=========
 import CategoryRouter from './routes/categoryRoutes.js';
 import correctionRequestRoutes from './routes/correctionRequestRoutes.js';
 //import passport from './config/passport.config.js';
 //import session from 'express-session';
->>>>>>>>> Temporary merge branch 2
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -38,12 +35,9 @@ app.use('/api', wordTranslationRoutes);
 //app.use('/api', favWordRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-<<<<<<<<< Temporary merge branch 1
 
 
-=========
 app.use('/api', wordTranslationRoutes);
->>>>>>>>> Temporary merge branch 2
 const startServer = async () => {
     try {
         await db.sequelize.authenticate();
