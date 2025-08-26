@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function RequestNewWordForm ({ onCancel }) {
+export default function RequestNewWordForm ({ onCancel, user }) {
     const [formData, setFormData] = useState({
         EnglishWord: "",
         KhmerWord: "",
