@@ -21,5 +21,19 @@ export const WordTranslationServices = {
 };
 
 
+//correction request
+export const CorrectionServices = {
+  requestCorrection: (correctionData) => API.post('/correction-requests', correctionData),//create by user
+  getCorrections: () => API.get('/correction-requests'),// get all by admin
+  getCorrectionById: (id) => API.get(`/correction-requests/${id}`),// get by admin
+  updateCorrectionStatus: (id, statusData) => API.patch(`/correction-requests/${id}`, statusData),// update by admin
+  deleteCorrection: (id) => API.delete(`/correction-requests/${id}`),// delete by admin 
+};
+
+//category
+export const CategoryServices = {
+  findAll: () => API.get('/categories'),
+  findById: (id) => API.get(`/categories/${id}`),
+};
 
 export default API;

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { CorrectionServices } from "../../api";
 
-export default function RequestChangingForm({ onCancel }) {
+export default function RequestChangingForm({ onCancel, user }) {
   const [formData, setFormData] = useState({
     EnglishWord: "",
     KhmerWord: "",
@@ -15,9 +16,15 @@ export default function RequestChangingForm({ onCancel }) {
   };
 
   // Handle form submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Submitted:", formData);
+    try {
+      const response = await CorrectionServices.requestChange(formData);
+      console.log("Form Submitted:", response.data);
+      onCancel();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
 
   return (
