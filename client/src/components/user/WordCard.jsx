@@ -24,7 +24,7 @@ export default function WordCard({word}){
             >
                 <div data-property-1="Default" className="w-[565px] p-9 bg-white rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] flex flex-col justify-start items-start gap-7">
                     <div className="self-stretch inline-flex justify-between items-start"> 
-                        <div className="w-80 inline-flex flex-col justify-start items-start gap-3">
+                        <div className="w-full inline-flex flex-col justify-start items-start gap-3">
                             <div className="self-stretch justify-start text-gray-700 text-3xl font-medium font-['Inter']">{word?.EnglishWord || "No Word" }</div>
                             <div className="justify-start text-indigo-500 text-3xl font-normal font-['Inter']">{word?.KhmerWord || ""}</div>
                         </div>

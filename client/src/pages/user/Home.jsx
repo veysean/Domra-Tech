@@ -56,7 +56,7 @@ export default function Home() {
                 // If query is empty, fetch all words
                 try {
                     setIsLoading(true);
-                    const res = await WordTranslationServices.findAll();
+                    const res = await WordTranslationServices.findAll(1, 4);
                     setWords(res.data.words || []);
                 } catch (error) {
                     console.error("Error fetching all words:", error);
@@ -112,7 +112,7 @@ export default function Home() {
                         </div>
                     </div>
                 </Link>
-                <WordList words={words} />
+                <WordList words={words} isHomepage={true}/>
              </div>
         </div>
     );
