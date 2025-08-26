@@ -15,9 +15,11 @@ import wordTranslationRoutes from './routes/wordTranslationRoutes.js';
 import passport from './config/passport.config.js';
 import session from 'express-session';
 import favWordRoutes from './routes/favWordRoutes.js';
-
+import CategoryRouter from './routes/categoryRoutes.js';
+import WordRequestRouter from './routes/wordRequestRoutes.js';
+import correctionRequestRoutes from './routes/correctionRequestRoutes.js';
 const app = express();
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
@@ -29,9 +31,13 @@ app.use('/api/auth', authRoutes);
 app.use('/api', userRoutes); 
 app.use('/api', wordTranslationRoutes);
 app.use('/api', favWordRoutes);
+app.use('/api/correctionRequests', correctionRequestRoutes)
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
+
+app.use('/api/categories', CategoryRouter);
+app.use('/api/wordRequests',WordRequestRouter);
 
 const startServer = async () => {
     try {
