@@ -1,4 +1,10 @@
 import db from "../models/index.js";
+/**
+ * @swagger
+ * tags:
+ *   - name: WordRequest
+ *     description: Endpoints for managing word requests
+ */
 
 /**
  * @swagger
@@ -31,13 +37,10 @@ import db from "../models/index.js";
  *               properties:
  *                 totalItems:
  *                   type: integer
- *                   example: 100
  *                 totalPages:
  *                   type: integer
- *                   example: 10
  *                 currentPage:
  *                   type: integer
- *                   example: 1
  *                 data:
  *                   type: array
  *                   items:
@@ -45,35 +48,26 @@ import db from "../models/index.js";
  *                     properties:
  *                       wordRequestId:
  *                         type: integer
- *                         example: 1
  *                       newEnglishWord:
  *                         type: string
- *                         example: "Algorithm"
  *                       newFrenchWord:
  *                         type: string
- *                         example: "Algorithme"
  *                       newKhmerWord:
  *                         type: string
- *                         example: "អាល់ហ្គូរីតម៍"
  *                       newDefinition:
  *                         type: string
- *                         example: "A step-by-step procedure for solving a problem."
  *                       newExample:
  *                         type: string
- *                         example: "Sorting algorithms like quicksort and mergesort."
  *                       reference:
  *                         type: string
- *                         example: "Wikipedia, CS50"
  *                       userId:
  *                         type: integer
- *                         example: 101
  *                       status:
  *                         type: string
  *                         enum: [pending, accepted, denied, deleted]
- *                         example: "pending"
  *                       check:
  *                         type: boolean
- *                         example: false
+
  *   post:
  *     summary: Submit a new word request
  *     tags: [WordRequest]
@@ -87,7 +81,6 @@ import db from "../models/index.js";
  *             type: object
  *             required:
  *               - newEnglishWord
- *               - userId
  *             properties:
  *               newEnglishWord:
  *                 type: string
@@ -101,20 +94,68 @@ import db from "../models/index.js";
  *                 type: string
  *               reference:
  *                 type: string
- *               userId:
- *                 type: integer
  *               status:
  *                 type: string
  *                 enum: [pending, accepted, denied, deleted]
  *               check:
  *                 type: boolean
+
+ * /wordRequests/{id}:
+ *   get:
+ *     summary: Get a word request by ID
+ *     tags: [WordRequest]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the word request
  *     responses:
- *       201:
- *         description: Word request submitted successfully
+ *       200:
+ *         description: Word request retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 wordRequestId:
+ *                   type: integer
+ *                 newEnglishWord:
+ *                   type: string
+ *                 newFrenchWord:
+ *                   type: string
+ *                 newKhmerWord:
+ *                   type: string
+ *                 newDefinition:
+ *                   type: string
+ *                 newExample:
+ *                   type: string
+ *                 reference:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *                   enum: [pending, accepted, denied, deleted]
+ *                 check:
+ *                   type: boolean
+ *                 User:
+ *                   type: object
+ *                   properties:
+ *                     userId:
+ *                       type: integer
+ *                     firstName:
+ *                       type: string
+ *                     lastName:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *       404:
+ *         description: Word request not found
  *       500:
  *         description: Server error
 
- * /wordRequests/{id}:
  *   put:
  *     summary: Update a word request by ID
  *     tags: [WordRequest]
@@ -189,7 +230,13 @@ export const getAllWordRequests = async (req, res) => {
     const { count, rows } = await db.WordRequest.findAndCountAll({
       limit,
       offset,
-      order: [['wordRequestId', 'DESC']]
+      order: [['wordRequestId', 'DESC']],
+      include: [
+        {
+          model: db.User,
+          attributes: ['userId', 'firstName', 'lastName']
+        }
+      ]
     });
 
     res.status(200).json({
@@ -204,13 +251,39 @@ export const getAllWordRequests = async (req, res) => {
   }
 };
 
+// Get word request by ID
+export const getWordRequestById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const request = await db.WordRequest.findByPk(id, {
+      include: [
+        {
+          model: db.User,
+          attributes: ['userId', 'firstName', 'lastName', 'email']
+        }
+      ]
+    });
+
+    if (!request) {
+      return res.status(404).json({ error: 'Word request not found.' });
+    }
+
+    res.status(200).json(request);
+  } catch (error) {
+    console.error('Error fetching word request by ID:', error);
+    res.status(500).json({ error: 'Failed to fetch word request.' });
+  }
+};
+
+
 
 // Controller for making word requests from both user and admin
 export const createWordRequest = async (req, res) => {
   try {
     const payload = {
       ...req.body,
-      userId: req.body.userId || 1,
+      userId: req.user.userId, // Securely associate with logged-in user
       check: req.body.check ?? false
     };
 
@@ -221,6 +294,7 @@ export const createWordRequest = async (req, res) => {
     res.status(500).json({ error: 'Failed to create word request.' });
   }
 };
+
 
 //COntroller for update the word requests from both user and admin (Transfer it to Translation table)
 export const updateWordRequest = async (req, res) => {
