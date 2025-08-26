@@ -47,7 +47,9 @@ export default function Categories() {
                 ))}
                 </div>
             </div>
+            <div className="flex flex-col items-center gap-5 w-full">
             <WordList />
+            </div>
             </div>
         </motion.div>
     );

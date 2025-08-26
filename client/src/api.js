@@ -17,8 +17,10 @@ export const authServices = {
 
 // word translation services
 export const WordTranslationServices = {
-  findAll: () => API.get('/words'),
-  searchWords: (query) => API.get('/words/search', { params: { q: query } }),
+  findAll: (page = 1, limit = 10) => API.get('/words', {
+    params: { page, limit }
+  }),
+  searchWords: (query, page = 1, limit = 10) => API.get('/words/search', { params: { q: query, page, limit } }),
 };
 
 
