@@ -1,6 +1,6 @@
-{
-    "header" : "Contribute to Domra Tech",
-    "desc" : "Your expertise can help researchers, students, and professionals find the right words. Contribute a new technical term to Domra today",
+{   
+    "contributeHeader" : "Contribute to Domra Tech",
+    "contributeDesc" : "Your expertise can help researchers, students, and professionals find the right words. Contribute a new technical term to Domra today",
     "add" : "Add New Terms",
     "addDes" : "Submit new technical terms with accurate Khmer translations",
     "submitTerm" : "Submit Term",
