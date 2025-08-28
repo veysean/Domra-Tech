@@ -6,13 +6,40 @@ export default function WordCard({word}){
     const [isFav, setIsFav] = useState(false);
 
     const handleCardClick = (e) => {
-        if (e.target.closest(".fav-btn")) return;
+        if (e.target.closest(".fav-btn") || e.target.closest(".reference-btn")) return;
         setOpen(true);
     };
 
     const toggleFav = (e) => {
         e.stopPropagation();
         setIsFav((prev) => !prev);
+    };
+
+    const handleReferenceClick = (e) => {
+        e.stopPropagation();
+        
+        if (word?.reference) {
+            const ref = word.reference.trim();
+            
+            // Check if it's a direct URL
+            if (ref.startsWith("https://") || ref.startsWith("http://")) {
+                window.open(ref, "_blank", "noopener,noreferrer");
+                return;
+            }
+            
+            // Check if it contains a URL that can be extracted
+            const urlMatch = ref.match(/https?:\/\/[^\s]+/);
+            if (urlMatch) {
+                window.open(urlMatch[0], "_blank", "noopener,noreferrer");
+                return;
+            }
+            
+            // If no URL found, open the modal to show the reference text
+            setOpen(true);
+        } else {
+            // If no reference, open the modal
+            setOpen(true);
+        }
     };
 
     return (
@@ -57,12 +84,9 @@ export default function WordCard({word}){
 
                         {/* Reference button */}
                         <div 
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setOpen(true);
-                            }}
+                            onClick={handleReferenceClick}
                             data-property-1="Default" 
-                            className="h-10 px-2.5 py-5 bg-green-600 rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 flex justify-center items-center gap-2.5"
+                            className="h-10 px-2.5 py-5 bg-green-600 rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 flex justify-center items-center gap-2.5 cursor-pointer"
                         >
                             <div className="w-4 h-4 relative">
                                 <div className="w-4 h-3 left-[0.13px] top-[2px] absolute">
