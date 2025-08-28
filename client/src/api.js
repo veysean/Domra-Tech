@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-    baseURL: 'http://localhost:3000/api', //backend URL
+    baseURL: 'http://localhost:4000/api', //backend URL
 });
 
 const token = localStorage.getItem('token');
@@ -29,6 +29,15 @@ export const CorrectionServices = {
   getCorrectionById: (id) => API.get(`/correction-requests/${id}`),// get by admin
   updateCorrectionStatus: (id, statusData) => API.patch(`/correction-requests/${id}`, statusData),// update by admin
   deleteCorrection: (id) => API.delete(`/correction-requests/${id}`),// delete by admin 
+};
+
+//word request 
+export const WordRequestServices = {
+  createWordRequest: (wordRequestData) => API.post('/wordRequests', wordRequestData),
+  getWordRequests: () => API.get('/wordRequests'),
+  getWordRequestById: (id) => API.get(`/wordRequests/${id}`),
+  updateWordRequest: (id, wordRequestData) => API.patch(`/wordRequests/${id}`, wordRequestData),
+  deleteWordRequest: (id) => API.delete(`/wordRequests/${id}`),
 };
 
 //category
