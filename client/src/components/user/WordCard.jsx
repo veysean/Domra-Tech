@@ -84,7 +84,6 @@ export default function WordCard({word}){
                 onClick={() => setOpen(false)} // close when clicking overlay
             >
                 <div
-                className="rounded-2xl p-6 shadow-lg max-w-lg w-full relative"
                 onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
                 >
                 {/* Word Detail Card */}

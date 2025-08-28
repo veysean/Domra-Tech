@@ -85,13 +85,20 @@ export default function Home() {
         //setSearchTrigger(prev => prev + 1); 
     };
 
+    
+    // Handle search input changes (real-time)
+    const handleSearchChange = (searchQuery) => {
+        setQuery(searchQuery);
+    };
+
+
     return (
         <div className="home-page flex flex-col gap-10">
             {/* Hero Section */}
             <HomeHeroSection header={t("header")} desc={t("desc")} />
 
             {/* Category section with See more */}
-            <CategorySearch onSearch={setQuery} onSearchSubmit={handleSearchSubmit}/>
+            <CategorySearch onSearchChange={handleSearchChange} onSearchSubmit={handleSearchSubmit}/>
 
             {/* Loading indicator */}
             {isLoading && <div className="text-center">Loading...</div>}
