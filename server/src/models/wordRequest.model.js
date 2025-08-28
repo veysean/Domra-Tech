@@ -27,7 +27,7 @@ export default (sequelize, DataTypes) => sequelize.define('WordRequest', {
     allowNull: false
   },
   status: {
-    type: DataTypes.ENUM('pending', 'accepted', 'denied')
+    type: DataTypes.ENUM('pending', 'accepted', 'denied', 'deleted')
   }
 }, {
   tableName: 'WordRequest'

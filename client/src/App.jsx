@@ -10,7 +10,9 @@ import WordsPage from './pages/admin/WordTranslation.jsx';
 import SettingsPage from './pages/admin/Settings.jsx';
 import PrivacyPage from './pages/admin/Privacy.jsx';
 import CheckModePage from './pages/admin/CheckMode.jsx';
+import ProfilePage from './pages/admin/Profile.jsx';
 
+import GoogleLoginButton from './component/googleLoginButton';
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -26,11 +28,13 @@ function App() {
           <Route path="settings" element={<SettingsPage />} />
           <Route path="privacy" element={<PrivacyPage />} />
           <Route path="checkmode" element={<CheckModePage />} />
+          <Route path="profile" element={<ProfilePage />} />
         </Route>
         <Route path="/" element={<Navigate to="/admin" replace />} />
         <Route path="*" element={<Navigate to="/admin" replace />} />
       </Routes>
     </Router>
+    
   );
 }
 

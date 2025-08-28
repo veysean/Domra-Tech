@@ -2,11 +2,13 @@
 import React, { useState } from "react";
 import { BsGlobe } from "react-icons/bs";
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from "react-router-dom";
 
 const Header = ({ i18n }) => {
   const [langOpen, setLangOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const { t } = useTranslation('adSidebar');
+  const navigate = useNavigate();
 
   const admin = { name: "នីតា"};
 
@@ -44,14 +46,13 @@ const Header = ({ i18n }) => {
         <div className="relative group">
           <button
             className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 transition"
-            // onClick={() => setProfileOpen((v) => !v)}
+            onClick={() => navigate("profile")}
           >
             <div className="w-10 h-10 bg-violet-500 rounded-full flex items-center justify-center">
               <span className="text-white font-bold text-sm">
                 {admin.name.charAt(0)}
               </span>
             </div>
-            
           </button>
           <div className="absolute right-0 mt-2 w-40 rounded-lg bg-white border border-gray-200 shadow-lg z-30 
                           opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transform translate-y-2 
