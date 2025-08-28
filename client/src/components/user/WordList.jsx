@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { WordTranslationServices } from "../../api";
 import WordCard from "./WordCard";
 
-
 export default function WordList({ words: propWords, isHomepage = false, searchQuery = "" }) {
     const [words, setWords] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -11,7 +10,6 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
     const limit = 10;
 
     useEffect(() => {
-        // If words are passed as props, use them
         if (propWords && propWords.length > 0) {
             setWords(propWords);
             setTotalPages(Math.ceil(propWords.length / limit));
@@ -35,7 +33,7 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
                        
                         setWords(paginatedWords);
                         setTotalPages(Math.ceil(res.data.length / limit));
-                    }else if (res.data && Array.isArray(res.data)) {
+                    } else if (res.data && Array.isArray(res.data.words)) {
                         const startIndex = (currentPage - 1) * limit;
                         const endIndex = startIndex + limit;
                         const paginatedWords = res.data.words.slice(startIndex, endIndex);
@@ -47,7 +45,6 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
                         setTotalPages(1);
                     }
                 } else {
-                    // If no search query, fetch all words with pagination
                     res = await WordTranslationServices.findAll();
                     setWords(res.data.words || []);
                     setTotalPages(Math.ceil((res.data.words || []).length / limit));
@@ -82,6 +79,58 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
 
     const displayedWords = getDisplayedWords();
 
+    // Generate page numbers for pagination with ellipsis
+    const getPageNumbers = () => {
+        const pages = [];
+        const maxVisiblePages = 5;
+        
+        if (totalPages <= maxVisiblePages) {
+            // Show all pages if total pages is less than or equal to max visible
+            for (let i = 1; i <= totalPages; i++) {
+                pages.push(i);
+            }
+        } else {
+            // Always include first page
+            pages.push(1);
+            
+            // Calculate start and end of visible page range
+            let startPage = Math.max(2, currentPage - 1);
+            let endPage = Math.min(totalPages - 1, currentPage + 1);
+            
+            // Adjust if we're at the beginning
+            if (currentPage <= 3) {
+                endPage = 4;
+            }
+            
+            // Adjust if we're at the end
+            if (currentPage >= totalPages - 2) {
+                startPage = totalPages - 3;
+            }
+            
+            // Add ellipsis after first page if needed
+            if (startPage > 2) {
+                pages.push('...');
+            }
+            
+            // Add middle pages
+            for (let i = startPage; i <= endPage; i++) {
+                if (i > 1 && i < totalPages) {
+                    pages.push(i);
+                }
+            }
+            
+            // Add ellipsis before last page if needed
+            if (endPage < totalPages - 1) {
+                pages.push('...');
+            }
+            
+            // Always include last page
+            pages.push(totalPages);
+        }
+        
+        return pages;
+    };
+
     if (loading) {
         return <div className="text-center py-10">Loading words...</div>;
     }
@@ -90,7 +139,9 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
         return <div className="text-center py-10">No words found</div>;
     }
 
-     return (
+    const pageNumbers = getPageNumbers();
+
+    return (
         <div className="word-list-container">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 justify-center items-start pb-10">
                 {displayedWords.map((word) => (
@@ -98,36 +149,45 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
                 ))}
             </div>
             
-            {/* Show pagination only if not on homepage and multiple pages exist */}
             {totalPages > 1 && (
-                <div className="pagination-controls flex justify-center items-center space-x-2 mt-8">
+                <div className="pagination-controls flex justify-center items-center space-x-2 mt-5 pb-[20px]">
+                    
+                    {/* Previous Button */}
                     <button 
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
-                        className="px-4 py-2 bg-[#667EEA] text-white disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center rounded-[12px]"
+                        className="px-3 py-2 bg-[#667EEA] text-white disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center rounded-md"
                     >
-<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M18.75 23.9925V6.00753L8.47311 15L18.75 23.9925ZM17.5144 25.4044L7.23936 16.4119C7.03796 16.2359 6.87655 16.0189 6.76596 15.7754C6.65536 15.5318 6.59814 15.2675 6.59814 15C6.59814 14.7326 6.65536 14.4682 6.76596 14.2247C6.87655 13.9812 7.03796 13.7641 7.23936 13.5882L17.5144 4.59565C17.7855 4.35811 18.1193 4.20375 18.4759 4.15106C18.8325 4.09837 19.1967 4.14958 19.5249 4.29856C19.8532 4.44754 20.1315 4.68797 20.3266 4.99107C20.5217 5.29416 20.6253 5.64707 20.625 6.00753V23.9925C20.6253 24.353 20.5217 24.7059 20.3266 25.009C20.1315 25.3121 19.8532 25.5525 19.5249 25.7015C19.1967 25.8505 18.8325 25.9017 18.4759 25.849C18.1193 25.7963 17.7855 25.6419 17.5144 25.4044Z" fill="white"/>
-</svg>
-
-
-
                         Prev
                     </button>
                     
-                    <span className="px-4 py-2">
-                        Page {currentPage} of {totalPages}
-                    </span>
+                    {/* Page Numbers */}
+                    <div className="flex space-x-1 gap-[5px]">
+                        {pageNumbers.map((page, index) => (
+                            page === '...' ? (
+                                <span key={`ellipsis-${index}`} className="px-3 py-2">...</span>
+                            ) : (
+                                <button
+                                    key={page}
+                                    onClick={() => handlePageChange(page)}
+                                    className={`px-3 py-2 rounded-md ${
+                                        currentPage === page
+                                            ? 'bg-[#667EEA] text-white'
+                                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                    }`}
+                                >
+                                    {page}
+                                </button>
+                            )
+                        ))}
+                    </div>
                     
+                    {/* Next Button */}
                     <button 
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages}
-                        className="px-4 py-2 bg-[#667EEA] text-white disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center rounded-[12px]"
+                        className="px-3 py-2 bg-[#667EEA] text-white disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center rounded-md"
                     >
-                        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M11.25 23.9925V6.00752L21.5269 15L11.25 23.9925ZM12.4856 25.4044L22.7606 16.4119C22.962 16.2359 23.1234 16.0189 23.234 15.7753C23.3446 15.5318 23.4018 15.2675 23.4018 15C23.4018 14.7326 23.3446 14.4682 23.234 14.2247C23.1234 13.9812 22.962 13.7641 22.7606 13.5881L12.4875 4.59565C11.2706 3.5344 9.375 4.3969 9.375 6.00752V23.9925C9.37469 24.353 9.47829 24.7059 9.67339 25.009C9.86849 25.3121 10.1468 25.5525 10.475 25.7015C10.8033 25.8505 11.1675 25.9017 11.5241 25.849C11.8807 25.7963 12.2145 25.6419 12.4856 25.4044Z" fill="white"/>
-</svg>
-
                         Next
                     </button>
                 </div>
