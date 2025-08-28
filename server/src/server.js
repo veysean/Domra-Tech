@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config({ path: '../.env' }); 
 
 console.log("Attempting to run server...");
-
+import cors from 'cors';
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocs from './config/swagger.js'; 
@@ -22,6 +22,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(cors());
 
 app.use(session({ secret: 'some_secret_key', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
