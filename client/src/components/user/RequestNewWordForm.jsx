@@ -1,25 +1,43 @@
 import React, { useState } from "react";
-
+import {WordRequestServices} from '../../api';
 export default function RequestNewWordForm ({ onCancel, user }) {
     const [formData, setFormData] = useState({
-        EnglishWord: "",
-        KhmerWord: "",
-        FrenchWord: "",
-        Example: "",
-        Definition: "",
-        WordReference: "",
+        newEnglishWord: "",
+        newFrenchWord: "",
+        newKhmerWord: "",
+        newDefinition: "",
+        newExample: "",
+        reference: "",
       });
   // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
-  // Handle form submit
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form Submitted:", formData);
+  //handle clear form
+  const handleClear = () => {
+    setFormData({
+      newEnglishWord: "",
+      newFrenchWord: "",
+      newKhmerWord: "",
+      newDefinition: "",
+      newExample: "",
+      reference: "",
+    });
   };
+  // Handle form submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await WordRequestServices.createWordRequest(formData);
+      console.log("Word request submitted:", response.data);
+      // Reset form or provide feedback to user
+      handleClear();
+    } catch (error) {
+      console.error("Error submitting word request:", error);
+    }
+  };
+
 
 return (
     <div className="w-[657px] p-7 bg-gradient-to-l from-indigo-500/50 to-purple-800/50 rounded-[30px] shadow-lg inline-flex flex-col justify-center items-center gap-7">
@@ -38,8 +56,8 @@ return (
           </label>
           <input
             type="text"
-            name="EnglishWord"
-            value={formData.EnglishWord}
+            name="newEnglishWord"
+            value={formData.newEnglishWord}
             onChange={handleChange}
             placeholder="Enter New English word"
             className="self-stretch h-10 px-3 rounded-xl outline-1 outline-gray-300 text-gray-500 text-sm font-['Inter'] hover:outline-indigo-500"
@@ -53,8 +71,8 @@ return (
           </label>
           <input
             type="text"
-            name="KhmerWord"
-            value={formData.KhmerWord}
+            name="newKhmerWord"
+            value={formData.newKhmerWord}
             onChange={handleChange}
             placeholder="Enter New Khmer word"
             className="self-stretch h-10 px-3 rounded-xl outline-1 outline-gray-300 text-gray-500 text-sm font-['Inter'] hover:outline-indigo-500"
@@ -68,8 +86,8 @@ return (
           </label>
           <input
             type="text"
-            name="FrenchWord"
-            value={formData.FrenchWord}
+            name="newFrenchWord"
+            value={formData.newFrenchWord}
             onChange={handleChange}
             placeholder="Enter New French word"
             className="self-stretch h-10 px-3 rounded-xl outline-1 outline-gray-300 text-gray-500 text-sm font-['Inter'] hover:outline-indigo-500"
@@ -83,8 +101,8 @@ return (
           </label>
           <input
             type="text"
-            name="Example"
-            value={formData.Example}
+            name="newExample"
+            value={formData.newExample}
             onChange={handleChange}
             placeholder="Enter New word example"
             className="self-stretch h-10 px-3 rounded-xl outline-1 outline-gray-300 text-gray-500 text-sm font-['Inter'] hover:outline-indigo-500"
@@ -98,8 +116,8 @@ return (
           </label>
           <input
             type="text"
-            name="WordDefinition"
-            value={formData.Definition}
+            name="newDefinition"
+            value={formData.newDefinition}
             onChange={handleChange}
             placeholder="Enter New word definition"
             className="self-stretch h-10 px-3 rounded-xl outline-1 outline-gray-300 text-gray-500 text-sm font-['Inter'] hover:outline-indigo-500"
@@ -112,8 +130,8 @@ return (
           </label>
           <input
             type="text"
-            name="WordReference"
-            value={formData.WordReference}
+            name="reference"
+            value={formData.reference}
             onChange={handleChange}
             placeholder="Enter New word reference"
             className="self-stretch h-10 px-3 rounded-xl outline-1 outline-gray-300 text-gray-500 text-sm font-['Inter'] hover:outline-indigo-500"
@@ -126,14 +144,7 @@ return (
             type="button"
             className="w-24 h-10 rounded-[20px] bg-gray-500 text-white text-base font-medium font-['Inter'] hover:bg-gray-300"
             onClick={() =>{
-              setFormData({
-                EnglishWord: "",
-                KhmerWord: "",
-                FrenchWord: "",
-                Example: "",
-                Definition: "",
-                WordReference: "",
-              });
+              handleClear();
               onCancel();
             }}
           >

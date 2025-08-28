@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import API from "../../api";
@@ -11,7 +11,7 @@ export default function NavBar() {
     const { auth, logout } = useContext(AuthContext);
     const [open, setOpen] = useState(false);
     const [language, setLanguage] = useState(i18n.language === "kh" ? "KH" : "ENG");
-    const [activeMenu, setActiveMenu] = useState("Home");
+    const [activeMenu, setActiveMenu] = useState(true);
     const [showProfile, setShowProfile] = useState(false);
     const [userData, setUserData] = useState(null);
 
@@ -64,18 +64,17 @@ export default function NavBar() {
                     {/* Nav Links */}
                     <div className="ml-50 flex gap-10 w-auto">
                         {navItems.map((item) => (
-                            <Link
+                            <NavLink
                                 key={item.label}
                                 to={item.path}
-                                className={`h-[28px] text-[#667EEA] text-[20px] font-inter cursor-pointer ${
-                                activeMenu === item.label
-                                    ? "underline underline-offset-4 decoration-[#667EEA]"
-                                    : ""
-                                }`}
-                                onClick={() => setActiveMenu(item.label)}
-                            >
+                                className={({ isActive }) =>
+                                    `h-[28px] text-[#667EEA] text-[20px] font-inter cursor-pointer ${
+                                    isActive ? "underline underline-offset-4 decoration-[#667EEA]" : ""
+                                    }`
+                                }
+                                >
                                 {item.label}
-                            </Link>
+                            </NavLink>
                         ))}
                     </div>
 
