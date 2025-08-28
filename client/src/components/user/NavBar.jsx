@@ -28,7 +28,7 @@ export default function NavBar() {
 
     const navItems = [
         { label: t("home"), path: "/" },
-        { label: t("categories"), path: "/categories" },
+        { label: t("Categories"), path: "/categories" },
         { label: t("contributeTerm"), path: "/contribute-term" },
         { label: t("aboutUs"), path: "/about-us" }
     ];
