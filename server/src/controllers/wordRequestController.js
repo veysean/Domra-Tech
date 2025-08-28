@@ -99,7 +99,17 @@ import db from "../models/index.js";
  *                 enum: [pending, accepted, denied, deleted]
  *               check:
  *                 type: boolean
+ *     responses:
+ *       201:
+ *         description: Word request created successfully
+ *       401:
+ *         description: Unauthorized. Login required.
+ *       500:
+ *         description: Server error
+ */
 
+/**
+ * @swagger
  * /wordRequests/{id}:
  *   get:
  *     summary: Get a word request by ID
@@ -220,14 +230,19 @@ import db from "../models/index.js";
  */
 
 
-// Controller to get all word requests from user
 export const getAllWordRequests = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
 
+    // Apply filter: if not admin, only fetch user's own requests
+    const whereCondition = req.user.role === 'admin'
+      ? {} // no filter for admin
+      : { userId: req.user.userId }; // filter for regular user
+
     const { count, rows } = await db.WordRequest.findAndCountAll({
+      where: whereCondition,
       limit,
       offset,
       order: [['wordRequestId', 'DESC']],
@@ -250,6 +265,7 @@ export const getAllWordRequests = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch word requests.' });
   }
 };
+
 
 // Get word request by ID
 export const getWordRequestById = async (req, res) => {
@@ -283,15 +299,15 @@ export const createWordRequest = async (req, res) => {
   try {
     const payload = {
       ...req.body,
-      userId: req.user.userId, // Securely associate with logged-in user
+      userId: req.user.userId,
       check: req.body.check ?? false
     };
 
     const newRequest = await db.WordRequest.create(payload);
     res.status(201).json(newRequest);
   } catch (error) {
-    console.error('Error creating word request:', error);
-    res.status(500).json({ error: 'Failed to create word request.' });
+    console.error('Error creating word request:', error.message);
+    res.status(500).json({ error: error.message });
   }
 };
 
