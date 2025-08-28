@@ -7,16 +7,16 @@ import {
     getWordRequestById,
 }
 from "../controllers/wordRequestController.js"
-//import { verifyAuth, checkAdminRole } from '../middleware/authMiddleware.js';
+import authMiddleware from '../middleware/authMiddleware.js';
 
+const { verifyAuth, checkAdminRole } = authMiddleware;
 
 const WordRequestRouter = express.Router();
-//CategoryRouter.use(authenticateToken);
 
-WordRequestRouter.get('/', getAllWordRequests);
-WordRequestRouter.get('/:id', getWordRequestById);
-WordRequestRouter.post('/', createWordRequest);
-WordRequestRouter.put('/:id', updateWordRequest);
-WordRequestRouter.delete('/:id', deleteWordRequest);
+WordRequestRouter.get('/', verifyAuth, getAllWordRequests);
+WordRequestRouter.get('/:id', verifyAuth, getWordRequestById);
+WordRequestRouter.post('/', verifyAuth, createWordRequest);
+WordRequestRouter.put('/:id', verifyAuth, updateWordRequest);
+WordRequestRouter.delete('/:id', verifyAuth, deleteWordRequest);
 
 export default WordRequestRouter;
