@@ -22,6 +22,7 @@ export const WordTranslationServices = {
   }),
   searchWords: (query, page = 1, limit = 10) => API.get('/words/search', { params: { q: query, page, limit } }),
 };
+const res = await WordTranslationServices.findAll(1, 1000); 
 
 
 //correction request
