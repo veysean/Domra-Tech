@@ -8,15 +8,21 @@
 
 import db from '../models/index.js';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto'; 
+import bcrypt from 'bcryptjs';
+import emailService from '../services/emailService.js';
+
 
 const { User } = db;
 
-
+// handles both traditional and third-party registration
+// handles both traditional and third-party registration
 /**
  * @swagger
  * /auth/register:
  *   post:
  *     summary: Register a new user (traditional or Google)
+ *     description: Creates a new user account using either traditional email/password or Google ID. Sends a verification email upon successful registration. No token is issued until the email is verified.
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -48,7 +54,7 @@ const { User } = db;
  *                 example: google-oauth2|1234567890
  *     responses:
  *       201:
- *         description: User registered successfully
+ *         description: User registered successfully. Verification email sent.
  *         content:
  *           application/json:
  *             schema:
@@ -56,37 +62,39 @@ const { User } = db;
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User registered successfully!
- *                 user:
- *                   type: object
- *                   properties:
- *                     userId:
- *                       type: integer
- *                       example: 1
- *                     firstName:
- *                       type: string
- *                       example: Alice
- *                     lastName:
- *                       type: string
- *                       example: Smith
- *                     email:
- *                       type: string
- *                       example: alice@example.com
- *                     role:
- *                       type: string
- *                       example: user
- *                 token:
- *                   type: string
- *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                   example: User registered successfully. Please check your email to verify your account.
  *       400:
  *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Validation failed.
  *       409:
  *         description: User with this email already exists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User with this email already exists.
  *       500:
  *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Failed to register user.
  */
 
-// This function now handles both traditional and third-party registration.
 const register = async (req, res) => {
   try {
     const { firstName, lastName, email, password, googleId } = req.body;
@@ -96,39 +104,28 @@ const register = async (req, res) => {
       return res.status(409).json({ message: 'User with this email already exists.' });
     }
 
-    // Prepare user data for creation
+    const verificationToken = crypto.randomBytes(32).toString('hex');
     const userData = {
       firstName,
       lastName,
       email,
       role: 'user',
       googleId: googleId || null,
+      emailVerificationToken: verificationToken,
+      emailVerificationExpires: new Date(Date.now() + 3600000), // 1 hour
+      status: 'unverified',
     };
 
-    // Conditionally add password for traditional registration
     if (password) {
       userData.password = password;
     }
 
     const newUser = await User.create(userData);
+    
+    await emailService.sendVerificationEmail(newUser.email, verificationToken);
 
-    // --- New: Generate a JWT for the new user upon successful registration ---
-    const token = jwt.sign(
-      { userId: newUser.userId, role: newUser.role },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' } // Token expires in 1 hour
-    );
-
-    const userResponse = {
-      userId: newUser.userId,
-      firstName: newUser.firstName,
-      lastName: newUser.lastName,
-      email: newUser.email,
-      role: newUser.role,
-    };
-
-    // Return the token along with the user response
-    return res.status(201).json({ message: 'User registered successfully!', user: userResponse, token });
+    // No JWT is generated here. The user must verify their email first.
+    return res.status(201).json({ message: 'User registered successfully. Please check your email to verify your account.' });
 
   } catch (error) {
     console.error('Registration error:', error);
@@ -136,7 +133,97 @@ const register = async (req, res) => {
   }
 };
 
+// function to verifies the email token
+/**
+ * @swagger
+ * /verify-email:
+ *   get:
+ *     summary: Verify user's email using a token
+ *     description: Verifies a user's email address using a token sent via email. If the token is valid and not expired, the user's status is updated to "verified" and a JWT is returned.
+ *     tags:
+ *       - Auth
+ *     parameters:
+ *       - in: query
+ *         name: token
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The email verification token sent to the user's email.
+ *     responses:
+ *       200:
+ *         description: Email verified successfully and JWT returned.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Email verified successfully. You are now logged in.
+ *                 token:
+ *                   type: string
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *       400:
+ *         description: Verification token is invalid or has expired.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Verification token is invalid or has expired.
+ *       500:
+ *         description: Server error during email verification.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Failed to verify email.
+ */
 
+const verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.query;
+
+    const user = await User.findOne({
+      where: {
+        emailVerificationToken: token,
+        emailVerificationExpires: { [Op.gt]: Date.now() }
+      }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Verification token is invalid or has expired.' });
+    }
+
+    user.status = 'verified';
+    user.emailVerificationToken = null; 
+    user.emailVerificationExpires = null;
+    await user.save();
+
+    // Generate a JWT for the now-verified user
+    const jwtToken = jwt.sign(
+      { userId: user.userId, role: user.role, status: user.status },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    return res.status(200).json({
+      message: 'Email verified successfully. You are now logged in.',
+      token: jwtToken
+    });
+
+  } catch (error) {
+    console.error('Email verification error:', error);
+    return res.status(500).json({ message: 'Failed to verify email.' });
+  }
+};
+
+// handles both traditional and third-party login
 /**
  * @swagger
  * /auth/login:
@@ -191,9 +278,6 @@ const register = async (req, res) => {
  *                     role:
  *                       type: string
  *                       example: user
- *                 token:
- *                   type: string
- *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
  *       401:
  *         description: Invalid credentials
  *       404:
@@ -202,7 +286,6 @@ const register = async (req, res) => {
  *         description: Server error
  */
 
-// This function now handles both traditional and third-party login.
 const login = async (req, res) => {
   try {
     const { email, password, googleId } = req.body;
@@ -224,7 +307,6 @@ const login = async (req, res) => {
     else if (googleId && user.googleId === googleId) {
       // User is authenticated, proceed
     }
-    // No credentials provided or mismatch
     else {
       return res.status(401).json({ message: 'Invalid credentials.' });
     }
@@ -252,8 +334,183 @@ const login = async (req, res) => {
   }
 };
 
+// forget password 
+/**
+ * @swagger
+ * /auth/forgot-password:
+ *   post:
+ *     summary: Initiates password reset process for a user.
+ *     description: Sends a password reset link to the user's email if the email exists in the system.
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: user@example.com
+ *     responses:
+ *       200:
+ *         description: Password reset link sent successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Password reset link sent to your email.
+ *       404:
+ *         description: User with the provided email does not exist.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User with this email does not exist.
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Failed to send password reset link.
+ */
+const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ where: { email } });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User with this email does not exist.' });
+        }
+
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        user.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+        user.passwordResetExpires = Date.now() + 900000; // 15 minutes
+
+        await user.save();
+
+        const resetURL = `http://localhost:3000/reset-password/${resetToken}`;
+        
+        await sendPasswordResetEmail(user.email, resetURL);
+
+        return res.status(200).json({ message: 'Password reset link sent to your email.' });
+
+    } catch (error) {
+        console.error('Forgot password error:', error);
+        return res.status(500).json({ message: 'Failed to send password reset link.' });
+    }
+};
+
+// reset password
+/**
+ * @swagger
+ * /auth/reset-password:
+ *   post:
+ *     summary: Resets the user's password using a valid reset token.
+ *     description: Validates the reset token and updates the user's password if the token is valid and not expired.
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - token
+ *               - password
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 example: 9f8d7c6b5a4e3d2c1b0a
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: NewSecurePassword123!
+ *     responses:
+ *       200:
+ *         description: Password has been reset successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Password has been reset successfully.
+ *       400:
+ *         description: Token is invalid or has expired.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Token is invalid or has expired.
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Failed to reset password.
+ */
+
+const resetPassword = async (req, res) => {
+    try {
+        const { token, password } = req.body;
+        
+        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+        const user = await User.findOne({
+            where: {
+                passwordResetToken: hashedToken,
+                passwordResetExpires: { [db.sequelize.Op.gt]: Date.now() }
+            }
+        });
+
+        if (!user) {
+            return res.status(400).json({ message: 'Token is invalid or has expired.' });
+        }
+
+        // Hash the new password and update the user
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(password, salt);
+        user.passwordResetToken = null;
+        user.passwordResetExpires = null;
+        await user.save();
+        
+        return res.status(200).json({ message: 'Password has been reset successfully.' });
+
+    } catch (error) {
+        console.error('Reset password error:', error);
+        return res.status(500).json({ message: 'Failed to reset password.' });
+    }
+};
+
 
 export default {
   register,
   login,
+  verifyEmail,
+  forgotPassword,
+  resetPassword
 };

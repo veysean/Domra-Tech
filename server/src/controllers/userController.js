@@ -180,14 +180,30 @@ const getProfile = async (req, res) => {
  *                   type: string
  *                   example: Profile updated successfully!
  *                 user:
- *                   $ref: '#/components/schemas/User'
- *       401:
- *         description: Unauthorized - missing or invalid token
- *       404:
- *         description: User not found
- *       500:
- *         description: Server error
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     firstName:
+ *                       type: string
+ *                       example: Alice
+ *                     lastName:
+ *                       type: string
+ *                       example: Smith
+ *                     email:
+ *                       type: string
+ *                       example: alice@example.com
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2023-01-01T00:00:00Z
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2023-01-02T00:00:00Z
  */
+
 
 const updateProfile = async (req, res) => {
   try {
