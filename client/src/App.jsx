@@ -17,6 +17,7 @@ import SettingsPage from './pages/admin/Settings.jsx';
 import PrivacyPage from './pages/admin/Privacy.jsx';
 import CheckModePage from './pages/admin/CheckMode.jsx';
 import ProfilePage from './pages/admin/Profile.jsx';
+import AdminLayout from "./layouts/AdminLayout";
 
 import GoogleLoginButton from './component/googleLoginButton';
 import React from 'react';
@@ -74,7 +75,9 @@ function AppRoutes() {
         {/* <Route
           path="/admin"
           element={
-              <AdminDashboard />
+              <AdminLayout>
+                <AdminLogin />
+              </AdminLayout>
           }
         /> */}
 
@@ -82,39 +85,73 @@ function AppRoutes() {
         <Route
           path="/admin/dashboard"
           element={
-              <AdminDashboard />     
+              <AdminLayout>
+                <OverviewPage />
+              </AdminLayout>     
           }
         />
 
         <Route
           path="/admin/users"
           element={
-              <UsersPage />
+              <AdminLayout>
+                <UsersPage />
+              </AdminLayout>
           }
         />
 
         <Route
           path="/admin/requests"
           element={
-              <WordRequestPage />
+              <AdminLayout>
+                <WordRequestPage />
+              </AdminLayout>
           }
         />
 
         <Route
           path="/admin/words"
           element={
-              <WordTranslationPage />
+              <AdminLayout>
+                <WordTranslationPage />
+              </AdminLayout>
           }
-        />
-
-        <Route>
-          <Route path="/admin/dashboard" element={<AdminDashboard/>}>
-          <Route index element={<OverviewPage/>}></Route>
-          <Route path="/admin/dashboard/words" element={<WordTranslationPage/>}></Route>
-          
-          </Route>
+        /> 
+        <Route path="/admin" element={<AdminDashboard />}>
+          <Route
+            index
+            element={
+              <OverviewPage />
+            }
+          />
+          <Route
+            path="requests"
+            element={
+              <WordRequestPage />
+            }
+          />
+          <Route
+            path="users"
+            element={
+              <UsersPage />
+            }
+          />
+          <Route
+            path="dashboard"
+            element={
+              <OverviewPage />
+            }
+          />
+          <Route
+            path="words"
+            element={
+              <WordTranslationPage />
+            }
+          />
         </Route>
+
       </Routes>
+        
     </>
   );
 }
