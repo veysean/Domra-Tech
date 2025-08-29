@@ -41,6 +41,7 @@ export default function NavBar() {
             headers: { Authorization: `Bearer ${auth.token}` }, 
             });
             setUserData(response.data);
+            console.log("Fetched user data:", response.data);
         } catch (error) {
             console.error("Error fetching user data:", error);
         }
