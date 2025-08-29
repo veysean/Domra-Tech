@@ -1,148 +1,148 @@
 import { useState } from "react";
-import RequestChangeCard from "./RequestChangeCard";
 
-export default function WordDetailCard({word}) {
-    const [showReference, setShowReference] = useState(false);
-    const [showRequestCard, setShowRequestCard] = useState(false);
 
-    return (
-        <div className="w-[565px] flex justify-center items-start max-h-[100vh] overflow-y-auto scrollbar-hide rounded-[30px] pt-[5px] bg-gradient-to-r to-[#764BA2] from-[#667EEA]">
-        <div className="w-[565px] p-7 bg-white rounded-[30px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] inline-flex flex-col justify-center items-center gap-7 overflow-y-auto">
-            <div className="self-stretch inline-flex justify-between items-start">
-                <div className="w-80 inline-flex flex-col justify-start items-start gap-3">
-                    <div className="self-stretch justify-start text-[#2D3748] text-3xl font-medium font-['Inter']">{word?.EnglishWord}</div>
-                    <div className="justify-start text-[#667EEA] text-3xl font-normal font-['Inter']">{word?.KhmerWord}</div>
-                    <div className="justify-start text-[#667EEA] text-3xl font-normal font-['Inter']"> {word?.FrenchWord}</div>
-                </div>
-                <div data-property-1="fav" className="flex justify-start items-center gap-2.5">
-                    <div className="w-4 h-4 relative">
-                        <div className="w-4 h-4 left-0 top-0 absolute">
-                            <div className="w-4 h-3.5 left-0 top-0 absolute">
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M8 2.74805L7.28325 2.01133C5.5989 0.280067 2.51415 0.877695 1.40036 3.05284C0.876534 4.07583 0.75875 5.55246 1.71429 7.43758C2.63457 9.25313 4.54767 11.4265 8 13.7946C11.4523 11.4265 13.3654 9.25313 14.2857 7.43758C15.2413 5.55246 15.1235 4.07583 14.5996 3.05284C13.4859 0.877695 10.4011 0.280067 8.71675 2.01133L8 2.74805ZM8 15C-7.33313 4.86841 3.27876 -3.04087 7.82432 1.14308C7.88395 1.19797 7.94253 1.25493 8 1.314C8.05747 1.25494 8.11605 1.19797 8.17567 1.14309C12.7212 -3.04088 23.3331 4.8684 8 15Z" fill="#667EEA"/>
-                                </svg>
-                            </div>
-                        <div/>
-                    </div>
-                    </div>
-                </div>
-            </div>
-            {/* Definition */}
-            <div className="self-stretch p-5 bg-[#E9ECEF] rounded-[20px] border-l-[3px] border-indigo-500 flex flex-col justify-start items-start gap-5">
-                <div className="self-stretch justify-start text-[#4A5568] text-base font-medium font-['Inter']">Definition</div>
-                <div className="self-stretch flex flex-col justify-start items-start gap-3.5">
-                    <div className="self-stretch justify-start text-[#667EEA]  text-base font-normal font-['Inter']">{word?.definition }</div>
-                </div>
-            </div>
-
-            {/* Example */}
-            <div className="self-stretch p-5 bg-[#E9ECEF] rounded-[20px] border-l-[3px] border-indigo-500 flex flex-col justify-start items-start gap-5">
-                <div className="self-stretch justify-start text-[#4A5568] text-base font-medium font-['Inter']">Example</div>
-                <div className="self-stretch flex flex-col justify-start items-start gap-3.5">
-                    <div className="self-stretch justify-start text-[#667EEA]  text-base font-normal font-['Inter']">{word?.example || "No Example"}</div>
-                </div>
-            </div>
-
-            {/* Reference */}
-            <div
-                onClick={() => setShowReference(!showReference)}
-                className="cursor-pointer"
-            >
-                {!showReference ? (
-                // BEFORE CLICK
-                <div className="w-[493px] h-10 p-5 bg-gray-50 rounded-[20px] border-l-[3px] border-indigo-500 inline-flex justify-start items-center gap-7">
-                    <div className="justify-start text-[#4A5568] text-base font-medium font-['Inter']">Reference</div>
-                    <div className="w-1.5 h-4">
-                        <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 1C3.73367 4.12419 5.26633 5.87581 8 9L1 17" stroke="#4A5568" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </div>
-                </div>
-                ) : (
-                     // AFTER CLICK
-                    <div className="w-[493px] min-h-36 p-5 bg-[#E9ECEF] rounded-[20px] border-l-[3px] border-indigo-500 inline-flex flex-col justify-center items-start gap-5">
-                        <div className="inline-flex justify-start items-center gap-7">
-                        <div className="justify-start text-slate-500 text-base font-medium font-['Inter']">Reference</div>
-                        <div className="w-5 h-2">
-                            <svg width="21" height="11" viewBox="0 0 21 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 1.5C4.02687 4.29641 7.14268 6.70359 10.1695 9.5L20.0002 2" stroke="#718096" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-
-                        </div>
-                        </div>
-                        <div className="w-96 flex flex-col justify-start items-start gap-3.5">
-                        <div className="self-stretch justify-start text-[#667EEA] text-base font-normal font-['Inter']">
-                            {word?.reference ? (() => {
-                                const ref = word.reference.trim();
-
-                                if (ref.startsWith("https")) {
-                                // Case 1: direct link (Facebook, etc.)
-                                return (
-                                    <a
-                                    href={ref}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-sm break-words w-full underline text-[#667EEA]"
-                                    onClick={(e) => e.stopPropagation()}
-                                    >
-                                    {ref}
-                                    </a>
-                                );
-                                }
-
-                                // Case 2: APA style with a link at the end
-                                const parts = ref.split("https");
-                                if (parts.length > 1) {
-                                const text = parts[0].trim();
-                                const link = "https" + parts[1].trim();
-                                return (
-                                    <a
-                                    href={link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-sm break-words w-full text-[#667EEA] hover:underline"
-                                    onClick={(e) => e.stopPropagation()}
-                                    >
-                                    {text}
-                                    </a>
-                                );
-                                }
-
-                                // fallback
-                                return <p className="text-sm text-gray-500">{ref}</p>;
-                            })() : (
-                                <p className="text-sm text-gray-500">No Reference</p>
-                            )}
-                        </div>
-                        </div>
-                    </div>
-                )}
-                </div>
-                <div className="self-stretch pt-7 border-t border-slate-200 inline-flex justify-between items-start">
-                    <div className="w-[505px] flex justify-between items-center">
-                        <div className="justify-start text-slate-500 text-base font-medium font-['Inter']">Added: {word?.createdAt?.slice(0, 10) || "N/A"}</div>
-                    <div className="w-60 flex justify-end items-center gap-2.5">
-                        <button onClick={() =>  setShowRequestCard(true)}>
-                        <div data-property-1="Default" className="h-10 px-2.5 py-5 bg-[#FFC107] rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 flex justify-center items-center gap-2.5">
-                            <div className="w-4 h-4 relative">
-                                <div className="w-4 h-3 left-[0.13px] top-[2px] absolute">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0.999763 3.5C0.999763 2.67157 1.67134 2 2.49976 2H5.2637C6.22146 2 7.02449 2.55996 7.57518 3.18398C7.98501 3.64839 8.47847 4 8.99976 4H13.5005C14.3293 4 14.9998 4.67203 14.9998 5.5V6.13933C15.5693 6.40467 15.9391 7.0161 15.8554 7.68605L15.2149 12.8101C15.0585 14.0612 13.995 15 12.7342 15H3.26533C2.00452 15 0.941017 14.0612 0.784633 12.8101L0.144128 7.68605C0.0603842 7.0161 0.430217 6.40467 0.999763 6.13933V3.5ZM1.99976 6H13.9998V5.5C13.9998 5.22341 13.7761 5 13.5005 5H8.99976C8.03587 5 7.28923 4.37127 6.82539 3.84565C6.37357 3.33367 5.82102 3 5.2637 3H2.49976C2.22362 3 1.99976 3.22386 1.99976 3.5V6ZM1.63254 7C1.3318 7 1.0991 7.26359 1.13641 7.56202L1.77691 12.6861C1.87074 13.4367 2.50884 14 3.26533 14H12.7342C13.4907 14 14.1288 13.4367 14.2226 12.6861L14.8631 7.56202C14.9004 7.26359 14.6677 7 14.367 7H1.63254Z" fill="white"/>
-                                    </svg>
-
-                                </div>
-                            </div>
-                            <div className="justify-start text-white text-base font-medium font-['Inter']">Request</div>
-                        </div>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            {showRequestCard && (
-            <RequestChangeCard onClose={() => setShowRequestCard(false)} />
-            )}
-
+export default function WordDetailCard({ word, onRequest }) {
+  const [showReference, setShowReference] = useState(false);
+  return (
+    <div className="w-[565px] p-7 bg-white border-t-4 border-indigo-500 rounded-[30px] shadow-md overflow-y-auto scrollbar-hide flex flex-col gap-7">
+      {/* Header: Word details */}
+      <div className="flex justify-between items-start">
+        <div className="flex flex-col gap-3">
+          <p className="text-[#2D3748] text-xl lg:text-3xl font-medium font-inter">{word?.EnglishWord}</p>
+          <p className="text-[#667EEA] text-xl lg:text-3xl font-normal font-inter">{word?.KhmerWord}</p>
+          <p className="text-[#667EEA] text-xl lg:text-3xl font-normal font-inter">{word?.FrenchWord}</p>
         </div>
-        </div>
-    );
+        {/* Favorite icon */}
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M8 2.74805L7.28325 2.01133C5.5989 0.280067 2.51415 0.877695 1.40036 3.05284C0.876534 4.07583 0.75875 5.55246 1.71429 7.43758C2.63457 9.25313 4.54767 11.4265 8 13.7946C11.4523 11.4265 13.3654 9.25313 14.2857 7.43758C15.2413 5.55246 15.1235 4.07583 14.5996 3.05284C13.4859 0.877695 10.4011 0.280067 8.71675 2.01133L8 2.74805ZM8 15C-7.33313 4.86841 3.27876 -3.04087 7.82432 1.14308C7.88395 1.19797 7.94253 1.25493 8 1.314C8.05747 1.25494 8.11605 1.19797 8.17567 1.14309C12.7212 -3.04088 23.3331 4.8684 8 15Z"
+            fill="#667EEA"
+          />
+        </svg>
+      </div>
+
+      {/* Definition */}
+      <Section title="Definition">
+        <p className="text-[#667EEA] text-base">{word?.definition}</p>
+      </Section>
+
+      {/* Example */}
+      <Section title="Example">
+        <p className="text-[#667EEA]">{word?.example || "No Example"}</p>
+      </Section>
+
+      {/* Reference (collapsible) */}
+      <div onClick={() => setShowReference(!showReference)} className="cursor-pointer">
+        {!showReference ? (
+          <CollapsedReference />
+        ) : (
+          <ExpandedReference reference={word?.reference} />
+        )}
+      </div>
+
+      {/*detail card Footer */}
+      <div className="pt-7 border-t border-slate-200 flex justify-between items-center">
+        <p className="text-slate-500 text-base font-medium">
+          Added: {word?.createdAt?.slice(0, 10) || "N/A"}
+        </p>
+
+        <button onClick={onRequest} className="h-10 px-4 bg-[#FFC107] rounded-[20px] flex items-center gap-2 text-white text-base font-medium hover:brightness-105">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0.999763 3.5C0.999763 2.67157 1.67134 2 2.49976 2H5.2637C6.22146 2 7.02449 2.55996 7.57518 3.18398C7.98501 3.64839 8.47847 4 8.99976 4H13.5005C14.3293 4 14.9998 4.67203 14.9998 5.5V6.13933C15.5693 6.40467 15.9391 7.0161 15.8554 7.68605L15.2149 12.8101C15.0585 14.0612 13.995 15 12.7342 15H3.26533C2.00452 15 0.941017 14.0612 0.784633 12.8101L0.144128 7.68605C0.0603842 7.0161 0.430217 6.40467 0.999763 6.13933V3.5ZM1.99976 6H13.9998V5.5C13.9998 5.22341 13.7761 5 13.5005 5H8.99976C8.03587 5 7.28923 4.37127 6.82539 3.84565C6.37357 3.33367 5.82102 3 5.2637 3H2.49976C2.22362 3 1.99976 3.22386 1.99976 3.5V6ZM1.63254 7C1.3318 7 1.0991 7.26359 1.13641 7.56202L1.77691 12.6861C1.87074 13.4367 2.50884 14 3.26533 14H12.7342C13.4907 14 14.1288 13.4367 14.2226 12.6861L14.8631 7.56202C14.9004 7.26359 14.6677 7 14.367 7H1.63254Z"
+              fill="white"
+            />
+          </svg>
+          Request
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* --- Subcomponents --- */
+function Section({ title, children }) {
+  return (
+    <div className="p-5 bg-[#E9ECEF] rounded-[20px] border-l-4 border-indigo-500 flex flex-col gap-3">
+      <p className="text-[#4A5568] font-medium">{title}</p>
+      {children}
+    </div>
+  );
+}
+
+function CollapsedReference() {
+  return (
+    <div className="h-10 p-5 bg-gray-50 rounded-[20px] border-l-4 border-indigo-500 flex items-center justify-between">
+      <p className="text-[#4A5568] text-base font-medium">Reference</p>
+      <svg
+        width="10"
+        height="18"
+        viewBox="0 0 10 18"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M1 1C3.73367 4.12419 5.26633 5.87581 8 9L1 17"
+          stroke="#4A5568"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+      </svg>
+    </div>
+  );
+}
+
+//function to handle reference 
+export const renderReference = ({reference}) => {
+  const ref = reference?.trim();
+  if (ref.startsWith("https")) {
+      return ref;
+    }
+
+    const parts = reference.split("https");
+    if (parts.length > 1) {
+      const text = parts[0].trim();
+      const link = "https" + parts[1].trim();
+      return link;
+    }
+};
+
+function ExpandedReference({ reference }) {
+
+  return (
+    <div className="min-h-36 p-5 bg-[#E9ECEF] rounded-[20px] border-l-4 border-indigo-500 flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <p className="text-slate-500 text-base font-medium">Reference</p>
+        <svg
+          width="21"
+          height="11"
+          viewBox="0 0 21 11"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M1 1.5C4.02687 4.29641 7.14268 6.70359 10.1695 9.5L20.0002 2"
+            stroke="#718096"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+      </div>
+      <a href={renderReference({ reference: reference })} target="_blank" rel="noopener noreferrer" className="text-sm underline text-[#667EEA] break-words">
+        {renderReference({ reference: reference })}
+      </a>
+    </div>
+  );
 }
