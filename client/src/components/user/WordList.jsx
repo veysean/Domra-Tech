@@ -1,13 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef, useImperativeHandle } from "react";
 import { WordTranslationServices } from "../../api";
 import WordCard from "./WordCard";
 
-export default function WordList({ words: propWords, isHomepage = false, searchQuery = "" }) {
+export default function WordList({ words: propWords, isHomepage = false, searchQuery = "", ref }) {
     const [words, setWords] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
     const limit = 10;
+
+    useImperativeHandle(ref, () => ({
+        resetToFirstPage: () => {
+            setCurrentPage(1);
+        }
+    }));
 
     useEffect(() => {
         if (propWords && propWords.length > 0) {
@@ -64,7 +70,16 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
     const handlePageChange = (newPage) => {
         if (newPage >= 1 && newPage <= totalPages) {
             setCurrentPage(newPage);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => {
+                const firstCard = document.querySelector('.word-list-container .grid > div:first-child');
+                if (firstCard) {
+                    firstCard.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start'
+                    });
+                }
+            }, 100);
         }
     };
 

@@ -1,6 +1,6 @@
 import HomeHeroSection from "../../components/user/HomeHeroSection";
 import { useTranslation } from 'react-i18next';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import WordList from "../../components/user/WordList";
 import CategorySearch from "../../components/user/CategorySearch";
 import { WordTranslationServices } from "../../api";
@@ -28,6 +28,7 @@ export default function Home() {
     const [query, setQuery] = useState("");
     //const [searchTrigger, setSearchTrigger] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
+    const wordListRef = useRef();
 
     const debouncedQuery = useDebounce(query, 300);
 
@@ -91,6 +92,12 @@ export default function Home() {
         setQuery(searchQuery);
     };
 
+    const handleSearchFocus = () => {
+        if (wordListRef.current) {
+            wordListRef.current.resetToFirstPage();
+        }
+    };
+
 
     return (
         <div className="home-page flex flex-col gap-10">
@@ -98,14 +105,14 @@ export default function Home() {
             <HomeHeroSection header={t("header")} desc={t("desc")} />
 
             {/* Category section with See more */}
-            <CategorySearch onSearchChange={handleSearchChange} onSearchSubmit={handleSearchSubmit}/>
+            <CategorySearch onSearchChange={handleSearchChange} onSearchSubmit={handleSearchSubmit}  onSearchFocus={handleSearchFocus}/>
 
             {/* Loading indicator */}
             {isLoading && <div className="text-center">Loading...</div>}
 
             {/* Word list */}
             <div className="flex flex-col items-center gap-5 w-full">
-                <WordList words={words} />
+                <WordList ref={wordListRef} words={words} />
              </div>
         </div>
     );
