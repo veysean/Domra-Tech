@@ -2,7 +2,7 @@
 import dotenv from 'dotenv'; // <-- Add this import
 dotenv.config(); // <-- And this config call
 console.log("Attempting to run server...");
-
+import cors from 'cors';
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocs from './config/swagger.js'; 
