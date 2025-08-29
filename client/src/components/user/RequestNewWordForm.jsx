@@ -23,6 +23,7 @@ export default function RequestNewWordForm ({ onCancel, user }) {
       newDefinition: "",
       newExample: "",
       reference: "",
+      status: "pending"
     });
   };
   // Handle form submit
