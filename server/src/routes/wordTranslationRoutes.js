@@ -1,5 +1,3 @@
-
-
 import express from 'express';
 import wordTranslationController from '../controllers/wordTranslationController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
