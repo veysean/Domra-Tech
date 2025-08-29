@@ -12,7 +12,7 @@ import { BsBoxArrowLeft } from "react-icons/bs";
 import { BsCheck2Square } from "react-icons/bs";
 
 const menuItems = [
-  { id: 'home', name: 'Home', path: '/admin', icon: (
+  { id: 'home', name: 'Home', path: '/admin/dashboard', icon: (
     <BsHouseDoor size={22}/>
   ) },
   { id: 'words', name: 'Word Translation', path: '/admin/words', icon: (

@@ -9,8 +9,10 @@ import AuthPage from "./pages/user/AuthPage";
 import AdminDashboard from "./pages/admin/Dashboard";
 import UsersPage from "./pages/admin/User";
 import WordTranslationPage from "./pages/admin/WordTranslation";
-import OverviewPage from "./pages/admin/Overview";
 import WordRequestPage from "./pages/admin/WordRequest";
+import AdminLayout from "./layouts/AdminLayout";
+//import AdminLogin from "./pages/admin/AdminLogin";
+import OverviewPage from "./pages/admin/Overview";
 import React from 'react';
 function AppRoutes() {
   return (
@@ -62,7 +64,9 @@ function AppRoutes() {
         {/* <Route
           path="/admin"
           element={
-              <AdminDashboard />
+              <AdminLayout>
+                <AdminLogin />
+              </AdminLayout>
           }
         /> */}
 
@@ -70,39 +74,73 @@ function AppRoutes() {
         {/* <Route
           path="/admin/dashboard"
           element={
-              <AdminDashboard />     
+              <AdminLayout>
+                <OverviewPage />
+              </AdminLayout>     
           }
         />
 
         <Route
           path="/admin/users"
           element={
-              <UsersPage />
+              <AdminLayout>
+                <UsersPage />
+              </AdminLayout>
           }
         />
 
         <Route
           path="/admin/requests"
           element={
-              <WordRequestPage />
+              <AdminLayout>
+                <WordRequestPage />
+              </AdminLayout>
           }
         />
 
         <Route
           path="/admin/words"
           element={
-              <WordTranslationPage />
+              <AdminLayout>
+                <WordTranslationPage />
+              </AdminLayout>
           }
         /> */}
-
-        <Route>
-          <Route path="/admin/dashboard" element={<AdminDashboard/>}>
-          <Route index element={<OverviewPage/>}></Route>
-          <Route path="/admin/dashboard/words" element={<WordTranslationPage/>}></Route>
-          
-          </Route>
+        <Route path="/admin" element={<AdminDashboard />}>
+          <Route
+            index
+            element={
+              <OverviewPage />
+            }
+          />
+          <Route
+            path="requests"
+            element={
+              <WordRequestPage />
+            }
+          />
+          <Route
+            path="users"
+            element={
+              <UsersPage />
+            }
+          />
+          <Route
+            path="dashboard"
+            element={
+              <OverviewPage />
+            }
+          />
+          <Route
+            path="words"
+            element={
+              <WordTranslationPage />
+            }
+          />
         </Route>
+
       </Routes>
+        
     </>
   );
 }
