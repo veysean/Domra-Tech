@@ -11,6 +11,7 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto'; 
 import bcrypt from 'bcryptjs';
 import emailService from '../services/emailService.js';
+import { Op } from 'sequelize'; 
 
 
 const { User } = db;
@@ -289,7 +290,7 @@ const verifyEmail = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password, googleId } = req.body;
-
+    
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
@@ -334,12 +335,12 @@ const login = async (req, res) => {
   }
 };
 
-// forget password 
+// Function to handle forgot password
 /**
  * @swagger
  * /auth/forgot-password:
  *   post:
- *     summary: Initiates password reset process for a user.
+ *     summary: Request a password reset link
  *     description: Sends a password reset link to the user's email if the email exists in the system.
  *     tags:
  *       - Auth
@@ -379,15 +380,8 @@ const login = async (req, res) => {
  *                   example: User with this email does not exist.
  *       500:
  *         description: Internal server error.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Failed to send password reset link.
  */
+
 const forgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
@@ -398,14 +392,15 @@ const forgotPassword = async (req, res) => {
         }
 
         const resetToken = crypto.randomBytes(32).toString('hex');
-        user.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
-        user.passwordResetExpires = Date.now() + 900000; // 15 minutes
+        const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+        user.passwordResetToken = hashedToken;
+        user.passwordResetExpires = Date.now() + 3600000; // 1 hour
 
         await user.save();
 
-        const resetURL = `http://localhost:3000/reset-password/${resetToken}`;
-        
-        await sendPasswordResetEmail(user.email, resetURL);
+        const resetURL = `http://localhost:5173/reset-password?token=${resetToken}`;
+
+        await emailService.sendPasswordResetEmail(user.email, resetURL);
 
         return res.status(200).json({ message: 'Password reset link sent to your email.' });
 
@@ -415,13 +410,13 @@ const forgotPassword = async (req, res) => {
     }
 };
 
-// reset password
+// Function to reset password
 /**
  * @swagger
  * /auth/reset-password:
  *   post:
- *     summary: Resets the user's password using a valid reset token.
- *     description: Validates the reset token and updates the user's password if the token is valid and not expired.
+ *     summary: Reset user password
+ *     description: Resets the user's password using a valid reset token.
  *     tags:
  *       - Auth
  *     requestBody:
@@ -436,7 +431,7 @@ const forgotPassword = async (req, res) => {
  *             properties:
  *               token:
  *                 type: string
- *                 example: 9f8d7c6b5a4e3d2c1b0a
+ *                 example: 123456abcdef
  *               password:
  *                 type: string
  *                 format: password
@@ -464,46 +459,37 @@ const forgotPassword = async (req, res) => {
  *                   example: Token is invalid or has expired.
  *       500:
  *         description: Internal server error.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Failed to reset password.
  */
 
 const resetPassword = async (req, res) => {
-    try {
-        const { token, password } = req.body;
-        
-        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+  try {
+    const { token, password } = req.body;
+  
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
-        const user = await User.findOne({
-            where: {
-                passwordResetToken: hashedToken,
-                passwordResetExpires: { [db.sequelize.Op.gt]: Date.now() }
-            }
-        });
+    const user = await User.findOne({
+      where: {
+        passwordResetToken: hashedToken,
+        passwordResetExpires: { [Op.gt]: Date.now() }
+      }
+    });
 
-        if (!user) {
-            return res.status(400).json({ message: 'Token is invalid or has expired.' });
-        }
-
-        // Hash the new password and update the user
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(password, salt);
-        user.passwordResetToken = null;
-        user.passwordResetExpires = null;
-        await user.save();
-        
-        return res.status(200).json({ message: 'Password has been reset successfully.' });
-
-    } catch (error) {
-        console.error('Reset password error:', error);
-        return res.status(500).json({ message: 'Failed to reset password.' });
+    if (!user) {
+      return res.status(400).json({ message: 'Token is invalid or has expired.' });
     }
+
+    // the password field and save the user
+    user.password = password;
+    user.passwordResetToken = null;
+    user.passwordResetExpires = null;
+    await user.save();
+    
+    return res.status(200).json({ message: 'Password has been reset successfully.' });
+
+  } catch (error) {
+    console.error('Reset password error:', error);
+    return res.status(500).json({ message: 'Failed to reset password.', error: error.message });
+  }
 };
 
 
