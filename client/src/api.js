@@ -27,11 +27,11 @@ const res = await WordTranslationServices.findAll(1, 1000);
 
 //correction request
 export const CorrectionServices = {
-  requestCorrection: (correctionData) => API.post('/correction-requests', correctionData),//create by user
-  getCorrections: () => API.get('/correction-requests'),// get all by admin
-  getCorrectionById: (id) => API.get(`/correction-requests/${id}`),// get by admin
-  updateCorrectionStatus: (id, statusData) => API.patch(`/correction-requests/${id}`, statusData),// update by admin
-  deleteCorrection: (id) => API.delete(`/correction-requests/${id}`),// delete by admin 
+  requestCorrection: (correctionData) => API.post('/correctionRequests', correctionData),//create by user
+  getCorrections: () => API.get('/correctionRequests'),
+  getCorrectionById: (id) => API.get(`/correctionRequests/${id}`),// get by admin
+  updateCorrectionStatus: (id, statusData) => API.patch(`/correctionRequests/${id}`, statusData),// update by admin
+  deleteCorrection: (id) => API.delete(`/correctionRequests/${id}`),// delete by admin
 };
 
 //word request 

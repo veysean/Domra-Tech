@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { CorrectionServices } from "../../api";
 
-export default function RequestChangingForm({ onCancel, user }) {
+export default function RequestChangingForm({ onCancel, wordId }) {
   const [formData, setFormData] = useState({
-    EnglishWord: "",
-    KhmerWord: "",
-    FrenchWord: "",
-    WordReference: "",
+    wordId: wordId,
+    correctEnglishWord: "",
+    correctFrenchWord: "",
+    correctKhmerWord: "",
+    reference: "",
+    status: "pending"
   });
 
   // Handle input changes
@@ -19,7 +21,7 @@ export default function RequestChangingForm({ onCancel, user }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await CorrectionServices.requestChange(formData);
+      const response = await CorrectionServices.requestCorrection(formData);
       console.log("Form Submitted:", response.data);
       onCancel();
     } catch (error) {
@@ -44,8 +46,8 @@ export default function RequestChangingForm({ onCancel, user }) {
           </label>
           <input
             type="text"
-            name="EnglishWord"
-            value={formData.EnglishWord}
+            name="correctEnglishWord"
+            value={formData.correctEnglishWord}
             onChange={handleChange}
             placeholder="Enter New English word"
             className="self-stretch h-10 px-3 rounded-xl outline-1 outline-gray-300 text-gray-500 text-sm font-['Inter'] hover:outline-indigo-500"
@@ -59,8 +61,8 @@ export default function RequestChangingForm({ onCancel, user }) {
           </label>
           <input
             type="text"
-            name="KhmerWord"
-            value={formData.KhmerWord}
+            name="correctKhmerWord"
+            value={formData.correctKhmerWord}
             onChange={handleChange}
             placeholder="Enter New Khmer word"
             className="self-stretch h-10 px-3 rounded-xl outline-1 outline-gray-300 text-gray-500 text-sm font-['Inter'] hover:outline-indigo-500"
@@ -74,8 +76,8 @@ export default function RequestChangingForm({ onCancel, user }) {
           </label>
           <input
             type="text"
-            name="FrenchWord"
-            value={formData.FrenchWord}
+            name="correctFrenchWord"
+            value={formData.correctFrenchWord}
             onChange={handleChange}
             placeholder="Enter New French word"
             className="self-stretch h-10 px-3 rounded-xl outline-1 outline-gray-300 text-gray-500 text-sm font-['Inter'] hover:outline-indigo-500"
@@ -89,8 +91,8 @@ export default function RequestChangingForm({ onCancel, user }) {
           </label>
           <input
             type="text"
-            name="WordReference"
-            value={formData.WordReference}
+            name="reference"
+            value={formData.reference}
             onChange={handleChange}
             placeholder="Enter New word reference"
             className="self-stretch h-10 px-3 rounded-xl outline-1 outline-gray-300 text-gray-500 text-sm font-['Inter'] hover:outline-indigo-500"
@@ -104,10 +106,11 @@ export default function RequestChangingForm({ onCancel, user }) {
             className="w-24 h-10 rounded-[20px] bg-gray-500 text-white text-base font-medium font-['Inter'] hover:bg-gray-200"
             onClick={() => {
               setFormData({
-                EnglishWord: "",
-                KhmerWord: "",
-                FrenchWord: "",
-                WordReference: "",
+                wordId: wordId,
+                correctEnglishWord: "",
+                correctFrenchWord: "",
+                correctKhmerWord: "",
+                reference: ""
               });
               onCancel();
             }}
