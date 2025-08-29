@@ -1,6 +1,6 @@
 
 
-import React, { use } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { BsHouseDoor } from "react-icons/bs";
 import { BsEnvelopeExclamation } from "react-icons/bs";
@@ -13,7 +13,7 @@ import { BsCheck2Square } from "react-icons/bs";
 import { useTranslation } from 'react-i18next';
 
 const menuItems = [
-  { id: 'home',key: 'home', path: '/admin', icon: (
+  { id: 'home',key: 'home', path: '/admin/dashboard', icon: (
     <BsHouseDoor size={22}/>
   ) },
   { id: 'words', key: 'wordTranslation', path: '/admin/words', icon: (

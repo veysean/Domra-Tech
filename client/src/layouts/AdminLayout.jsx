@@ -2,11 +2,11 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import Header from '../../components/admin/Header.jsx';
-import Sidebar from '../../components/admin/Sidebar.jsx';
+import Header from '../components/admin/Header.jsx';
+import Sidebar from '../components/admin/Sidebar.jsx';
 
 const menuItems = [
-  { id: 'home', name: 'Home', path: '/admin' },
+  { id: 'home', name: 'Home', path: '/admin/dashboard' },
   { id: 'requests', name: 'Word Requests', path: '/admin/requests' },
   { id: 'words', name: 'Word Management', path: '/admin/words' },
   { id: 'users', name: 'Users', path: '/admin/users' },

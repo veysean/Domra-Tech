@@ -2,13 +2,26 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import en from './locales/en/common.json';
 import kh from './locales/kh/common.json';
+import conEn from './locales/en/contributeTerm.json';
+import conKh from './locales/kh/contributeTerm.json';
+import aboutUsEn from './locales/en/aboutUs.json';
+import aboutUsKh from './locales/kh/aboutUs.json';
+import enSidebar from './locales/en/adSidebar.json';
+import khSidebar from './locales/kh/adSidebar.json';
 
 i18n
   .use(initReactI18next)
   .init({
     resources: {
-      en: { translation: en },
-      kh: { translation: kh },
+      en: { 
+        translation: en, contributeTerm: conEn, aboutUs: aboutUsEn,
+        adSidebar: enSidebar
+
+       },
+      kh: { 
+        translation: kh, contributeTerm: conKh, aboutUs: aboutUsKh,
+        adSidebar: khSidebar
+      },
     },
     lng: 'en', // default language
     fallbackLng: 'en',

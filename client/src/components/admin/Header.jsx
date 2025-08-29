@@ -1,8 +1,8 @@
 
-import React, { useState } from "react";
 import { BsGlobe } from "react-icons/bs";
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
 
 const Header = ({ i18n }) => {
   const [langOpen, setLangOpen] = useState(false);
@@ -11,12 +11,26 @@ const Header = ({ i18n }) => {
   const navigate = useNavigate();
 
   const admin = { name: "នីតា"};
+  const langRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (langRef.current && !langRef.current.contains(event.target)) {
+        setLangOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <header className="w-full bg-white shadow-sm sticky top-0 z-20">
       <div className="flex justify-end items-center px-8 py-4 gap-6">
         {/* Language Switcher */}
-        <div className="relative">
+        <div className="relative" ref={langRef}>
           <button
             className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 transition"
             onClick={() => setLangOpen((v) => !v)}
