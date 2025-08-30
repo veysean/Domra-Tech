@@ -12,8 +12,11 @@ const verifyAuth = (req, res, next) => {
     // Verify the token using your JWT secret key
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     
-    req.userId = decodedToken.userId;
-    req.role = decodedToken.role;
+    req.user = {
+      userId: decodedToken.userId,
+      role: decodedToken.role
+    };
+
 
     // Call next() to pass the request to the next middleware or controller
     next();
