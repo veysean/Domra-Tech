@@ -59,36 +59,26 @@ const { CorrectionRequest } = db;
  */
 const createCorrectionRequest = async (req, res) => {
   try {
-    const {
-      userId,
-      wordId,
-      correctEnglishWord,
-      correctFrenchWord,
-      correctKhmerWord,
-      reference,
-      status
-    } = req.body;
+     
+    const payload = {
+      userId: req.user.userId,
+      ...req.body
+    }
 
-    if (!userId || !wordId) {
+    if (!payload.userId || !payload.wordId) {
       return res.status(400).json({ message: 'userId and wordId are required.' });
     }
 
-    const newRequest = await CorrectionRequest.create({
-      userId,
-      wordId,
-      correctEnglishWord,
-      correctFrenchWord,
-      correctKhmerWord,
-      reference,
-      status: status || 'pending'
-    });
+    const newRequest = await CorrectionRequest.create(payload);
 
     return res.status(201).json(newRequest);
+
   } catch (error) {
     console.error('Create correction request error:', error);
     return res.status(400).json({ message: 'Failed to create correction request.' });
   }
 };
+
 
 /**
  * @swagger
@@ -140,7 +130,13 @@ const getAllCorrectionRequests = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
 
+    // Apply filter: if not admin, only fetch user's own requests
+    const whereCondition = req.user.role === 'admin'
+      ? {} // no filter for admin
+      : { userId: req.user.userId }; // filter for regular user
+
     const { count, rows } = await CorrectionRequest.findAndCountAll({
+      where: whereCondition,
       limit,
       offset,
       order: [['createdAt', 'DESC']]

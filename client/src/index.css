@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+@layer utilities {
+  .gradient-text {
+    @apply bg-gradient-to-r from-indigo-500/80 to-purple-800/80 bg-clip-text text-transparent;
+  }
+}
+
+/* hide scrollbar but keep scroll functionality */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}

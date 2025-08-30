@@ -124,7 +124,7 @@ const findAll = async (req, res) => {
 const getProfile = async (req, res) => {
   try {
     // The verifyAuth middleware added the userId to the request object
-    const userId = req.userId;
+    const userId = req.user.userId;
     
     // Find the user by their ID
     const user = await User.findByPk(userId, {
