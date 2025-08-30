@@ -1,12 +1,16 @@
 import WordDetailCard from "./WordDetailCard";
-import { useState, useEffect} from "react";
+import { useState, useEffect, useContext} from "react";
 import { renderReference } from "./WordDetailCard";
 import RequestChangingForm from "./RequestChangingForm";
+import { AuthContext } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function WordCard({word}){
     const [open, setOpen] = useState(false);
     const [isFav, setIsFav] = useState(false);
     const [showRequestForm, setShowRequestForm] = useState(false);
+    const { auth } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const handleCardClick = (e) => {
         if (e.target.closest(".fav-btn") || e.target.closest(".reference-btn")) return;
@@ -18,6 +22,15 @@ export default function WordCard({word}){
         setIsFav((prev) => !prev);
     };
     
+    //handle show request form after login
+    const handleShowRequestForm = () => {
+        if (auth) {
+            setShowRequestForm(true);
+        } else {
+            navigate("/auth");
+        }
+    };
+
     useEffect(() => {
     if (open) {
         // disable scroll
@@ -111,11 +124,10 @@ export default function WordCard({word}){
                 {!showRequestForm ? (
                     <WordDetailCard 
                     word={word} 
-                    onRequest={() => setShowRequestForm(true)} // pass handler
+                    onRequest={handleShowRequestForm} // pass handler
                     />
                 ) : (
                     <RequestChangingForm 
-                    //user={user}
                     wordId={word.wordId} 
                     onCancel={() => setShowRequestForm(false)} // go back to detail
                     />
