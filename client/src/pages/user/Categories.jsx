@@ -19,7 +19,7 @@ export default function Categories() {
     fetchCategories();
     }, []);
     
-    const CategoryCard = ({key, title, description }) => (
+    const CategoryCard = ({title, description }) => (
         <div className="w-80 h-44 p-9 bg-white rounded-[20px] border-t-[3px] outline-1 outline-offset-[-1px] outline-slate-200 border-indigo-500 inline-flex flex-col justify-start items-center gap-5 hover:shadow-lg transition-shadow duration-300">
             <div className="justify-start text-indigo-500 text-base font-medium font-['Inter'] group-hover:font-bold"> {title}</div>
             <div className="w-80 h-20 text-center justify-start text-slate-500 text-sm font-medium font-['Inter']">{description}</div>
