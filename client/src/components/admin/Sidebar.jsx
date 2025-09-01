@@ -10,30 +10,6 @@ import { BsGear } from "react-icons/bs";
 import { BsShieldLock } from "react-icons/bs";
 import { BsBoxArrowLeft } from "react-icons/bs";
 import { BsCheck2Square } from "react-icons/bs";
-<<<<<<< HEAD
-import { useTranslation } from 'react-i18next';
-
-const menuItems = [
-  { id: 'home',key: 'home', path: '/admin/dashboard', icon: (
-    <BsHouseDoor size={22}/>
-  ) },
-  { id: 'words', key: 'wordTranslation', path: '/admin/words', icon: (
-    <BsBook size={22}/>
-  ) },
-  { id: 'requests', key: 'wordRequest', path: '/admin/requests', icon: (
-    <BsEnvelopeExclamation size={22}/>
-  ) },
-  { id: 'users', key: 'user', path: '/admin/users', icon: (
-    <BsPeople size={22}/>
-  ) },
-  { id: 'settings', key: 'settings', path: '/admin/settings', icon: (
-    <BsGear size={22}/>
-  ) },
-  { id: 'privacy', key: 'privacy', path: '/admin/privacy', icon: (
-    <BsShieldLock size={22}/>
-  ) },
-  { id: 'checkmode', key: 'checkMode', path: '/admin/checkmode', icon: (
-=======
 
 const menuItems = [
   { id: 'home', name: 'Home', path: '/admin/dashboard', icon: (
@@ -55,17 +31,11 @@ const menuItems = [
     <BsShieldLock size={22}/>
   ) },
   { id: 'checkmode', name: 'Check Mode', path: '/admin/checkmode', icon: (
->>>>>>> 87e09df97073b36d7961a878e82f905d85be1802
     <BsCheck2Square size={22}/>
   ) },
 ];
 
 const Sidebar = () => {
-<<<<<<< HEAD
-  const { t } = useTranslation('adSidebar');
-
-=======
->>>>>>> 87e09df97073b36d7961a878e82f905d85be1802
   return (
     <aside className="h-screen w-64 bg-white shadow-lg flex flex-col justify-between fixed left-0 top-0 z-30">
       <div>
@@ -87,11 +57,7 @@ const Sidebar = () => {
               end={item.id === 'home'}
             >
               {item.icon}
-<<<<<<< HEAD
-              <span>{t(item.key)}</span>
-=======
               <span>{item.name}</span>
->>>>>>> 87e09df97073b36d7961a878e82f905d85be1802
             </NavLink>
           ))}
         </nav>
@@ -102,11 +68,7 @@ const Sidebar = () => {
           className="flex items-center gap-4 px-4 py-3 rounded-lg font-medium text-red-600 hover:bg-red-50 transition-colors duration-150"
         >
           <BsBoxArrowLeft size={22}/>
-<<<<<<< HEAD
-          <span>{t("logout")}</span>
-=======
           <span>Logout</span>
->>>>>>> 87e09df97073b36d7961a878e82f905d85be1802
         </NavLink>
       </div>
     </aside>

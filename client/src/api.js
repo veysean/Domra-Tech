@@ -17,10 +17,22 @@ export const authServices = {
 
 // word translation services
 export const WordTranslationServices = {
-  findAll: () => API.get('/words'),
-  searchWords: (query) => API.get('/words/search', { params: { q: query } }),
+  findAll: (page = 1, limit = 10, categoryId = "") =>
+    API.get("/words", {
+      params: { page, limit, categoryId },
+    }),
+
+  findById: (id) => API.get(`/words/${id}`),
+  searchWords: (query, page = 1, limit = 10, categoryId = "") =>
+    API.get("/words/search", {
+      params: { q: query, page, limit, categoryId },
+    }),
+  update: (id, updatedData) => API.put(`/admin/words/${id}`, updatedData),
 };
 
-
+// category services
+export const CategoryServices = {
+  getAll: () => API.get('/categories'),
+};
 
 export default API;
