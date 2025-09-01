@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 
-export default function WordDetailCard({ word, onRequest }) {
+export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
   const [showReference, setShowReference] = useState(false);
   return (
     <div className="w-[565px] p-7 bg-white border-t-4 border-indigo-500 rounded-[30px] shadow-md overflow-y-auto scrollbar-hide flex flex-col gap-7">
@@ -13,18 +13,21 @@ export default function WordDetailCard({ word, onRequest }) {
           <p className="text-[#667EEA] text-xl lg:text-3xl font-normal font-inter">{word?.FrenchWord}</p>
         </div>
         {/* Favorite icon */}
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M8 2.74805L7.28325 2.01133C5.5989 0.280067 2.51415 0.877695 1.40036 3.05284C0.876534 4.07583 0.75875 5.55246 1.71429 7.43758C2.63457 9.25313 4.54767 11.4265 8 13.7946C11.4523 11.4265 13.3654 9.25313 14.2857 7.43758C15.2413 5.55246 15.1235 4.07583 14.5996 3.05284C13.4859 0.877695 10.4011 0.280067 8.71675 2.01133L8 2.74805ZM8 15C-7.33313 4.86841 3.27876 -3.04087 7.82432 1.14308C7.88395 1.19797 7.94253 1.25493 8 1.314C8.05747 1.25494 8.11605 1.19797 8.17567 1.14309C12.7212 -3.04088 23.3331 4.8684 8 15Z"
-            fill="#667EEA"
-          />
-        </svg>
+        <div className="relative w-6 h-6 cursor-pointer hover:bg-[#E9ECEF] rounded flex items-center justify-center" onClick={toggleFav}>
+          {isFav ? (
+            <div className="w-4 h-3.5 absolute">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fillRule="evenodd" clipRule="evenodd" d="M8 1.314C12.4384 -3.24799 23.5343 4.7355 8 15C-7.53427 4.7355 3.56164 -3.24799 8 1.314Z" fill="#DC3545"/>
+                </svg>
+            </div>
+          ) : (
+            <div className="w-4 h-3.5 absolute">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 2.74805L7.28325 2.01133C5.5989 0.280067 2.51415 0.877695 1.40036 3.05284C0.876534 4.07583 0.75875 5.55246 1.71429 7.43758C2.63457 9.25313 4.54767 11.4265 8 13.7946C11.4523 11.4265 13.3654 9.25313 14.2857 7.43758C15.2413 5.55246 15.1235 4.07583 14.5996 3.05284C13.4859 0.877695 10.4011 0.280067 8.71675 2.01133L8 2.74805ZM8 15C-7.33313 4.86841 3.27876 -3.04087 7.82432 1.14308C7.88395 1.19797 7.94253 1.25493 8 1.314C8.05747 1.25494 8.11605 1.19797 8.17567 1.14309C12.7212 -3.04088 23.3331 4.8684 8 15Z" fill="#667EEA"/>
+                </svg>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Definition */}
