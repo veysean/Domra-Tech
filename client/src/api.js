@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-    baseURL: 'http://localhost:3000/api', //backend URL
+    baseURL: 'http://localhost:3002/api', //backend URL
 });
 
 const token = localStorage.getItem('token');
@@ -13,6 +13,8 @@ if (token) {
 export const authServices = {
   register: (userData) => API.post('/auth/register', userData),
   login: (credentials) => API.post('/auth/login', credentials),
+  forgotPassword: (emailData) => API.post('/auth/forgot-password', emailData),
+  resetPassword: (resetData) => API.post('/auth/reset-password', resetData),
 };
 
 // word translation services
