@@ -49,4 +49,10 @@ export const CategoryServices = {
   findById: (id) => API.get(`/categories/${id}`),
 };
 
+export const FavoriteServices = {
+  createFavorite: (wordId) => API.post('/favorites', { wordId }),
+  getAllFavorites: () => API.get('/favorites'),
+  deleteFavorite: (wordId) => API.delete(`/favorites/${wordId}`)
+};
+
 export default API;
