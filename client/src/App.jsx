@@ -21,6 +21,8 @@ function AppRoutes() {
         
         {/* All auth-related routes are now defined here explicitly */}
         <Route path="/auth" element={<AuthPage />} />
+        <Route path="/auth/login" element={<MainLayout />} />
+        <Route path="/auth/register" element={<MainLayout />} />
         <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
 
