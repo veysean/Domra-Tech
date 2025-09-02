@@ -158,6 +158,11 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
 
     return (
         <div className="word-list-container">
+            {/*show found terms*/}
+            <div className="text-sm text-gray-500 mb-3">
+                {words.length} {words.length === 1 ? 'term' : 'terms'} found
+            </div>
+            {/*word card */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 justify-center items-start pb-10">
                 {displayedWords.map((word) => (
                     <WordCard key={word.wordId} word={word} />

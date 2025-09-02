@@ -1,9 +1,10 @@
 import WordDetailCard from "./WordDetailCard";
-import { useState, useEffect, useContext} from "react";
+import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { renderReference } from "./WordDetailCard";
 import RequestChangingForm from "./RequestChangingForm";
+import { FavoriteServices } from "../../api";
 import { AuthContext } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
 
 export default function WordCard({word}){
     const [open, setOpen] = useState(false);
@@ -11,26 +12,58 @@ export default function WordCard({word}){
     const [showRequestForm, setShowRequestForm] = useState(false);
     const { auth } = useContext(AuthContext);
     const navigate = useNavigate();
+    const [message, setMessage] = useState("");
+    const [showMessage, setShowMessage] = useState(false);
+    const [showTooltip, setShowTooltip] = useState(false);
+    let hoverTimeout;
+
+    //check if a word is already in fav
+    useEffect(() => {
+        const fetchFavorites = async () => {
+            if (!auth?.token) { return; }
+            try {
+                const res = await FavoriteServices.getAllFavorites();
+                const favWords = res.data.map((w) => w.wordId);
+                setIsFav(favWords.includes(word.wordId));
+            } catch (error) {
+                console.error("Error fetching favorite words:", error);
+            }
+        };
+        fetchFavorites();
+    }, [auth?.token, word.wordId]);
 
     const handleCardClick = (e) => {
         if (e.target.closest(".fav-btn") || e.target.closest(".reference-btn")) return;
         setOpen(true);
     };
 
-    const toggleFav = (e) => {
+    const toggleFav = async (e) => {
         e.stopPropagation();
-        setIsFav((prev) => !prev);
-    };
-    
-    //handle show request form after login
-    const handleShowRequestForm = () => {
-        if (auth) {
-            setShowRequestForm(true);
-        } else {
-            navigate("/auth");
+
+        if (!auth?.token) {
+            navigate("/auth"); 
+            return;
+        }
+
+        try {
+            if (isFav) {
+                await FavoriteServices.deleteFavorite(word.wordId, auth.token);
+                setMessage("Removed from favorites");
+            } else {
+                await FavoriteServices.createFavorite(word.wordId, auth.token);
+                setMessage("Added to favorites");
+            }
+            setIsFav(!isFav);
+            setShowMessage(true);
+            setTimeout(() => setShowMessage(false), 2000);
+        } catch (error) {
+            console.error("Error toggling favorite:", error);
+            setMessage("Something went wrong");
+            setShowMessage(true);
+            setTimeout(() => setShowMessage(false), 2000);
         }
     };
-
+    
     useEffect(() => {
     if (open) {
         // disable scroll
@@ -50,6 +83,19 @@ export default function WordCard({word}){
         window.open(renderReference({ reference }), "_blank");
     }
 
+    //for tooltip
+    const handleMouseEnter = () => {
+        hoverTimeout = setTimeout(() => setShowTooltip(true), 500); 
+    };
+
+    const handleMouseLeave = () => {
+        clearTimeout(hoverTimeout); 
+        setShowTooltip(false); 
+    };
+     const handleTooltipClick = () => {
+        setShowTooltip(false);
+    };
+
     return (
         <>
             {/*Word Card*/}
@@ -65,25 +111,39 @@ export default function WordCard({word}){
                         </div>
                         {/* Fav */}
                         <div 
-                            data-property-1="fav" 
-                            className="flex justify-start items-center gap-2.5 cursor-pointer"
+                            className="relative group flex justify-start items-center cursor-pointer" 
                             onClick={toggleFav}
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
                         >
-                            <div className="w-4 h-4 relative">
-                                {isFav? (
-                                    <div className="w-4 h-3.5 left-0 top-0 absolute">
-                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8 1.314C12.4384 -3.24799 23.5343 4.7355 8 15C-7.53427 4.7355 3.56164 -3.24799 8 1.314Z" fill="#DC3545"/>
-                                        </svg>
-                                    </div>
-                                ) : (
-                                    <div className="w-4 h-3.5 left-0 top-0 absolute">
-                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8 2.74805L7.28325 2.01133C5.5989 0.280067 2.51415 0.877695 1.40036 3.05284C0.876534 4.07583 0.75875 5.55246 1.71429 7.43758C2.63457 9.25313 4.54767 11.4265 8 13.7946C11.4523 11.4265 13.3654 9.25313 14.2857 7.43758C15.2413 5.55246 15.1235 4.07583 14.5996 3.05284C13.4859 0.877695 10.4011 0.280067 8.71675 2.01133L8 2.74805ZM8 15C-7.33313 4.86841 3.27876 -3.04087 7.82432 1.14308C7.88395 1.19797 7.94253 1.25493 8 1.314C8.05747 1.25494 8.11605 1.19797 8.17567 1.14309C12.7212 -3.04088 23.3331 4.8684 8 15Z" fill="#667EEA"/>
-                                        </svg>
-                                    </div>
-                                )}
+                            <div 
+                                className="flex justify-start items-center gap-2.5 cursor-pointer hover:bg-[#E9ECEF] p-1 rounded"
+                                
+                            >
+                                <div className="w-4 h-4 relative">
+                                    {isFav? (
+                                        <div className="w-4 h-3.5 left-0 top-0 absolute">
+                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fillRule="evenodd" clipRule="evenodd" d="M8 1.314C12.4384 -3.24799 23.5343 4.7355 8 15C-7.53427 4.7355 3.56164 -3.24799 8 1.314Z" fill="#DC3545"/>
+                                            </svg>
+                                        </div>
+                                    ) : (
+                                        <div className="w-4 h-3.5 left-0 top-0 absolute">
+                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M8 2.74805L7.28325 2.01133C5.5989 0.280067 2.51415 0.877695 1.40036 3.05284C0.876534 4.07583 0.75875 5.55246 1.71429 7.43758C2.63457 9.25313 4.54767 11.4265 8 13.7946C11.4523 11.4265 13.3654 9.25313 14.2857 7.43758C15.2413 5.55246 15.1235 4.07583 14.5996 3.05284C13.4859 0.877695 10.4011 0.280067 8.71675 2.01133L8 2.74805ZM8 15C-7.33313 4.86841 3.27876 -3.04087 7.82432 1.14308C7.88395 1.19797 7.94253 1.25493 8 1.314C8.05747 1.25494 8.11605 1.19797 8.17567 1.14309C12.7212 -3.04088 23.3331 4.8684 8 15Z" fill="#667EEA"/>
+                                            </svg>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
+                            {showTooltip && (
+                                <span 
+                                    className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 text-xs text-black bg-[#E9ECEF] outline-1 outline-black rounded pointer-events-auto"
+                                    onClick={handleTooltipClick} // hide tooltip on click
+                                >
+                                    Favorite
+                                </span>
+                            )}
                         </div>
                     </div>
                     {/* Bottom Section */}
@@ -124,10 +184,13 @@ export default function WordCard({word}){
                 {!showRequestForm ? (
                     <WordDetailCard 
                     word={word} 
-                    onRequest={handleShowRequestForm} // pass handler
+                    onRequest={() => setShowRequestForm(true)} // pass handler
+                    isFav={isFav}
+                    toggleFav={toggleFav}
                     />
                 ) : (
                     <RequestChangingForm 
+                    //user={user}
                     wordId={word.wordId} 
                     onCancel={() => setShowRequestForm(false)} // go back to detail
                     />
@@ -135,6 +198,12 @@ export default function WordCard({word}){
                 </div>
             </div>
             )}
+            {showMessage && (
+                <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-[#764BA2] text-white px-6 py-3 rounded-lg shadow-lg z-50">
+                    {message}
+                </div>
+            )}
+
 
 
         </>
