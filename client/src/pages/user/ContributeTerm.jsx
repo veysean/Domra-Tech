@@ -44,7 +44,7 @@ export default function ContributeTerm() {
                 <div className="flex justify-center m-10">
                     <GuidLine />
                 </div>
-                {isRequestNewWord || isRequestChanging ? null : (
+                {isRequestNewWord ? null : (
                 <div className="w-[1156px] m-auto flex justify-between">
                 {/* add new word request */}
                 <div className="group w-[467px] p-7 bg-white rounded-[30px] outline-1 outline-offset-[-1px] outline-slate-200 inline-flex flex-col justify-center items-center gap-5 hover:shadow-lg transition-shadow duration-300">
