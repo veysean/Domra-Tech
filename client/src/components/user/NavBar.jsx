@@ -8,13 +8,15 @@ export default function NavBar() {
 
     const { auth, logout } = useContext(AuthContext);
     const [open, setOpen] = useState(false);
-    const [language, setLanguage] = useState(i18n.language === "kh" ? "KH" : "ENG");
-    const [isOpen, setIsOpen] = useState(false);
+    const [language, setLanguage] = useState(i18n.language === "kh" ? "ខ្មែរ" : "ENG");
+    const [activeMenu, setActiveMenu] = useState(true);
+    const [showProfile, setShowProfile] = useState(false);
+    const [userData, setUserData] = useState(null);
 
     const toggleMenu = () => setIsOpen(!isOpen);
     const languageMap = {
         ENG: "en",
-        KH: "kh",
+        ខ្មែរ: "kh",
         };
 
    const handleSelect = (lang) => {
@@ -25,7 +27,7 @@ export default function NavBar() {
 
     const navItems = [
         { label: t("home"), path: "/" },
-        { label: t("Categories"), path: "/categories" },
+        { label: t("categories"), path: "/categories" },
         { label: t("contributeTerm"), path: "/contribute-term" },
         { label: t("aboutUs"), path: "/about-us" }
     ];
@@ -130,7 +132,7 @@ export default function NavBar() {
                         {/* Dropdown */}
                         {open && (
                             <div className="absolute right-0 mt-2 w-[113px] bg-[#F8F9FA] shadow-md rounded-2xl overflow-hidden z-50">
-                            {["ENG", "KH"].map((lang) => (
+                            {["ENG", "ខ្មែរ"].map((lang) => (
                                 <div
                                 key={lang}
                                 onClick={() => handleSelect(lang)}

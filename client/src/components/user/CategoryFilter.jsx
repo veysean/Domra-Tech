@@ -100,11 +100,11 @@ export default function Categories() {
                     {/* Static "Categories" button */}
                     <button 
                         onClick={() => setActiveCategory("Categories")}
-                        className={`w-36 h-10 px-2.5 py-5 bg-[#6677EA] rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 flex justify-center items-center gap-2.5
+                        className={`w-36 h-10 px-2.5 py-5 bg-[#6677EA] rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 flex justify-center items-center gap-2.5 hover:shadow-[0px_3px_3px_0px_rgba(0,0,0,0.20)]
                         ${
                             activeCategory === "Categories"
                             ? "bg-[#6677EA] text-white"
-                            : "bg-transparent text-slate-600"
+                            : "bg-transparent text-slate-600 hover:bg-[#F1F5F9]"
                         }`}>
                         <div className="w-4 h-4 relative">
                             <div className="w-4 h-4 left-0 top-0 absolute">
@@ -123,11 +123,11 @@ export default function Categories() {
                         <button 
                             key={cat.categoryId}
                             onClick={() => setActiveCategory(cat.categoryName)}
-                            className={`h-10 px-2.5 py-5 rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 flex justify-center items-center gap-2.5
+                            className={`h-10 px-2.5 py-5 rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 flex justify-center items-center gap-2.5 hover:shadow-[0px_3px_3px_0px_rgba(0,0,0,0.20)]
                             ${
                                 isActive
                                 ? "bg-[#6677EA] text-white"
-                                : "bg-transparent text-slate-600"
+                                : "bg-transparent text-slate-600 hover:bg-[#F1F5F9]"
                             }`}>
                             <div className="w-4 h-4 relative">
                                 <div className="w-4 h-3.5 left-0 top-0 absolute">
