@@ -6,6 +6,7 @@ import ContributeTerm from './pages/user/ContributeTerm';
 import Categories from './pages/user/Categories';
 import AboutUs from './pages/user/AboutUs';
 import AuthPage from "./pages/user/AuthPage";
+import Profile from "./pages/user/Profile";
 import React from 'react';
 function AppRoutes() {
   return (
@@ -51,6 +52,13 @@ function AppRoutes() {
           path="/auth"
           element={
               <AuthPage />
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <Profile />
           }
         />
 
