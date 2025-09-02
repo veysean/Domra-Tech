@@ -159,7 +159,7 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
     return (
         <div className="word-list-container">
             {/*show found terms*/}
-            <div className="text-sm text-gray-500 mb-3">
+            <div className="text-xl text-gray-700 mb-10 font-semibold">
                 {words.length} {words.length === 1 ? 'term' : 'terms'} found
             </div>
             {/*word card */}
