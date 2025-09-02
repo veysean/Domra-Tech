@@ -12,17 +12,17 @@ const menuItems = [
   { id: 'users', name: 'Users', path: '/admin/users' },
 ];
 
-const AdminDashboard = () => {
+const AdminLayout = ({ children }) => {
   const { i18n } = useTranslation();
   return (
     <div className="min-h-screen bg-gray-50">
       <Header i18n={i18n} />
       <Sidebar menuItems={menuItems} />
       <main className="ml-64 p-8 bg-[#F4F4F4] min-h-screen">
-        <Outlet />
+        {children ? children : <Outlet />}
       </main>
     </div>
   );
 };
 
-export default AdminDashboard;
+export default AdminLayout;

@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { BsXLg } from "react-icons/bs";
-import { CategoryServices } from "../../api";
+import { CategoryServices, WordTranslationServices } from "../../api";
 import CategoryDropdown from "./CategoryDropdown";
 
-const WordEdit = ({ word, onClose, onSave, saving, error, success }) => {
+const AddWord = ({ onClose, onAdd, saving, error, success }) => {
   const [form, setForm] = useState({
-    EnglishWord: word?.EnglishWord || "",
-    KhmerWord: word?.KhmerWord || "",
-    FrenchWord: word?.FrenchWord || "",
-    definition: word?.definition || "",
-    example: word?.example || "",
-    reference: word?.reference || "",
-    categories: word?.categories ? word.categories.map(c => c.categoryId) : [],
+    EnglishWord: "",
+    KhmerWord: "",
+    FrenchWord: "",
+    definition: "",
+    example: "",
+    reference: "",
+    categories: [],
   });
   const [categories, setCategories] = useState([]);
 
@@ -26,9 +26,9 @@ const WordEdit = ({ word, onClose, onSave, saving, error, success }) => {
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (onSave) onSave(form);
+    if (onAdd) onAdd(form);
   };
 
   return (
@@ -48,12 +48,9 @@ const WordEdit = ({ word, onClose, onSave, saving, error, success }) => {
         </button>
 
         {/* Title */}
-        <h3 className="text-lg text-center font-semibold text-gray-700 mb-4">Edit Word</h3>
+        <h3 className="text-lg text-center font-semibold text-gray-700 mb-4">Add Word</h3>
         <div className="flex justify-between items-center mb-4">
-          <p className="text-sm text-gray-500">Update word details and categories.</p>
-          <p className="text-sm text-green-700 font-medium">
-            Word ID <span className="text-green-700">{word.wordId}</span>
-          </p>
+          <p className="text-sm text-gray-500">Enter word details and categories.</p>
         </div>
 
         {/* Words Row */}
@@ -79,8 +76,7 @@ const WordEdit = ({ word, onClose, onSave, saving, error, success }) => {
           <label className="text-sm font-semibold text-gray-500 mb-1 block">
               Categories
           </label>
-
-          {/* Dropdown for selecting categories */}
+          <p className="text-sm text-gray-500 mb-1">Select categories for the word.</p>
           <CategoryDropdown
             className="w-138"
             categories={categories}
@@ -99,10 +95,8 @@ const WordEdit = ({ word, onClose, onSave, saving, error, success }) => {
                   }}
                   multiSelect={true}
               />
-
-          {/* Selected categories as chips */}
           <div className="flex flex-wrap gap-2 mt-3">
-              {categories
+            {categories
               .filter(cat => form.categories.includes(cat.categoryId))
               .map(cat => (
                   <span
@@ -123,12 +117,12 @@ const WordEdit = ({ word, onClose, onSave, saving, error, success }) => {
                       <BsXLg size={12} />
                   </button>
                   </span>
-              ))}
-              {form.categories.length === 0 && (
+            ))}
+            {form.categories.length === 0 && (
               <span className="text-gray-400 text-xs italic">
                   No categories selected
               </span>
-              )}
+            )}
           </div>
         </div>
 
@@ -185,7 +179,7 @@ const WordEdit = ({ word, onClose, onSave, saving, error, success }) => {
             className="px-8 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-600 text-sm transition-colors"
             disabled={saving}
           >
-            {saving ? "Saving..." : "Save"}
+            {saving ? "Adding..." : "Add"}
           </button>
         </div>
       </form>
@@ -193,4 +187,4 @@ const WordEdit = ({ word, onClose, onSave, saving, error, success }) => {
   );
 };
 
-export default WordEdit;
+export default AddWord;

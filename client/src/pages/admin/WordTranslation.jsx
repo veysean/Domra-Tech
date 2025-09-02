@@ -6,7 +6,7 @@ import Pagination from "../../components/admin/Pagination.jsx";
 import { WordTranslationServices } from "../../api.js";
 import { CategoryServices } from "../../api.js";
 import CategoryDropdown from "../../components/admin/CategoryDropdown.jsx";
-
+import AddWord from "../../components/admin/AddWord.jsx";
 
 const WordTranslationPage = () => {
   const [words, setWords] = useState([]);
@@ -21,6 +21,10 @@ const WordTranslationPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchTimeout, setSearchTimeout] = useState(null);
 
+  const [showAdd, setShowAdd] = useState(false);
+  const [addSaving, setAddSaving] = useState(false);
+  const [addError, setAddError] = useState(null);
+  const [addSuccess, setAddSuccess] = useState(null);
 
   // Fetch words for a given page
   const fetchWords = async (page = 1, limit = 10, category = selectedCategory) => {
@@ -39,7 +43,6 @@ const WordTranslationPage = () => {
     }
   };
 
- 
   // Search words
   const searchWords = async (query, page = 1, limit = 10, category = selectedCategory) => {
     setLoading(true);
@@ -153,7 +156,10 @@ const WordTranslationPage = () => {
             />
           </div>
           <div>
-            <button className="bg-blue-500 font-semibold text-white rounded-lg px-4 py-2 flex items-center">
+            <button
+              className="bg-blue-500 font-semibold text-white rounded-lg px-4 py-2 flex items-center"
+              onClick={() => setShowAdd(true)}
+            >
               <BsPlus className="mr-2 font-bold" />
               Add Word
             </button>
@@ -178,6 +184,34 @@ const WordTranslationPage = () => {
           </>
         )}
       </div>
+      {/* AddWord Popup */}
+      {showAdd && (
+        <AddWord
+          onClose={() => {
+            setShowAdd(false);
+            setAddError(null);
+            setAddSuccess(null);
+          }}
+          onAdd={async (form) => {
+            setAddSaving(true);
+            setAddError(null);
+            setAddSuccess(null);
+            try {
+              const res = await WordTranslationServices.create(form);
+              setAddSuccess("Word added successfully.");
+              setShowAdd(false);
+              fetchWords(currentPage, 10, selectedCategory); // refresh table
+            } catch (err) {
+              setAddError(err?.response?.data?.message || "Failed to add word");
+            } finally {
+              setAddSaving(false);
+            }
+          }}
+          saving={addSaving}
+          error={addError}
+          success={addSuccess}
+        />
+      )}
     </div>
   );
 };

@@ -1,24 +1,27 @@
 import React, { useState, useRef } from "react";
 import { BsFilterRight } from "react-icons/bs";
 
-const CategoryDropdown = ({ categories, selectedCategory, setSelectedCategory }) => {
+const CategoryDropdown = ({ categories, selectedCategory, setSelectedCategory, className = "" }) => {
     
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef();
   const dropdownTimeout = useRef();
 
-  const selectedName = selectedCategory
-    ? categories.find((c) => c.categoryId === +selectedCategory)?.categoryName
-    : "Select Category";
+
+  const selectedName =
+    selectedCategory && categories.find((c) => c.categoryId === +selectedCategory)
+      ? categories.find((c) => c.categoryId === +selectedCategory).categoryName
+      : "All Categories";
 
   const handleSelect = (categoryId) => {
     setSelectedCategory(categoryId);
     setIsOpen(false); // close after selection
   };
 
+
   return (
     <div
-      className="relative w-60"
+      className={`relative ${className || "w-60"}`}
       ref={dropdownRef}
       onMouseEnter={() => {
         if (dropdownTimeout.current) clearTimeout(dropdownTimeout.current);
@@ -31,8 +34,10 @@ const CategoryDropdown = ({ categories, selectedCategory, setSelectedCategory })
       {/* Dropdown button */}
       <button
         className="w-full border border-gray-300 rounded-lg px-4 py-2 text-left bg-white hover:border-blue-500 flex justify-between items-center"
+        type="button"
+        onClick={() => setIsOpen((prev) => !prev)}
       >
-        {selectedName}
+        <span>{selectedName}</span>
         <span className={`ml-2 transform transition-transform ${isOpen ? "rotate-180" : ""}`}>
           <BsFilterRight />
         </span>

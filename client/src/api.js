@@ -27,6 +27,7 @@ export const WordTranslationServices = {
     API.get("/words/search", {
       params: { q: query, page, limit, categoryId },
     }),
+  create: (wordData) => API.post('/admin/words', wordData),
   update: (id, updatedData) => API.put(`/admin/words/${id}`, updatedData),
 };
 

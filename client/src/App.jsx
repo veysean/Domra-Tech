@@ -11,7 +11,7 @@ import UsersPage from "./pages/admin/User";
 import WordTranslationPage from "./pages/admin/WordTranslation";
 import WordRequestPage from "./pages/admin/WordRequest";
 import AdminLayout from "./layouts/AdminLayout";
-//import AdminLogin from "./pages/admin/AdminLogin";
+import AdminLogin from "./pages/admin/AdminLogin";
 import OverviewPage from "./pages/admin/Overview";
 import React from 'react';
 function AppRoutes() {
@@ -64,14 +64,11 @@ function AppRoutes() {
         {/* <Route
           path="/admin"
           element={
-              <AdminLayout>
                 <AdminLogin />
-              </AdminLayout>
           }
         /> */}
 
-
-        {/* <Route
+        <Route
           path="/admin/dashboard"
           element={
               <AdminLayout>
@@ -105,39 +102,7 @@ function AppRoutes() {
                 <WordTranslationPage />
               </AdminLayout>
           }
-        /> */}
-        <Route path="/admin" element={<AdminDashboard />}>
-          <Route
-            index
-            element={
-              <OverviewPage />
-            }
-          />
-          <Route
-            path="requests"
-            element={
-              <WordRequestPage />
-            }
-          />
-          <Route
-            path="users"
-            element={
-              <UsersPage />
-            }
-          />
-          <Route
-            path="dashboard"
-            element={
-              <OverviewPage />
-            }
-          />
-          <Route
-            path="words"
-            element={
-              <WordTranslationPage />
-            }
-          />
-        </Route>
+        />
 
       </Routes>
         
