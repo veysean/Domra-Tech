@@ -1,11 +1,9 @@
 import { Link, NavLink } from "react-router-dom";
-import { useEffect, useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
-import API from "../../api";
+import { FiMenu, FiX } from "react-icons/fi";
 import i18n from "../../i18n";
 import { t } from "i18next";
-import UserProfile from "./UserProfile";
-import {motion} from "framer-motion";
 export default function NavBar() {
 
     const { auth, logout } = useContext(AuthContext);
@@ -15,6 +13,7 @@ export default function NavBar() {
     const [showProfile, setShowProfile] = useState(false);
     const [userData, setUserData] = useState(null);
 
+    const toggleMenu = () => setIsOpen(!isOpen);
     const languageMap = {
         ENG: "en",
         ខ្មែរ: "kh",
@@ -33,37 +32,47 @@ export default function NavBar() {
         { label: t("aboutUs"), path: "/about-us" }
     ];
 
-   useEffect(() => {
-    if (auth) {
-        const fetchUserData = async () => {
-        try {
-            const response = await API.get("/profile", {
-            headers: { Authorization: `Bearer ${auth.token}` }, 
-            });
-            setUserData(response.data);
-            console.log("Fetched user data:", response.data);
-        } catch (error) {
-            console.error("Error fetching user data:", error);
-        }
-    };
-
-    fetchUserData();
-  }
-}, [auth]);
 
     return (
         <>
-            <div className="w-full h-full px-10 py-5 bg-white border-b border-[#E2E8F0] flex justify-between items-center">
+            <div className="w-full bg-white border-b border-[#E2E8F0] px-6 py-4">
+                <div className="relative flex justify-between items-center px-10 mx-auto">
                 {/* Logo */}
-                <div className="flex items-center gap-2.5">
-                    <div className="w-[36px] h-[28px] text-[#667EEA] text-[24px] font-bold font-inter">KH</div>
-                    <div className="w-[147px] h-[28px] text-[#667EEA] text-[24px] font-normal font-['Righteous']">Domra Tech</div>
+                <div className="flex items-center lg:gap-2.5">
+                    <div className="w-[36px] h-[28px] text-[#667EEA] lg:text-[24px] font-bold font-inter">KH</div>
+                    <div className="w-[147px] h-[28px] text-[#667EEA] lg:text-[24px] font-normal font-['Righteous']">Domra Tech</div>
+                </div>
+                {/* Mobile Menu Icon */}
+                <div className="md:hidden">
+                    <button onClick={toggleMenu} className="text-[#667EEA]">
+                        {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+                    </button>
                 </div>
 
+                {/* Mobile Dropdown */}
+                {isOpen && (
+                <div className="absolute top-full right-0 mt-2 w-[180px] bg-[#F8F9FA] shadow-md rounded-2xl overflow-hidden z-50 transition-all duration-300 ease-in-out">
+                    {navItems.map((item) => (
+                    <NavLink
+                        key={item.label}
+                        to={item.path}
+                        onClick={() => setIsOpen(false)}
+                        className={({ isActive }) =>
+                        `px-5 py-2.5 text-[#667EEA]/80 text-[18px] font-inter hover:bg-gray-100 cursor-pointer flex justify-between items-center border-t first:border-t-0 border-[#E2E8F0] ${
+                            isActive ? "underline underline-offset-4 decoration-[#667EEA] font-semibold" : ""
+                        }`
+                        }
+                    >
+                        {item.label}
+                    </NavLink>
+                    ))}
+                </div>
+                )}
+
                 {/* Menu & Actions */}
-                <div className="flex justify-between items-center w-full max-w-[1200px]">
+                <div className="hidden md:flex justify-between items-center w-full max-w-[1200px]">
                     {/* Nav Links */}
-                    <div className="ml-50 flex gap-10 w-auto">
+                    <div className="hidden ml-50 md:flex gap-10">
                         {navItems.map((item) => (
                             <NavLink
                                 key={item.label}
@@ -78,36 +87,13 @@ export default function NavBar() {
                             </NavLink>
                         ))}
                     </div>
-
-                    <div className="flex items-center gap-2.5">
-                        
+                    
+                    <div className="hidden md:flex items-center gap-2.5">
                     {/* LogIn / Sign up button */}
                     {auth ? (
-                        <div className="relative group">
-                            <button className="px-2.5 py-2 bg-[#667EEA] rounded-[30px] text-white text-[20px] font-medium font-inter" onClick={() => setShowProfile(!showProfile)}>
-                                {auth.user?.username || t("profile")}
-                            </button>
-                            {showProfile && (
-                                <div className="fixed inset-0 bg-black/50 z-50 flex justify-end">
-                                    <motion.div
-                                    initial={{ opacity: 0, scale: 0.95 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.95 }}
-                                    transition={{ duration: 0.3 }}
-                                    className="relative"
-                                    >
-                                    <button
-                                        onClick={() => setShowProfile(false)}
-                                        className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
-                                    >
-                                        ✕
-                                    </button>
-                                    <UserProfile userData={userData} />
-                                    </motion.div>
-                                </div>
-                                )}
-
-                        </div>
+                        <Link to="/profile" className="px-2.5 py-2 bg-[#667EEA] rounded-[30px] flex justify-center items-center">
+                            <div className="text-white text-[20px] font-medium font-inter">{t("profile")}</div>
+                        </Link>
                         ) : (
                         <Link to="/auth" className="px-2.5 py-2 bg-[#667EEA] rounded-[30px] flex justify-center items-center">
                             <div className="text-white text-[20px] font-medium font-inter">{t("login")} / {t("signup")}</div>
@@ -169,7 +155,7 @@ export default function NavBar() {
                     </div>
                 </div>
                 </div>
-
+            </div>
         </>
     );
 
