@@ -30,6 +30,7 @@ export default function RequestChangingForm({ onCancel, wordId }) {
   };
 
   return (
+    <div className="bg-white w-[657px] rounded-[30px]">
     <div className="w-[657px] p-7 bg-gradient-to-l from-indigo-500/50 to-purple-800/50 rounded-[30px] shadow-lg inline-flex flex-col justify-center items-center gap-7">
       <div className="self-stretch h-10 text-center justify-start text-white text-3xl font-bold font-['Inter']">
         Request Changing
@@ -125,6 +126,7 @@ export default function RequestChangingForm({ onCancel, wordId }) {
           </button>
         </div>
       </form>
+    </div>
     </div>
   );
 }
