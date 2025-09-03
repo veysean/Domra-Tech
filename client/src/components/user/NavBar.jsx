@@ -12,6 +12,7 @@ export default function NavBar() {
     const [activeMenu, setActiveMenu] = useState(true);
     const [showProfile, setShowProfile] = useState(false);
     const [userData, setUserData] = useState(null);
+    const [isOpen, setIsOpen] = useState(false);
 
     const toggleMenu = () => setIsOpen(!isOpen);
     const languageMap = {
