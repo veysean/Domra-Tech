@@ -11,6 +11,7 @@ import { BsShieldLock } from "react-icons/bs";
 import { BsBoxArrowLeft } from "react-icons/bs";
 import { BsCheck2Square } from "react-icons/bs";
 import { useTranslation } from 'react-i18next';
+import LogoutConfirmation from './LogoutConfirmation.jsx';
 
 const menuItems = [
   { id: 'home',key: 'home', path: '/admin/dashboard', icon: (
@@ -66,13 +67,7 @@ const Sidebar = () => {
         </nav>
       </div>
       <div className="mb-8 px-4">
-        <NavLink
-          to="/logout"
-          className="flex items-center gap-4 px-4 py-3 rounded-lg font-medium text-red-600 hover:bg-red-50 transition-colors duration-150"
-        >
-          <BsBoxArrowLeft size={22}/>
-          <span>{t("logout")}</span>
-        </NavLink>
+          <LogoutConfirmation />
       </div>
     </aside>
   );

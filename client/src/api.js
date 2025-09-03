@@ -21,6 +21,26 @@ export const WordTranslationServices = {
   searchWords: (query) => API.get('/words/search', { params: { q: query } }),
 };
 
+// word request services
+export const userServices = {
+  getProfile: () => API.get('/profile'),
+  updateProfile: (data) => API.put('/profile', data),
+  deleteAccount: () => API.delete('/profile'),
 
+  // Admin endpoints
+  getAll: (page = 1, limit = 60) => API.get('/users', { params: { page, limit } }),
+  deleteUser: (id) => API.delete(`/users/${id}`),
+  updateUser: (id, data) => API.put(`/users/${id}`, data),
+};
+
+// request services
+export const requestServices = {
+  getRecent: () => API.get("/requests/recent"),
+};
+
+// stats services
+export const statsServices = {
+  getStats: () => API.get("/stats"),
+};
 
 export default API;

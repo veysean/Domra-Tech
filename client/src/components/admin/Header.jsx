@@ -1,7 +1,7 @@
 
 import { BsGlobe } from "react-icons/bs";
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import React, { useState, useEffect, useRef } from "react";
 
 const Header = ({ i18n }) => {
@@ -57,7 +57,9 @@ const Header = ({ i18n }) => {
         </div>
 
         {/* User Profile */}
-        <div className="relative group">
+        <NavLink 
+        to={"profile"}
+        className="relative group">
           <button
             className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 transition"
             onClick={() => navigate("profile")}
@@ -73,7 +75,7 @@ const Header = ({ i18n }) => {
                           transition-all duration-200 pointer-events-none group-hover:pointer-events-auto">
             <div className="px-4 py-2 text-gray-700 font-medium">{admin.name}</div>
           </div>
-        </div>
+        </NavLink>
       </div>
     </header>
   );
