@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BsXLg } from "react-icons/bs";
 import { CategoryServices, WordTranslationServices } from "../../api";
 import CategoryDropdown from "./CategoryDropdown";
+import CategoryMultiSelect from "./CategoryMultiSelect";
 
 const AddWord = ({ onClose, onAdd, saving, error, success }) => {
   const [form, setForm] = useState({
@@ -77,24 +78,12 @@ const AddWord = ({ onClose, onAdd, saving, error, success }) => {
               Categories
           </label>
           <p className="text-sm text-gray-500 mb-1">Select categories for the word.</p>
-          <CategoryDropdown
+          <CategoryMultiSelect
             className="w-138"
             categories={categories}
-            selectedCategory={form.categories}
-            setSelectedCategory={(selected) => {
-            let newCats = Array.isArray(selected) ? selected : [selected];
-            if (typeof selected === "number" || typeof selected === "string") {
-              const id = +selected;
-              if (form.categories.includes(id)) {
-              newCats = form.categories.filter(c => c !== id);
-              } else {
-              newCats = [...form.categories, id];
-                      }
-                  }
-                  setForm(prev => ({ ...prev, categories: newCats }));
-                  }}
-                  multiSelect={true}
-              />
+            selectedCategories={form.categories}
+            setSelectedCategories={(newCats) => setForm(prev => ({ ...prev, categories: newCats }))}
+          />
           <div className="flex flex-wrap gap-2 mt-3">
             {categories
               .filter(cat => form.categories.includes(cat.categoryId))

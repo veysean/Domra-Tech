@@ -27,7 +27,7 @@ const verifyAuth = (req, res, next) => {
 
 // checks if the authenticated user is an admin
 const checkAdminRole = (req, res, next) => {
-  if (req.role !== 'admin') {
+  if (!req.user || req.user.role !== 'admin') {
     return res.status(403).json({ message: 'Access denied. You do not have permission to perform this action.' });
   }
   next();

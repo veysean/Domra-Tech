@@ -27,10 +27,16 @@ const WordsTable = ({ words: initialWords }) => {
     setSelectedWord(null);
   };
 
-  const handleEditClick = (word) => {
-    setEditWord(word);
+  const handleEditClick = async (word) => {
     setError(null);
     setSuccess(null);
+    try {
+      // Fetch the latest word info with categories from backend
+      const res = await WordTranslationServices.findById(word.wordId);
+      setEditWord(res.data);
+    } catch (err) {
+      setEditWord(word); // fallback to local if fetch fails
+    }
   };
 
   const handleCloseEdit = () => {
@@ -47,8 +53,8 @@ const WordsTable = ({ words: initialWords }) => {
       // Ensure categories are sent as array of IDs
       const payload = { ...updatedWord, categories: updatedWord.categories };
       const res = await WordTranslationServices.update(editWord.wordId, payload);
-      // If backend returns updated word, use it; else merge manually
-      const updated = res.data && res.data.word ? res.data.word : { ...editWord, ...updatedWord };
+      // Use backend response (with categories) if available
+      const updated = res.data ? res.data : { ...editWord, ...updatedWord };
       setWords((prev) =>
         prev.map((w) => (w.wordId === editWord.wordId ? updated : w))
       );

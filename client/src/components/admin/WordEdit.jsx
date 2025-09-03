@@ -1,9 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { BsXLg } from "react-icons/bs";
 import { CategoryServices } from "../../api";
-import CategoryDropdown from "./CategoryDropdown";
+import CategoryMultiSelect from "./CategoryMultiSelect";
+
 
 const WordEdit = ({ word, onClose, onSave, saving, error, success }) => {
+  // Normalize categories from backend (Sequelize may return .Categories or .categories)
+  const getCategoryIds = (w) => {
+    if (w?.categories && Array.isArray(w.categories)) {
+      return w.categories.map(c => c.categoryId);
+    }
+    if (w?.Categories && Array.isArray(w.Categories)) {
+      return w.Categories.map(c => c.categoryId);
+    }
+    return [];
+  };
+
   const [form, setForm] = useState({
     EnglishWord: word?.EnglishWord || "",
     KhmerWord: word?.KhmerWord || "",
@@ -11,9 +23,23 @@ const WordEdit = ({ word, onClose, onSave, saving, error, success }) => {
     definition: word?.definition || "",
     example: word?.example || "",
     reference: word?.reference || "",
-    categories: word?.categories ? word.categories.map(c => c.categoryId) : [],
+    categories: getCategoryIds(word),
   });
   const [categories, setCategories] = useState([]);
+
+  // Sync form.categories with word.categories when word changes
+  useEffect(() => {
+    setForm(prev => ({
+      ...prev,
+      EnglishWord: word?.EnglishWord || "",
+      KhmerWord: word?.KhmerWord || "",
+      FrenchWord: word?.FrenchWord || "",
+      definition: word?.definition || "",
+      example: word?.example || "",
+      reference: word?.reference || "",
+      categories: getCategoryIds(word),
+    }));
+  }, [word]);
 
   useEffect(() => {
     CategoryServices.getAll().then(res => {
@@ -81,54 +107,43 @@ const WordEdit = ({ word, onClose, onSave, saving, error, success }) => {
           </label>
 
           {/* Dropdown for selecting categories */}
-          <CategoryDropdown
+          <CategoryMultiSelect
             className="w-138"
             categories={categories}
-            selectedCategory={form.categories}
-            setSelectedCategory={(selected) => {
-            let newCats = Array.isArray(selected) ? selected : [selected];
-            if (typeof selected === "number" || typeof selected === "string") {
-              const id = +selected;
-              if (form.categories.includes(id)) {
-              newCats = form.categories.filter(c => c !== id);
-              } else {
-              newCats = [...form.categories, id];
-                      }
-                  }
-                  setForm(prev => ({ ...prev, categories: newCats }));
-                  }}
-                  multiSelect={true}
-              />
+            selectedCategories={form.categories}
+            setSelectedCategories={(newCats) => setForm(prev => ({ ...prev, categories: newCats }))}
+          />
 
           {/* Selected categories as chips */}
           <div className="flex flex-wrap gap-2 mt-3">
-              {categories
-              .filter(cat => form.categories.includes(cat.categoryId))
-              .map(cat => (
+            {Array.isArray(form.categories) && form.categories.length > 0 ? (
+              categories
+                .filter(cat => form.categories.includes(cat.categoryId))
+                .map(cat => (
                   <span
-                  key={cat.categoryId}
-                  className="flex items-center gap-1 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 px-3 py-2 rounded-lg text-xs font-medium shadow-sm hover:from-blue-200 hover:to-blue-300 transition"
+                    key={cat.categoryId}
+                    className="flex items-center gap-1 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 px-3 py-2 rounded-lg text-xs font-medium shadow-sm hover:from-blue-200 hover:to-blue-300 transition"
                   >
-                  {cat.categoryName}
-                  <button
+                    {cat.categoryName}
+                    <button
                       type="button"
                       onClick={() =>
-                      setForm(prev => ({
+                        setForm(prev => ({
                           ...prev,
                           categories: prev.categories.filter(c => c !== cat.categoryId),
-                      }))
+                        }))
                       }
                       className="ml-1 text-blue-600 hover:text-blue-900"
-                  >
+                    >
                       <BsXLg size={12} />
-                  </button>
+                    </button>
                   </span>
-              ))}
-              {form.categories.length === 0 && (
+                ))
+            ) : (
               <span className="text-gray-400 text-xs italic">
-                  No categories selected
+                No categories yet for this word
               </span>
-              )}
+            )}
           </div>
         </div>
 

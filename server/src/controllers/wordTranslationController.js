@@ -142,11 +142,33 @@ const findAll = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
+    const categoryId = req.query.categoryId;
+
+    let where = {};
+    let include = [];
+    if (categoryId) {
+      include.push({
+        model: db.Category,
+        where: { categoryId: Number(categoryId) },
+        through: { attributes: [] },
+        attributes: [],
+        required: true, // Ensures INNER JOIN for filtering
+      });
+    }
+
+    // Debug logging
+    console.log('findAll called with categoryId:', categoryId);
+    console.log('Sequelize include:', JSON.stringify(include, null, 2));
 
     const words = await WordTranslation.findAndCountAll({
+      where,
+      include,
       limit: limit,
       offset: offset,
     });
+
+    // Print the number of words returned for debugging
+    console.log('Words returned:', words.rows.length, 'of', words.count);
 
     return res.status(200).json({
       totalItems: words.count,
@@ -154,8 +176,14 @@ const findAll = async (req, res) => {
       currentPage: page,
       words: words.rows,
     });
+    return res.status(200).json({
+      totalItems: words.count,
+      totalPages: Math.ceil(words.count / limit),
+      currentPage: page,
+      words: words.rows,
+    });
   } catch (error) {
-    console.error(error);
+    console.error('findAll error:', error);
     return res.status(500).json({ error: 'Failed to retrieve words' });
   }
 };
@@ -182,7 +210,9 @@ const findAll = async (req, res) => {
 
 const findById = async (req, res) => {
   try {
-    const word = await WordTranslation.findByPk(req.params.wordId);
+    const word = await WordTranslation.findByPk(req.params.wordId, {
+      include: [{ model: db.Category }],
+    });
     if (!word) {
       return res.status(404).json({ error: 'Word not found' });
     }
@@ -191,7 +221,6 @@ const findById = async (req, res) => {
     console.error(error);
     return res.status(500).json({ error: 'Failed to retrieve word' });
   }
-  
 };
 
 // Function to create a new word translation
@@ -233,8 +262,23 @@ const findById = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    const newWord = await WordTranslation.create(req.body);
-    return res.status(201).json(newWord);
+    const { categories, ...wordData } = req.body;
+    // Create the word
+    const newWord = await WordTranslation.create(wordData);
+    // Assign categories if provided
+    if (categories && Array.isArray(categories) && categories.length > 0) {
+      if (typeof newWord.setCategories === 'function') {
+        await newWord.setCategories(categories);
+        console.log('Assigned categories to new word', newWord.wordId, categories);
+      } else {
+        console.error('No setCategories method found on newWord instance');
+      }
+    }
+    // Return the new word with categories
+    const wordWithCategories = await WordTranslation.findByPk(newWord.wordId, {
+      include: [{ model: db.Category }],
+    });
+    return res.status(201).json(wordWithCategories);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Failed to create word' });
@@ -287,14 +331,37 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const [updated] = await WordTranslation.update(req.body, {
+    const { categories, ...wordData } = req.body;
+    // Update word fields
+    const [updated] = await WordTranslation.update(wordData, {
       where: { wordId: req.params.wordId },
     });
-    if (updated) {
-      const updatedWord = await WordTranslation.findByPk(req.params.wordId);
-      return res.status(200).json(updatedWord);
+    if (!updated) {
+      return res.status(404).json({ error: 'Word not found' });
     }
-    return res.status(404).json({ error: 'Word not found' });
+    // Update categories if provided
+    if (categories && Array.isArray(categories)) {
+      const word = await WordTranslation.findByPk(req.params.wordId);
+      if (word) {
+        if (typeof word.setCategories === 'function') {
+          await word.setCategories(categories);
+          console.log('Updated categories for word', req.params.wordId, 'to', categories);
+        } else {
+          // fallback: try setCategories from db.WordTranslation associations
+          if (word.setCategory) {
+            await word.setCategory(categories);
+            console.log('Used setCategory fallback for word', req.params.wordId);
+          } else {
+            console.error('No setCategories or setCategory method found on word instance');
+          }
+        }
+      }
+    }
+    // Return updated word with categories
+    const updatedWord = await WordTranslation.findByPk(req.params.wordId, {
+      include: [{ model: db.Category }],
+    });
+    return res.status(200).json(updatedWord);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Failed to update word' });

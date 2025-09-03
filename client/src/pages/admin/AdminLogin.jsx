@@ -3,6 +3,7 @@ import { authServices } from "../../api";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 const AdminLogin = () => {
 
   const [error, setError] = useState("");
@@ -24,14 +25,25 @@ const AdminLogin = () => {
    //connect to authentication API 
    try {
       const res = await authServices.login(formData);
-      const {token} = res.data;
-      if(token) {
-        login(token);
-        //navigate to main
-        navigate(location.state?.from || "/");
-        console.log("Login successful");
-
-      }else{
+      const { token } = res.data;
+      if (token) {
+        let decoded;
+        try {
+          decoded = jwtDecode(token);
+        } catch (err) {
+          setError("Invalid token received.");
+          setLoading(false);
+          return;
+        }
+        if (decoded.role === "admin") {
+          login(token);
+          //navigate to admin dashboard
+          navigate("/admin/dashboard");
+          console.log("Login successful");
+        } else {
+          setError("Access denied. You are not an admin.");
+        }
+      } else {
         setError("Login failed. Please check your credentials.");
       }
    } catch (error) {

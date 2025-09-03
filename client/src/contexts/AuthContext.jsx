@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { isAuthenticated, setToken, logout as removeToken, getToken } from '../utils/auth';
 import {jwtDecode} from 'jwt-decode';
+import API from '../api';
 
 // Create Context
 export const AuthContext = createContext();
@@ -18,8 +19,11 @@ export const AuthProvider = ({ children }) => {
 
   const login = (token) => {
     setToken(token);
+    // Set axios default header for all future requests
+    API.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     try {
       const decoded = jwtDecode(token);
+      console.log('Decoded JWT:', decoded); // Debug: log the decoded token
       setAuth({ token, user: decoded });
 
     } catch (error) {

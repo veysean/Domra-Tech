@@ -31,7 +31,6 @@ const WordTranslationPage = () => {
     setLoading(true);
     try {
       const res = await WordTranslationServices.findAll(page, limit, category);
-      console.log("Fetched words:", res.data);
       setWords(res.data.words || []);
       setCurrentPage(res.data.currentPage || page);
       setTotalPages(res.data.totalPages || 1);
@@ -77,7 +76,6 @@ const WordTranslationPage = () => {
     setLoading(true);
     try {
       const res = await CategoryServices.getAll();
-       console.log("Categories:", res.data); // debug
       setCategories(res.data || []);
     } catch (err) {
       console.error("Failed to fetch categories:", err);
@@ -197,7 +195,14 @@ const WordTranslationPage = () => {
             setAddError(null);
             setAddSuccess(null);
             try {
-              const res = await WordTranslationServices.create(form);
+              // Ensure categories is an array of numbers
+              const payload = {
+                ...form,
+                categories: Array.isArray(form.categories)
+                  ? form.categories.map(Number)
+                  : [],
+              };
+              const res = await WordTranslationServices.create(payload);
               setAddSuccess("Word added successfully.");
               setShowAdd(false);
               fetchWords(currentPage, 10, selectedCategory); // refresh table
