@@ -14,7 +14,7 @@ export default function NavBar() {
     const [userData, setUserData] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
 
-    const toggleMenu = () => setIsOpen(!isOpen);
+    const toggleMenu = () => setOpen(!open);
     const languageMap = {
         ENG: "en",
         ខ្មែរ: "kh",
@@ -46,18 +46,18 @@ export default function NavBar() {
                 {/* Mobile Menu Icon */}
                 <div className="md:hidden">
                     <button onClick={toggleMenu} className="text-[#667EEA]">
-                        {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+                        {open ? <FiX size={24} /> : <FiMenu size={24} />}
                     </button>
                 </div>
 
                 {/* Mobile Dropdown */}
-                {isOpen && (
+                {open && (
                 <div className="absolute top-full right-0 mt-2 w-[180px] bg-[#F8F9FA] shadow-md rounded-2xl overflow-hidden z-50 transition-all duration-300 ease-in-out">
                     {navItems.map((item) => (
                     <NavLink
                         key={item.label}
                         to={item.path}
-                        onClick={() => setIsOpen(false)}
+                        onClick={() => setOpen(false)}
                         className={({ isActive }) =>
                         `px-5 py-2.5 text-[#667EEA]/80 text-[18px] font-inter hover:bg-gray-100 cursor-pointer flex justify-between items-center border-t first:border-t-0 border-[#E2E8F0] ${
                             isActive ? "underline underline-offset-4 decoration-[#667EEA] font-semibold" : ""

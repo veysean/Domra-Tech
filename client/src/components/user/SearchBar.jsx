@@ -28,7 +28,7 @@ export default function SearchBar({ onSearchChange, onSearchSubmit, onSearchFocu
     };
 
   return (
-    <div className="self-stretch h-16 p-5 rounded-[30px] outline-1 outline-offset-[-1px] outline-slate-200 inline-flex flex-col justify-center items-start gap-5​ hover:outline-[#667EEA]">
+    <div className="sm:w-full lg:self-stretch h-12 lg:h-16 p-5 rounded-[30px] outline-1 outline-offset-[-1px] outline-slate-200 inline-flex flex-col justify-center items-start gap-5​ hover:outline-[#667EEA]">
       <div className="p-2.5 inline-flex justify-center items-center gap-2.5 w-full">
         <input
           type="text"
@@ -37,7 +37,7 @@ export default function SearchBar({ onSearchChange, onSearchSubmit, onSearchFocu
           onFocus={handleFocus}
           onSubmit={handleSubmit}
           placeholder="Search terms in English or Khmer or French... (ស្វែងរកពាក្យជាភាសាអង់គ្លេស ឬខ្មែរ ឬបារាំង...)"
-          className="w-full text-gray-700/80 text-base font-normal font-['Inter'] bg-transparent outline-none"
+          className="w-full text-gray-700/80 text-sm lg:text-base font-normal font-['Inter'] bg-transparent outline-none"
         />
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g clip-path="url(#clip0_887_686)">
