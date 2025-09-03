@@ -1,12 +1,13 @@
 import React, { useState, useContext } from "react";
 import { FcGoogle } from "react-icons/fc"; // Google icon
-import { FaUser } from "react-icons/fa";   // Guest/User icon
+import { FaUser } from "react-icons/fa";   // Guest/User icon
 import { HiArrowLeft } from "react-icons/hi"; // arrow icon
 import { authServices } from "../../api";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../../contexts/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
+
 const SignUpCard = () => {
   const { t } = useTranslation();
   const [step, setStep] = useState(1);
@@ -18,6 +19,9 @@ const SignUpCard = () => {
     firstName: "",
     lastName: ""
   });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleNext = (e) => {
     e.preventDefault();
@@ -26,16 +30,24 @@ const SignUpCard = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-   // console.log("Sign Up data:", { firstName, lastName, email, password });
-    // connect to sign-up API here
+    setError("");
+    setMessage("");
+    setLoading(true);
+
     try{
       const res = await authServices.register(formData);
-      login(res.data.token); // decode and store token
-      navigate("/");
+      // Success message from the backend (e.g., "Verification email sent")
+      setMessage(res.data.message);
+      // No token is received on register, so we don't call login()
     } catch (error) {
-      console.error("Error during sign-up:", error);
+      if (error.response?.data?.message) {
+        setError(error.response.data.message);
+      } else {
+        setError("Sign-up failed. Please try again.");
+      }
+    } finally {
+      setLoading(false);
     }
-
   };
 
   const handleBack = () => {
@@ -47,84 +59,78 @@ const SignUpCard = () => {
       <h2 className="absolute left-[217px] top-[47px] text-3xl font-['Righteous'] gradient-text">
         {t("signup")}
       </h2>
-    {/* step one for sign up */}
-    {step === 1 && (
-      <form
-        onSubmit={handleNext}
-        className="w-96 h-80 left-[69px] top-[113px] absolute flex flex-col gap-2.5"
-      >
-        {/* Email */}
-        <div className="flex flex-col gap-2.5">
-          <label className="text-indigo-500 text-xl font-['Inter']">{t("email")}: </label>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light"
-          />
-        </div>
-
-        {/* Password */}
-        <div className="flex flex-col gap-2.5">
-          <label className="text-indigo-500 text-xl font-['Inter']">{t("password")}: </label>
-          <input
-            type="password"
-            placeholder="Enter your password"
-            value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light"
-          />
-        </div>
-
-        {/* Divider */}
-        <div className="flex items-center gap-3.5 mt-2">
-          <div className="w-28 h-px bg-slate-500" />
+      {/* step one for sign up */}
+      {step === 1 && (
+        <form
+          onSubmit={handleNext}
+          className="w-96 h-80 left-[69px] top-[113px] absolute flex flex-col gap-2.5"
+        >
+          {/* Email */}
+          <div className="flex flex-col gap-2.5">
+            <label className="text-indigo-500 text-xl font-['Inter']">{t("email")}: </label>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light"
+            />
+          </div>
+          {/* Password */}
+          <div className="flex flex-col gap-2.5">
+            <label className="text-indigo-500 text-xl font-['Inter']">{t("password")}: </label>
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light"
+            />
+          </div>
+          {/* Divider */}
+          <div className="flex items-center gap-3.5 mt-2">
+            <div className="w-28 h-px bg-slate-500" />
             <span className="w-28 text-center text-slate-500 text-sm font-['Inter']">
               or continue with
             </span>
-          <div className="w-28 h-px bg-slate-500" /></div>
-
-        {/* Continue with Google */}
-        <div className="w-96 px-5 py-2.5 bg-slate-200 rounded-xl flex items-center gap-20 cursor-pointer">
-           <FcGoogle className="w-5 h-5" />
-            <span className="text-gray-600 text-sm font-['Inter']">
-              Continue with Google
-            </span>
-        </div>
-
-        {/* Continue as Guest */}
-        <Link to={"/"}>
-        <div className="w-96 px-5 py-2.5 bg-slate-200 rounded-xl flex items-center gap-20 cursor-pointer">
-         <FaUser className="w-5 h-5 text-gray-600" />
-          <span className="text-gray-600 text-sm font-['Inter']">
-            Continue as guest
-          </span>
-        </div>
-        </Link>
-
-        {/* Sign up Button */}
-        <button
-          type="submit"
-          className="self-stretch p-2.5 bg-indigo-500 rounded-xl text-white text-sm font-extrabold mt-3 hover:bg-indigo-500/80"
-        >
-          Next
-        </button>
-      </form>
-      )}
-       {/* Step 2: First Name & Last Name */}
+            <div className="w-28 h-px bg-slate-500" /></div>
+          {/* Continue with Google */}
+          <div className="w-96 px-5 py-2.5 bg-slate-200 rounded-xl flex items-center gap-20 cursor-pointer">
+             <FcGoogle className="w-5 h-5" />
+             <span className="text-gray-600 text-sm font-['Inter']">
+               Continue with Google
+             </span>
+          </div>
+          {/* Continue as Guest */}
+          <Link to={"/"}>
+            <div className="w-96 px-5 py-2.5 bg-slate-200 rounded-xl flex items-center gap-20 cursor-pointer">
+             <FaUser className="w-5 h-5 text-gray-600" />
+             <span className="text-gray-600 text-sm font-['Inter']">
+               Continue as guest
+             </span>
+            </div>
+          </Link>
+          {/* Sign up Button */}
+          <button
+            type="submit"
+            className="self-stretch p-2.5 bg-indigo-500 rounded-xl text-white text-sm font-extrabold mt-3 hover:bg-indigo-500/80"
+          >
+            Next
+          </button>
+        </form>
+        )}
+        {/* Step 2: First Name & Last Name */}
         {step === 2 && (
-          
           <form
             onSubmit={handleSignUp}
             className="w-96 left-[69px] top-[113px] absolute flex flex-col gap-5"
           >
-          <div
-            onClick={handleBack}
-            className="text-indigo-500 cursor-pointer text-xl flex items-center gap-1"
-            >
-            <HiArrowLeft />
-          </div>
+            <div
+              onClick={handleBack}
+              className="text-indigo-500 cursor-pointer text-xl flex items-center gap-1"
+              >
+              <HiArrowLeft />
+            </div>
             {/* First Name */}
             <div className="flex flex-col gap-2.5">
               <label className="text-indigo-500 text-xl font-['Inter']">First Name:</label>
@@ -136,7 +142,6 @@ const SignUpCard = () => {
                 className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light leading-snug"
               />
             </div>
-
             {/* Last Name */}
             <div className="flex flex-col gap-2.5">
               <label className="text-indigo-500 text-xl font-['Inter']">Last Name:</label>
@@ -148,7 +153,6 @@ const SignUpCard = () => {
                 className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light leading-snug"
               />
             </div>
-
             {/* Sign Up Button */}
             <button
               type="submit"
@@ -156,6 +160,8 @@ const SignUpCard = () => {
             >
               Sign Up
             </button>
+            {error && <p className="text-red-500 mt-2">{error}</p>}
+            {message && <p className="text-green-500 mt-2">{message}</p>}
           </form>
         )}
     </div>

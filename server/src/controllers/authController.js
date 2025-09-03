@@ -137,7 +137,7 @@ const register = async (req, res) => {
 // function to verifies the email token
 /**
  * @swagger
- * /verify-email:
+ * /auth/verify-email:
  *   get:
  *     summary: Verify user's email using a token
  *     description: Verifies a user's email address using a token sent via email. If the token is valid and not expired, the user's status is updated to "verified" and a JWT is returned.
@@ -193,20 +193,19 @@ const verifyEmail = async (req, res) => {
     const user = await User.findOne({
       where: {
         emailVerificationToken: token,
-        emailVerificationExpires: { [Op.gt]: Date.now() }
       }
     });
 
-    if (!user) {
+    // Correct: First, check if the user exists or if the token is expired.
+    if (!user || user.emailVerificationExpires < Date.now()) {
       return res.status(400).json({ message: 'Verification token is invalid or has expired.' });
     }
 
     user.status = 'verified';
-    user.emailVerificationToken = null; 
+    user.emailVerificationToken = null; // Invalidate the token
     user.emailVerificationExpires = null;
     await user.save();
 
-    // Generate a JWT for the now-verified user
     const jwtToken = jwt.sign(
       { userId: user.userId, role: user.role, status: user.status },
       process.env.JWT_SECRET,
@@ -220,7 +219,7 @@ const verifyEmail = async (req, res) => {
 
   } catch (error) {
     console.error('Email verification error:', error);
-    return res.status(500).json({ message: 'Failed to verify email.' });
+    return res.status(500).json({ message: 'Failed to verify email.', error: error.message });
   }
 };
 

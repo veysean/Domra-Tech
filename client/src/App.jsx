@@ -9,6 +9,8 @@ import AboutUs from './pages/user/AboutUs';
 import AuthPage from "./pages/user/AuthPage";
 import ForgotPasswordPage from "./pages/user/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/user/ResetPasswordPage";
+import EmailVerificationPage from './pages/user/VerifyEmailPage';
+import VerifyEmailPage from './pages/user/VerifyEmailPage';
 
 function AppRoutes() {
   return (
@@ -25,6 +27,7 @@ function AppRoutes() {
         <Route path="/auth/register" element={<MainLayout />} />
         <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
 
         {/* A fallback route for any unmatched paths */}
         <Route path="*" element={<Navigate to="/" />} />

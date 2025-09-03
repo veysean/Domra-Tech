@@ -15,6 +15,7 @@ export const authServices = {
   login: (credentials) => API.post('/auth/login', credentials),
   forgotPassword: (emailData) => API.post('/auth/forgot-password', emailData),
   resetPassword: (resetData) => API.post('/auth/reset-password', resetData),
+  verifyEmail: (token) => API.get(`/auth/verify-email?token=${token}`),
 };
 
 // word translation services
