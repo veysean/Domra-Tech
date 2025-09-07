@@ -10,32 +10,36 @@ import { BsGear } from "react-icons/bs";
 import { BsShieldLock } from "react-icons/bs";
 import { BsBoxArrowLeft } from "react-icons/bs";
 import { BsCheck2Square } from "react-icons/bs";
+import { useTranslation } from 'react-i18next';
+import LogoutConfirmation from './LogoutConfirmation.jsx';
 
 const menuItems = [
-  { id: 'home', name: 'Home', path: '/admin/dashboard', icon: (
+  { id: 'home',key: 'home', path: '/admin/dashboard', icon: (
     <BsHouseDoor size={22}/>
   ) },
-  { id: 'words', name: 'Word Translation', path: '/admin/words', icon: (
+  { id: 'words', key: 'wordTranslation', path: '/admin/words', icon: (
     <BsBook size={22}/>
   ) },
-  { id: 'requests', name: 'Word Request', path: '/admin/requests', icon: (
+  { id: 'requests', key: 'wordRequest', path: '/admin/requests', icon: (
     <BsEnvelopeExclamation size={22}/>
   ) },
-  { id: 'users', name: 'User', path: '/admin/users', icon: (
+  { id: 'users', key: 'user', path: '/admin/users', icon: (
     <BsPeople size={22}/>
   ) },
-  { id: 'settings', name: 'Settings', path: '/admin/settings', icon: (
+  { id: 'settings', key: 'settings', path: '/admin/settings', icon: (
     <BsGear size={22}/>
   ) },
-  { id: 'privacy', name: 'Privacy', path: '/admin/privacy', icon: (
+  { id: 'privacy', key: 'privacy', path: '/admin/privacy', icon: (
     <BsShieldLock size={22}/>
   ) },
-  { id: 'checkmode', name: 'Check Mode', path: '/admin/checkmode', icon: (
+  { id: 'checkmode', key: 'checkMode', path: '/admin/checkmode', icon: (
     <BsCheck2Square size={22}/>
   ) },
 ];
 
 const Sidebar = () => {
+  const { t } = useTranslation('adSidebar');
+
   return (
     <aside className="h-screen w-64 bg-white shadow-lg flex flex-col justify-between fixed left-0 top-0 z-30">
       <div>
@@ -57,19 +61,13 @@ const Sidebar = () => {
               end={item.id === 'home'}
             >
               {item.icon}
-              <span>{item.name}</span>
+              <span>{t(item.key)}</span>
             </NavLink>
           ))}
         </nav>
       </div>
       <div className="mb-8 px-4">
-        <NavLink
-          to="/logout"
-          className="flex items-center gap-4 px-4 py-3 rounded-lg font-medium text-red-600 hover:bg-red-50 transition-colors duration-150"
-        >
-          <BsBoxArrowLeft size={22}/>
-          <span>Logout</span>
-        </NavLink>
+          <LogoutConfirmation />
       </div>
     </aside>
   );

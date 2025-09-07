@@ -6,12 +6,22 @@ import conEn from './locales/en/contributeTerm.json';
 import conKh from './locales/kh/contributeTerm.json';
 import aboutUsEn from './locales/en/aboutUs.json';
 import aboutUsKh from './locales/kh/aboutUs.json';
+import enSidebar from './locales/en/adSidebar.json';
+import khSidebar from './locales/kh/adSidebar.json';
+
 i18n
   .use(initReactI18next)
   .init({
     resources: {
-      en: { translation: en, contributeTerm: conEn, aboutUs: aboutUsEn },
-      kh: { translation: kh, contributeTerm: conKh, aboutUs: aboutUsKh },
+      en: { 
+        translation: en, contributeTerm: conEn, aboutUs: aboutUsEn,
+        adSidebar: enSidebar
+
+       },
+      kh: { 
+        translation: kh, contributeTerm: conKh, aboutUs: aboutUsKh,
+        adSidebar: khSidebar
+      },
     },
     lng: 'en', // default language
     fallbackLng: 'en',

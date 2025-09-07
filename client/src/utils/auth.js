@@ -10,6 +10,12 @@ export function setToken(token) {
     localStorage.setItem("token", token);
 }
 
+
+export const removeToken = () => {
+  localStorage.removeItem('token');
+};
+
+
 export function logout() {
     // implement your logic to remove the token
     localStorage.removeItem("token");

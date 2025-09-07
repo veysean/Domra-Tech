@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'http://localhost:3002' // Forward all requests starting with /api
+      '/api': 'http://localhost:3000' // Forward all requests starting with /api
     }
   }
 })

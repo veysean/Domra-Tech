@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { isAuthenticated, setToken, logout as removeToken, getToken } from '../utils/auth';
 import {jwtDecode} from 'jwt-decode';
+import API from '../api';
 
 // Create Context
 export const AuthContext = createContext();
@@ -21,7 +22,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const decoded = jwtDecode(token);
       setAuth({ token, user: decoded });
-
+      API.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     } catch (error) {
       console.error('Invalid token during login:', error);
       removeToken();
