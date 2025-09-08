@@ -9,6 +9,9 @@ export default function RequestNewWordForm ({ onCancel, user }) {
         newExample: "",
         reference: "",
       });
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  
   // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,10 +35,20 @@ export default function RequestNewWordForm ({ onCancel, user }) {
     try {
       const response = await WordRequestServices.createWordRequest(formData);
       console.log("Word request submitted:", response.data);
+      setSuccessMessage("Word request submitted successfully!");
+      setErrorMessage("");
       // Reset form or provide feedback to user
       handleClear();
+      // Auto-close form after a delay
+      setTimeout(() => {
+        setSuccessMessage("");
+        onCancel();
+      }, 500);
+      
     } catch (error) {
       console.error("Error submitting word request:", error);
+      setErrorMessage("Failed to submit word request.");
+      setSuccessMessage("");
     }
   };
 
@@ -45,6 +58,17 @@ return (
       <div className="self-stretch h-10 text-center justify-start text-white text-3xl font-bold font-['Inter']">
         Add New Term
       </div>
+      {/* Success and Error Messages */}
+      {successMessage && (
+        <div className="self-stretch p-3 rounded-lg text-sm font-medium bg-green-100 text-green-700">
+          {successMessage}
+        </div>
+      )}
+      {errorMessage && (
+        <div className="self-stretch p-3 rounded-lg text-sm font-medium bg-red-100 text-red-700">
+          {errorMessage}
+        </div>
+      )}
 
       <form
         onSubmit={handleSubmit}

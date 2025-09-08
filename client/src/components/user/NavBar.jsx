@@ -7,13 +7,14 @@ import { t } from "i18next";
 export default function NavBar() {
 
     const { auth, logout } = useContext(AuthContext);
-    const [open, setOpen] = useState(false);
+    const [isLangOpen, setLangOpen] = useState(false);
     const [language, setLanguage] = useState(i18n.language === "kh" ? "ខ្មែរ" : "ENG");
     const [activeMenu, setActiveMenu] = useState(true);
     const [showProfile, setShowProfile] = useState(false);
     const [userData, setUserData] = useState(null);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const toggleMenu = () => setOpen(!open);
+    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
     const languageMap = {
         ENG: "en",
         ខ្មែរ: "kh",
@@ -22,7 +23,7 @@ export default function NavBar() {
    const handleSelect = (lang) => {
             setLanguage(lang);       // update button text
             i18n.changeLanguage(languageMap[lang]);
-            setOpen(false);
+            setLangOpen(false);
         };
 
     const navItems = [
@@ -45,18 +46,18 @@ export default function NavBar() {
                 {/* Mobile Menu Icon */}
                 <div className="md:hidden">
                     <button onClick={toggleMenu} className="text-[#667EEA]">
-                        {open ? <FiX size={24} /> : <FiMenu size={24} />}
+                        {isMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
                     </button>
                 </div>
 
                 {/* Mobile Dropdown */}
-                {open && (
+                {isMenuOpen && (
                 <div className="absolute top-full right-0 mt-2 w-[180px] bg-[#F8F9FA] shadow-md rounded-2xl overflow-hidden z-50 transition-all duration-300 ease-in-out">
                     {navItems.map((item) => (
                     <NavLink
                         key={item.label}
                         to={item.path}
-                        onClick={() => setOpen(false)}
+                        onClick={() => setIsOpen(false)}
                         className={({ isActive }) =>
                         `px-5 py-2.5 text-[#667EEA]/80 text-[18px] font-inter hover:bg-gray-100 cursor-pointer flex justify-between items-center border-t first:border-t-0 border-[#E2E8F0] ${
                             isActive ? "underline underline-offset-4 decoration-[#667EEA] font-semibold" : ""
@@ -104,8 +105,8 @@ export default function NavBar() {
                     <div className="relative">
 
                         {/* Button */}
-                        <button 
-                            onClick={() => setOpen(!open)}
+                        <button
+                            onClick={() => setLangOpen(!isLangOpen)}
                             className="w-[113px] h-[44px] bg-[#F8F9FA] rounded-[30px] outline-[1px] outline-[#E2E8F0] outline-offset-[-1px] flex justify-center items-center"
                         >
                             <div className="flex justify-center items-center">
@@ -130,7 +131,7 @@ export default function NavBar() {
                         </button>
 
                         {/* Dropdown */}
-                        {open && (
+                        {isLangOpen && (
                             <div className="absolute right-0 mt-2 w-[113px] bg-[#F8F9FA] shadow-md rounded-2xl overflow-hidden z-50">
                             {["ENG", "ខ្មែរ"].map((lang) => (
                                 <div

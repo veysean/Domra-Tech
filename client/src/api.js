@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-    baseURL: 'http://localhost:3000/api', //backend URL
+    baseURL: 'http://localhost:4000/api', //backend URL
 });
 
 const token = localStorage.getItem('token');
@@ -49,10 +49,16 @@ export const CategoryServices = {
   findById: (id) => API.get(`/categories/${id}`),
 };
 
+//favorites services
 export const FavoriteServices = {
   createFavorite: (wordId) => API.post('/favorites', { wordId }),
   getAllFavorites: () => API.get('/favorites'),
   deleteFavorite: (wordId) => API.delete(`/favorites/${wordId}`)
 };
 
+//user services
+export const UserServices = {
+  getUserProfile: () => API.get('/profile'),
+  updateUserProfile: (profileData) => API.put('/profile', profileData),
+};
 export default API;
