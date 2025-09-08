@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { CategoryServices } from "../../api";
 import { FiMenu, FiX } from "react-icons/fi";
 
@@ -7,14 +7,14 @@ export default function Categories() {
     const [categories, setCategories] = useState([]);
     const [activeCategory, setActiveCategory] = useState("Categories");
     const [openCat, setOpenCat] = useState(false);
+    const dropdownRef = useRef(null);
 
-    const toggleCategory = () => setOpenCat(!openCat);
+    const toggleCategory = () => setOpenCat((prev) => !prev);
 
     useEffect(() => {
         const fetchCategories = async () => {
         try {
             const res = await CategoryServices.findAll();
-            console.log("API Response:", res.data);
             setCategories(res.data || []); 
         } catch (err) {
             console.error("Failed to fetch categories:", err);
@@ -22,6 +22,16 @@ export default function Categories() {
         };
 
         fetchCategories();
+    }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            setOpenCat(false); 
+        }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
     const getCategoryIcon = (categoryName, isActive) => {
@@ -98,43 +108,56 @@ export default function Categories() {
         <div className="w-[1076px] self-stretch inline-flex flex-col justify-start items-start gap-5">
             <div className="p-2.5 inline-flex justify-center items-center gap-2.5">
                 <div className="justify-start text-slate-600 text-base font-bold font-['Inter']">Filter by  category</div>
-                 <div className="lg:hidden">
+                 <div className="lg:hidden" ref={dropdownRef}>
 
                 <button
                     onClick={toggleCategory}
                     className="text-[#667EEA]"
                 >
                     {openCat ? <div className="text-[#667EEA] font-bold">
-                                    <svg width="21" height="11" viewBox="0 0 21 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1 1.5C4.02687 4.29641 7.14268 6.70359 10.1695 9.5L20.0002 2" stroke="#718096" stroke-width="2" stroke-linecap="round"/>
+                                    <svg width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1 1C2.91168 2.74775 4.87954 4.25225 6.79122 6L13 1.3125" stroke="#4A5568" stroke-width="2" stroke-linecap="round"/>
                                     </svg>
                                 </div>: <div className="w-[19px]">
-                                    <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1 1C3.73367 4.12419 5.26633 5.87581 8 9L1 17" stroke="#4A5568" stroke-width="2" stroke-linecap="round"/>
+                                    <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1 1C2.95262 3.34315 4.04738 4.65685 6 7L1 13" stroke="#4A5568" stroke-width="2" stroke-linecap="round"/>
                                     </svg>
                                 </div>}
                 </button>
                 {/* Dropdown list */}
                 {openCat && (
-                <div className="absolute mt-2 w-64 bg-white shadow-lg rounded-lg p-2 z-10">
+                <ul className="absolute mt-2 w-64 bg-white shadow-lg rounded-lg p-2 z-10">
+                    {/* "All Category" option */}
+                    <li
+                        onClick={() => {
+                        setActiveCategory("All Category");
+                        }}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition  ${
+                        activeCategory === "All Category" ? "bg-[#667EEA] text-white" : "hover:bg-gray-100 text-gray-700"
+                        }`}
+                    >
+                        All Category
+                    </li>
+
+                    {/* Other categories from API */}
                     {categories.map((cat) => {
                     const isActive = activeCategory === cat.categoryName;
                     return (
-                        <div
+                        <li
                         key={cat.categoryId}
                         onClick={() => {
                             setActiveCategory(cat.categoryName);
-                            setOpenCat(false);
+                            
                         }}
                         className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition 
                             ${isActive ? "bg-[#667EEA] text-white" : "hover:bg-gray-100 text-gray-700"}`}
                         >
                         {getCategoryIcon(cat.categoryName, isActive)}
                         <span>{cat.categoryName}</span>
-                        </div>
+                        </li>
                     );
                     })}
-                </div>
+                </ul>
                 )}
             </div>
             </div>
