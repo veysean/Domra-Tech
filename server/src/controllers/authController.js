@@ -103,6 +103,7 @@ const register = async (req, res) => {
       email,
       role: 'user',
       googleId: googleId || null,
+      password
     };
 
     // Conditionally add password for traditional registration

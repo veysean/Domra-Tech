@@ -1,8 +1,6 @@
 // server/src/server.js
-
-import dotenv from 'dotenv'; 
-dotenv.config({ path: '../.env' }); 
-
+import dotenv from 'dotenv'; // <-- Add this import
+dotenv.config(); // <-- And this config call
 console.log("Attempting to run server...");
 import cors from 'cors';
 import express from 'express';
@@ -23,7 +21,6 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors());
-
 app.use(session({ secret: 'some_secret_key', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -40,6 +37,9 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use('/api/categories', CategoryRouter);
 app.use('/api/wordRequests',WordRequestRouter);
 
+app.use('/api/categories', CategoryRouter);
+app.use('/api/wordRequests',WordRequestRouter);
+app.use('/api', wordTranslationRoutes);
 const startServer = async () => {
     try {
         await db.sequelize.authenticate();

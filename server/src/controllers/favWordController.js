@@ -57,7 +57,7 @@ const { User, WordTranslation } = db;
 
 const createFavorite = async (req, res) => {
   try {
-    const userId = req.userId;
+    const userId = req.user.userId;
     const { wordId } = req.body;
 
     if (!wordId) {
@@ -122,13 +122,14 @@ const createFavorite = async (req, res) => {
 
 const getAllFavorites = async (req, res) => {
   try {
-    const userId = req.userId;
+    const userId = req.user.userId;
 
     const userWithFavorites = await User.findByPk(userId, {
       include: [{
         model: WordTranslation,
         as: 'WordTranslations', 
         attributes: [
+          'wordId',
           'EnglishWord',
           'FrenchWord',
           'KhmerWord',
@@ -174,7 +175,7 @@ const getAllFavorites = async (req, res) => {
  */
 const deleteFavorite = async (req, res) => {
   try {
-    const userId = req.userId;
+    const userId = req.user.userId;
     const { wordId } = req.params;
     const deleted = await db.Favorite.destroy({ where: { userId, wordId } });
     if (!deleted) return res.status(404).json({ error: 'Favorite not found' });
