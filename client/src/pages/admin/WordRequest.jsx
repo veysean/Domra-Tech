@@ -102,7 +102,7 @@ const WordRequestPage = () => {
           <div className="text-center py-8 text-red-500">{error}</div>
         ) : (
           <>
-            <WordRequestTable requests={requests} />
+            <WordRequestTable requests={requests} setRequests={setRequests} />
             <hr className="w-full border-t border-gray-100 my-4" />
             <Pagination
               currentPage={currentPage}
@@ -140,6 +140,7 @@ const WordRequestPage = () => {
           error={addError}
           success={addSuccess}
         />
+        
       )}
     </div>
   );

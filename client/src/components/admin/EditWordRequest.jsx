@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { BsXLg } from "react-icons/bs";
 
 const WordRequestEdit = ({ request, onClose, onSave, saving, error, success }) => {
-  const [form, setForm] = useState({
+  const initialForm = {
+    wordRequestId: request?.wordRequestId || "",
     newEnglishWord: request?.newEnglishWord || "",
     newKhmerWord: request?.newKhmerWord || "",
     newFrenchWord: request?.newFrenchWord || "",
@@ -11,20 +12,14 @@ const WordRequestEdit = ({ request, onClose, onSave, saving, error, success }) =
     reference: request?.reference || "",
     status: request?.status || "pending",
     check: request?.check || false,
-  });
+  };
 
+  const [form, setForm] = useState(initialForm);
+
+  // Reset form when request changes or after successful save
   useEffect(() => {
-    setForm({
-      newEnglishWord: request?.newEnglishWord || "",
-      newKhmerWord: request?.newKhmerWord || "",
-      newFrenchWord: request?.newFrenchWord || "",
-      newDefinition: request?.newDefinition || "",
-      newExample: request?.newExample || "",
-      reference: request?.reference || "",
-      status: request?.status || "pending",
-      check: request?.check || false,
-    });
-  }, [request]);
+    setForm(initialForm);
+  }, [request, success]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -60,7 +55,7 @@ const WordRequestEdit = ({ request, onClose, onSave, saving, error, success }) =
         <div className="flex justify-between items-center mb-4">
           <p className="text-sm text-gray-500">Update submitted word request details.</p>
           <p className="text-sm text-green-700 font-medium">
-            Request ID <span className="text-green-700">{request.wordRequestId}</span>
+            Request ID <span className="text-green-700">{form.wordRequestId}</span>
           </p>
         </div>
 
@@ -128,8 +123,9 @@ const WordRequestEdit = ({ request, onClose, onSave, saving, error, success }) =
               className="p-2 rounded bg-gray-100 border border-gray-300 w-full text-sm"
             >
               <option value="pending">Pending</option>
-              <option value="approved">Approved</option>
-              <option value="rejected">Rejected</option>
+              <option value="accepted">Accepted</option>
+              <option value="denied">Denied</option>
+              <option value="deleted">Deleted</option>
             </select>
           </div>
           <div className="flex items-center gap-2 mt-6">

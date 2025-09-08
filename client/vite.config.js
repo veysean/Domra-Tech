@@ -7,6 +7,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': 'http://localhost:3000' // Forward all requests starting with /api
+    },
+      optimizeDeps: {
+      exclude: ['pg-hstore']
     }
   }
 })

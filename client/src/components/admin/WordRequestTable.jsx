@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { FaEye, FaRegEdit } from "react-icons/fa";
 import WordRequestEdit from "../admin/EditWordRequest";
+import { WordRequestServices } from "../../api";
 import WordRequestPopup from "../admin/WordRequestPopUp"; // Optional view modal
 
-const WordRequestTable = ({ requests }) => {
+const WordRequestTable = ({ requests, setRequests }) => {
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [editRequest, setEditRequest] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -32,20 +33,41 @@ const WordRequestTable = ({ requests }) => {
 
   const handleSaveEdit = async (updatedRequest) => {
     setSaving(true);
+
+    // Define allowed status values
+    const validStatuses = ['pending', 'accepted', 'denied', 'deleted'];
+
+    // // Validate status before sending
+    // if (!validStatuses.includes(updatedRequest.status)) {
+    //   setError(`Invalid status: "${updatedRequest.status}". Must be one of ${validStatuses.join(', ')}.`);
+    //   setSaving(false);
+    //   return;
+    // }
+
     try {
-        const res = await WordRequestServices.updateWordRequest(editRequest.wordRequestId, updatedRequest);
-        const updated = res.data || { ...editRequest, ...updatedRequest };
-        setRequests(prev =>
-        prev.map(r => r.wordRequestId === editRequest.wordRequestId ? updated : r)
-        );
-        setSuccess("Request updated successfully.");
-        setEditRequest(null);
+      const res = await WordRequestServices.updateWordRequest(
+        editRequest.wordRequestId,
+        updatedRequest
+      );
+
+      const updated = res.data || { ...editRequest, ...updatedRequest };
+
+      setRequests(prev =>
+        prev.map(r =>
+          r.wordRequestId === editRequest.wordRequestId ? updated : r
+        )
+      );
+
+      setSuccess("Request updated successfully.");
+      setEditRequest(null);
     } catch (err) {
-        setError("Failed to update request.");
+      console.error("Update error:", err);
+      setError("Failed to update request.");
     } finally {
-        setSaving(false);
+      setSaving(false);
     }
-    };
+  };
+
 
     const handleToggleCheck = (e) => {
         setIsChecked(e.target.checked);

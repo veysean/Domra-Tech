@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getTodayWordRequests } from '../../server/src/controllers/wordRequestController';
+
 
 const API = axios.create({
     baseURL: 'http://localhost:3000/api', // backend URL
@@ -77,7 +77,7 @@ export const WordRequestServices = {
   getWordRequestById: (id) => API.get(`/wordRequests/${id}`),
   updateWordRequest: (id, data) => API.put(`/wordRequests/${id}`, data),
   deleteWordRequest: (id) => API.delete(`/wordRequests/${id}`),
-  getTodayWordRequests: () => API.get('/wordRequests/today'),
+  getTodayWordRequests: () => API.get('/wordRequests/today').then((res) => res.data),
 };
 
 

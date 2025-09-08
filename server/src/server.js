@@ -38,7 +38,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 
 app.use('/api/categories', CategoryRouter);
-app.use('/api/wordRequests',WordRequestRouter);
+app.use('/api/wordRequests', WordRequestRouter);
 
 const startServer = async () => {
     try {
