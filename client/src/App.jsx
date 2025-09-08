@@ -1,21 +1,76 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import './index.css';
-import { useTranslation } from 'react-i18next';
-import GoogleLoginButton from './component/googleLoginButton';
-
-function App() {
-    const { t, i18n } = useTranslation();
-
-  const changeLanguage = (lang) => {
-    i18n.changeLanguage(lang);
-  };
+import MainLayout from './layouts/MainLayout';
+import Home from './pages/user/Home';
+import ContributeTerm from './pages/user/ContributeTerm';
+import Categories from './pages/user/Categories';
+import AboutUs from './pages/user/AboutUs';
+import AuthPage from "./pages/user/AuthPage";
+import Profile from "./pages/user/Profile";
+import React from 'react';
+function AppRoutes() {
   return (
-    <div>
-      <h1>{t('welcome')}</h1>
-      <GoogleLoginButton />
+    <>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <MainLayout>
+              <Home />
+            </MainLayout>
+          }
+        />
 
-    </div>
-    
+        <Route
+          path="/contribute-term"
+          element={
+            <MainLayout>
+              <ContributeTerm />
+            </MainLayout>
+          }
+        />
+
+         <Route
+          path="/categories"
+          element={
+            <MainLayout>
+              <Categories />
+            </MainLayout>
+          }
+        />
+
+         <Route
+          path="/about-us"
+          element={
+            <MainLayout>
+              <AboutUs />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/auth"
+          element={
+              <AuthPage />
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <Profile />
+          }
+        />
+
+      </Routes>
+    </>
   );
 }
 
-export default App;
+export default function App(){
+  return (  
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+  );
+}
