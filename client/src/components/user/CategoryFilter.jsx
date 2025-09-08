@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { CategoryServices } from "../../api";
+import { FiMenu, FiX } from "react-icons/fi";
 
 export default function Categories() {
 
     const [categories, setCategories] = useState([]);
     const [activeCategory, setActiveCategory] = useState("Categories");
+    const [openCat, setOpenCat] = useState(false);
+
+    const toggleCategory = () => setOpenCat(!openCat);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -87,13 +91,52 @@ export default function Categories() {
         };
 
     
-        return categoryIcons[categoryName] || categoryIcons['General'];
+        return categoryIcons[categoryName];
     };
 
     return (
         <div className="w-[1076px] self-stretch inline-flex flex-col justify-start items-start gap-5">
             <div className="p-2.5 inline-flex justify-center items-center gap-2.5">
-                <div className="justify-start text-slate-600 text-base font-bold font-['Inter']">Filter by  category :</div>
+                <div className="justify-start text-slate-600 text-base font-bold font-['Inter']">Filter by  category</div>
+                 <div className="lg:hidden">
+
+                <button
+                    onClick={toggleCategory}
+                    className="text-[#667EEA]"
+                >
+                    {openCat ? <div className="text-[#667EEA] font-bold">
+                                    <svg width="21" height="11" viewBox="0 0 21 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M1 1.5C4.02687 4.29641 7.14268 6.70359 10.1695 9.5L20.0002 2" stroke="#718096" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </div>: <div className="w-[19px]">
+                                    <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M1 1C3.73367 4.12419 5.26633 5.87581 8 9L1 17" stroke="#4A5568" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </div>}
+                </button>
+                {/* Dropdown list */}
+                {openCat && (
+                <div className="absolute mt-2 w-64 bg-white shadow-lg rounded-lg p-2 z-10">
+                    {categories.map((cat) => {
+                    const isActive = activeCategory === cat.categoryName;
+                    return (
+                        <div
+                        key={cat.categoryId}
+                        onClick={() => {
+                            setActiveCategory(cat.categoryName);
+                            setOpenCat(false);
+                        }}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition 
+                            ${isActive ? "bg-[#667EEA] text-white" : "hover:bg-gray-100 text-gray-700"}`}
+                        >
+                        {getCategoryIcon(cat.categoryName, isActive)}
+                        <span>{cat.categoryName}</span>
+                        </div>
+                    );
+                    })}
+                </div>
+                )}
+            </div>
             </div>
             <div className="self-stretch inline-flex justify-start items-start gap-7 flex-wrap content-start">
                 <div className="w-full flex justify-start items-start gap-7 flex-wrap content-start">
