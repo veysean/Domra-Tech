@@ -2,7 +2,7 @@ import react from "react";
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import API from "../../api";
-import { UserServices } from "../../api";
+import { userServices } from "../../api";
 import ProfileSidebar from "../../components/user/ProfileSidebar";
 import ProfileForm from "./ProfileForm";
 import History from "./History";
@@ -17,7 +17,7 @@ export default function Profile() {
     if (auth) {
       const fetchUserData = async () => {
         try {
-          const response = await UserServices.getUserProfile();
+          const response = await userServices.getUserProfile();
           setUserData(response.data);
         } catch (error) {
           console.error("Error fetching user data:", error);
