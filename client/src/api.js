@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+
 const API = axios.create({
-    baseURL: 'http://localhost:3000/api', //backend URL
+    baseURL: 'http://localhost:3000/api', // backend URL
 });
 
 const token = localStorage.getItem('token');
@@ -17,48 +18,81 @@ export const authServices = {
 
 // word translation services
 export const WordTranslationServices = {
-  findAll: (page = 1, limit = 10) => API.get('/words', {
-    params: { page, limit }
-  }),
-  searchWords: (query, page = 1, limit = 10) => API.get('/words/search', { params: { q: query, page, limit } }),
+  findAll: (page = 1, limit = 10, categoryId = "") =>
+    API.get("/words", {
+      params: { page, limit, categoryId },
+    }),
+
+  findById: (id) => API.get(`/words/${id}`),
+
+  searchWords: (query, page = 1, limit = 10, categoryId = "") =>
+    API.get("/words/search", {
+      params: { q: query, page, limit, categoryId },
+    }),
+
+  create: (wordData) => API.post('/admin/words', wordData),
+  update: (id, updatedData) => API.put(`/admin/words/${id}`, updatedData),
 };
-const res = await WordTranslationServices.findAll(1, 1000); 
+
+// user services
+export const userServices = {
+  getProfile: () => API.get('/profile'),
+  updateProfile: (data) => API.put('/profile', data),
+  deleteAccount: () => API.delete('/profile'),
+
+  // Admin endpoints
+  getAll: (page = 1, limit = 60, sortField = 'userId', sortOrder = 'asc') =>
+    API.get('/admin/users', {
+      params: { page, limit, sortField, sortOrder }
+    }),
+  updateUser: (id, data) => API.put(`/admin/users/${id}`, data),
+  deleteUser: (id, data) => API.put(`/admin/users/${id}`, data),
+};
 
 
-//correction request
+// request services
+export const requestServices = {
+  getRecent: () => API.get("/requests/recent"),
+};
+
+// stats services
+export const statsServices = {
+  getStats: () => API.get("/stats"),
+};
+
+// correction request
 export const CorrectionServices = {
-  requestCorrection: (correctionData) => API.post('/correctionRequests', correctionData),//create by user
+  requestCorrection: (correctionData) => API.post('/correctionRequests', correctionData), // create by user
   getCorrections: () => API.get('/correctionRequests'),
-  getCorrectionById: (id) => API.get(`/correctionRequests/${id}`),// get by admin
-  updateCorrectionStatus: (id, statusData) => API.patch(`/correctionRequests/${id}`, statusData),// update by admin
-  deleteCorrection: (id) => API.delete(`/correctionRequests/${id}`),// delete by admin
+  getCorrectionById: (id) => API.get(`/correctionRequests/${id}`), // get by admin
+  updateCorrectionStatus: (id, statusData) => API.patch(`/correctionRequests/${id}`, statusData), // update by admin
+  deleteCorrection: (id) => API.delete(`/correctionRequests/${id}`), // delete by admin
 };
 
-//word request 
+// word request
 export const WordRequestServices = {
-  createWordRequest: (wordRequestData) => API.post('/wordRequests', wordRequestData),
-  getWordRequests: () => API.get('/wordRequests'),
+  createWordRequest: (data) => API.post('/wordRequests', data),
+  getWordRequests: (page = 1, limit = 10) =>
+    API.get('/wordRequests', { params: { page, limit } }),
   getWordRequestById: (id) => API.get(`/wordRequests/${id}`),
-  updateWordRequest: (id, wordRequestData) => API.patch(`/wordRequests/${id}`, wordRequestData),
+  updateWordRequest: (id, data) => API.put(`/wordRequests/${id}`, data),
   deleteWordRequest: (id) => API.delete(`/wordRequests/${id}`),
+  getTodayWordRequests: () => API.get('/wordRequests/today').then((res) => res.data),
 };
 
-//category
+
+// category
 export const CategoryServices = {
   findAll: () => API.get('/categories'),
   findById: (id) => API.get(`/categories/${id}`),
+  getAll: () => API.get('/categories'),
 };
 
-//favorites services
+// favorite
 export const FavoriteServices = {
   createFavorite: (wordId) => API.post('/favorites', { wordId }),
   getAllFavorites: () => API.get('/favorites'),
   deleteFavorite: (wordId) => API.delete(`/favorites/${wordId}`)
 };
 
-//user services
-export const UserServices = {
-  getUserProfile: () => API.get('/profile'),
-  updateUserProfile: (profileData) => API.put('/profile', profileData),
-};
 export default API;

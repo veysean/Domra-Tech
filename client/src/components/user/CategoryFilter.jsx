@@ -100,7 +100,7 @@ export default function Categories() {
                     {/* Static "Categories" button */}
                     <button 
                         onClick={() => setActiveCategory("Categories")}
-                        className={`hidden h-10 px-2.5 py-5 bg-[#6677EA] rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 lg:flex justify-center items-center gap-2.5 hover:shadow-[0px_3px_3px_0px_rgba(0,0,0,0.20)]
+                        className={`w-36 h-10 px-2.5 py-5 bg-[#6677EA] rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 flex justify-center items-center gap-2.5 hover:shadow-[0px_3px_3px_0px_rgba(0,0,0,0.20)]
                         ${
                             activeCategory === "Categories"
                             ? "bg-[#6677EA] text-white"
@@ -114,7 +114,7 @@ export default function Categories() {
                                 </svg>
                             </div>
                         </div>
-                        <div className="justify-start text-base font-medium font-['Inter']">All Categories</div>
+                        <div className="justify-start text-base font-medium font-['Inter']">Categories</div>
                     </button>
                     {/* Category button */}
                     {categories.map((cat) =>  {
@@ -123,7 +123,7 @@ export default function Categories() {
                         <button 
                             key={cat.categoryId}
                             onClick={() => setActiveCategory(cat.categoryName)}
-                            className={`hidden h-10 px-2.5 py-5 rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 lg:flex justify-center items-center gap-2.5 hover:shadow-[0px_3px_3px_0px_rgba(0,0,0,0.20)]
+                            className={`h-10 px-2.5 py-5 rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 flex justify-center items-center gap-2.5 hover:shadow-[0px_3px_3px_0px_rgba(0,0,0,0.20)]
                             ${
                                 isActive
                                 ? "bg-[#6677EA] text-white"
