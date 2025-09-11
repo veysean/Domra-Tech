@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { UserServices } from "../../api";
+import { userServices } from "../../api";
 
 export default function ProfileForm({ userData, setUserData }) {
   const [formData, setFormData] = useState({
@@ -30,8 +30,8 @@ export default function ProfileForm({ userData, setUserData }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await UserServices.updateUserProfile(formData);
-      const updatedUser = await UserServices.getUserProfile();
+      await userServices.updateUserProfile(formData);
+      const updatedUser = await userServices.getUserProfile();
       setUserData(updatedUser.data);
       setMessage("Profile updated successfully");
       setMessageType("success");
@@ -58,7 +58,7 @@ export default function ProfileForm({ userData, setUserData }) {
     }
 
     try {
-      await UserServices.changePassword({
+      await userServices.changePassword({
         oldPassword: passwordData.oldPassword,
         newPassword: passwordData.newPassword,
       });
