@@ -7,11 +7,13 @@ import { motion } from "framer-motion";
 import requestImg from "../../assets/request.png";
 import contributeImg from "../../assets/contribute.png";
 import API from "../../api";
+import RequestChangingForm from "../../components/user/RequestChangingForm";
 import RequestNewWordForm from "../../components/user/RequestNewWordForm";
 import GuidLine from "../../components/user/GuidLine";
 export default function ContributeTerm() {
     const { t } = useTranslation('contributeTerm');
     const [isRequestNewWord, setIsRequestNewWord] = useState(false);
+    const [isRequestChanging, setIsRequestChanging] = useState(false);
     const { auth } = useContext(AuthContext);
     const [userData, setUserData] = useState(null);
     const navigate = useNavigate();
@@ -44,7 +46,7 @@ export default function ContributeTerm() {
                 <div className="flex justify-center m-10">
                     <GuidLine />
                 </div>
-                {isRequestNewWord  ? null : (
+                {isRequestNewWord || isRequestChanging ? null : (
                 <div className="w-[1156px] m-auto flex justify-between">
                 {/* add new word request */}
                 <div className="group w-[467px] p-7 bg-white rounded-[30px] outline-1 outline-offset-[-1px] outline-slate-200 inline-flex flex-col justify-center items-center gap-5 hover:shadow-lg transition-shadow duration-300">
@@ -70,7 +72,7 @@ export default function ContributeTerm() {
                         <img className="w-60 h-56" src={requestImg} />
                     </div>
                         <button className="px-5 py-3.5 bg-indigo-500 rounded-[30px] text-white text-xl font-bold font-['Inter'] hover:bg-indigo-600"
-                        onClick={() => auth ? navigate("/") : navigate("/auth")}
+                        onClick={() => auth ? setIsRequestChanging(true) : navigate("/auth")}
                         >Improve Translation</button>
                     </div>
                  
@@ -78,14 +80,24 @@ export default function ContributeTerm() {
                    )}
                 {isRequestNewWord && (
                     <div className="flex justify-center m-10">
+                         <motion.div
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="relative"
+                                    ><RequestNewWordForm onCancel={() => setIsRequestNewWord(false)} user={userData} /></motion.div>
+                    </div>
+                )}
+                {isRequestChanging && (
+                    <div className="flex justify-center m-10">
                         <motion.div
                                     initial={{ opacity: 0, scale: 0.95 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.95 }}
                                     transition={{ duration: 0.3 }}
                                     className="relative"
-                                    ><RequestNewWordForm onCancel={() => setIsRequestNewWord(false)} user={userData} />
-                        </motion.div>
+                                    ><RequestChangingForm onCancel={() => setIsRequestChanging(false)} user={userData} /></motion.div>
                     </div>
                 )}
             </div>

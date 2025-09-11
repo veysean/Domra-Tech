@@ -9,6 +9,79 @@ import db from '../models/index.js';
 
 const { User } = db;
 
+//find all users
+/**
+ * @swagger
+ * /admin/users:
+ *   get:
+ *     summary: Get all users with pagination and sorting
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         description: Page number for pagination
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         description: Number of items per page
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: sortField
+ *         required: false
+ *         description: Field to sort by (e.g., userId, email, firstName, lastName)
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: sortOrder
+ *         required: false
+ *         description: Sort direction (asc or desc)
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *     responses:
+ *       200:
+ *         description: Paginated list of users
+ *       500:
+ *         description: Failed to retrieve users
+ */
+
+const findAll = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    const allowedSortFields = ['userId', 'email', 'firstName', 'lastName'];
+    const sortField = allowedSortFields.includes(req.query.sortField) ? req.query.sortField : 'userId';
+    const sortOrder = req.query.sortOrder === 'desc' ? 'DESC' : 'ASC';
+
+    const users = await User.findAndCountAll({
+      order: [[sortField, sortOrder]],
+      limit,
+      offset
+    });
+
+    return res.status(200).json({
+      totalItems: users.count,
+      totalPages: Math.ceil(users.count / limit),
+      currentPage: page,
+      users: users.rows
+    });
+  } catch (error) {
+    console.error('Error retrieving users:', error);
+    return res.status(500).json({ error: 'Failed to retrieve users' });
+  }
+};
+
+
+
+//get profile
 /**
  * @swagger
  * /profile:
@@ -107,14 +180,30 @@ const getProfile = async (req, res) => {
  *                   type: string
  *                   example: Profile updated successfully!
  *                 user:
- *                   $ref: '#/components/schemas/User'
- *       401:
- *         description: Unauthorized - missing or invalid token
- *       404:
- *         description: User not found
- *       500:
- *         description: Server error
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     firstName:
+ *                       type: string
+ *                       example: Alice
+ *                     lastName:
+ *                       type: string
+ *                       example: Smith
+ *                     email:
+ *                       type: string
+ *                       example: alice@example.com
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2023-01-01T00:00:00Z
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2023-01-02T00:00:00Z
  */
+
 
 const updateProfile = async (req, res) => {
   try {
@@ -189,6 +278,7 @@ const deleteAccount = async (req, res) => {
 };
 
 export default {
+  findAll,
   getProfile,
   updateProfile,
   deleteAccount

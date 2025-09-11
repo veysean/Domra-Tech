@@ -1,15 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PromoCard from "../../components/user/Promocard";
 import Login from "../../components/user/Login";
 import SignUp from "../../components/user/SignUp";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const AuthPage = () => {
-  const [isSignUp, setIsSignUp] = useState(true);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [isSignUp, setIsSignUp] = useState(() => location.pathname === "/auth/register");
 
   const handleToggle = () => {
-    setIsSignUp((prev) => !prev);
+    const next = !isSignUp;
+    setIsSignUp(next);
+    navigate(next ? "/auth/register" : "/auth/login", { replace: true });
   };
+  
+
+  useEffect(() => {
+    const shouldShowSignUp = location.pathname === "/auth/register";
+    setIsSignUp(shouldShowSignUp);
+  }, [location.pathname]);
 
   const promoVariants = {
     initialLeft: { x: -50, opacity: 1 },

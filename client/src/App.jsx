@@ -27,6 +27,12 @@ import UnauthorizedPage from "./pages/admin/Unauthorized";
 // Components
 import ProtectedRoute from "./components/admin/ProtectedRoute";
 
+import ForgotPasswordPage from "./pages/user/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/user/ResetPasswordPage";
+import VerifyEmailPage from './pages/user/VerifyEmailPage';
+import { Navigate } from "react-router-dom";
+
+
 function AppRoutes() {
   return (
     <>
@@ -142,6 +148,16 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+
+        {/* All auth-related routes are now defined here explicitly */}
+        <Route path="/auth/login" element={<AuthPage />} />
+        <Route path="/auth/register" element={<AuthPage />} />
+        <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
+
+        {/* A fallback route for any unmatched paths */}
+        <Route path="*" element={<Navigate to="/" />} />
 
       </Routes>
     </>

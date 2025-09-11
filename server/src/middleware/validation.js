@@ -21,10 +21,18 @@ const validate = (req, res, next) => {
 // Validation rules for a 'create user' request
 const registerValidationRules = () => {
   return [
-    body('firstName').notEmpty().withMessage('First name is required'),
-    body('lastName').notEmpty().withMessage('Last name is required'),
     body('email').isEmail().withMessage('Please provide a valid email'),
-    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+    // This custom validator checks if a password OR googleId is provided
+    body('password').custom((value, { req }) => {
+      if (!req.body.password && !req.body.googleId) {
+        throw new Error('Either a password or googleId is required for registration');
+      }
+      return true;
+    }),
+    // fields that are optional for third-party registration
+    body('firstName').optional().notEmpty().withMessage('First name cannot be empty'),
+    body('lastName').optional().notEmpty().withMessage('Last name cannot be empty'),
+    body('password').optional().isLength({ min: 6 }).withMessage('Password must be at least 6 characters long')
   ];
 };
 

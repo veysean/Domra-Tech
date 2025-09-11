@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { authServices } from "../../api";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom"; // Import Link
 const Login = () => {
 
   const [error, setError] = useState("");
@@ -99,7 +99,7 @@ const Login = () => {
 
           {/* Forgot Password */}
           <div className="text-center underline border-slate-200 text-slate-500 text-xs font-light leading-snug cursor-pointer">
-            Forgot password?
+            <Link to="/auth/forgot-password">Forgot password?</Link> {/* Link is updated here */}
           </div>
         </form>
       </div>

@@ -96,7 +96,7 @@ export default function NavBar() {
                             <div className="text-white text-[20px] font-medium font-inter">{t("profile")}</div>
                         </Link>
                         ) : (
-                        <Link to="/auth" className="px-2.5 py-2 bg-[#667EEA] rounded-[30px] flex justify-center items-center">
+                        <Link to="/auth/login" className="px-2.5 py-2 bg-[#667EEA] rounded-[30px] flex justify-center items-center">
                             <div className="text-white text-[20px] font-medium font-inter">{t("login")} / {t("signup")}</div>
                         </Link>
                         )}
