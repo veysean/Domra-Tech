@@ -44,32 +44,6 @@ export default function NavBar() {
                         <div className="w-[147px] h-[28px] text-[#667EEA] lg:text-[24px] font-normal font-['Righteous']">Domra Tech</div>
                     </div>
                     <div className="flex items-center gap-1 ml-0 sm:ml-auto lg:ml-0">
-                    {/* Mobile Menu Icon */}
-                    <div className="lg:hidden mr-2">
-                        <button onClick={toggleMenu} className="text-[#667EEA]">
-                            {isMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-                        </button>
-                    </div>
-
-                    {/* Mobile Dropdown */}
-                    {isMenuOpen && (
-                    <div className="absolute top-full right-15 mt-2 w-[180px] bg-[#F8F9FA] shadow-md rounded-2xl overflow-hidden z-50 transition-all duration-300 ease-in-out">
-                        {navItems.map((item) => (
-                        <NavLink
-                            key={item.label}
-                            to={item.path}
-                            onClick={() => setIsOpen(false)}
-                            className={({ isActive }) =>
-                            `px-5 py-2.5 text-[#667EEA]/80 text-sm md:text-base lg:text-[18px] font-inter hover:bg-gray-100 cursor-pointer flex justify-between items-center border-t first:border-t-0 border-[#E2E8F0] ${
-                                isActive ? "underline underline-offset-4 decoration-[#667EEA] font-semibold" : ""
-                            }`
-                            }
-                        >
-                            {item.label}
-                        </NavLink>
-                        ))}
-                    </div>
-                    )}
 
                     {/* Menu & Actions */}
                     <div className="lg:flex justify-between items-center w-full max-w-[1200px]">
@@ -90,7 +64,7 @@ export default function NavBar() {
                             ))}
                         </div>
                         
-                        <div className="flex items-center gap-1 md:gap-2.5">
+                        <div className="flex items-center gap-2 md:gap-2.5">
                         {/* LogIn / Sign up button */}
                         {auth ? (
                             <Link to="/profile" className="px-2.5 py-2 bg-[#667EEA] rounded-[30px] flex justify-center items-center">
@@ -156,6 +130,32 @@ export default function NavBar() {
                             </div>
                         </div>
                     </div>
+                    {/* Mobile Menu Icon */}
+                    <div className="lg:hidden ml-3">
+                        <button onClick={toggleMenu} className="text-[#667EEA]">
+                            {isMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+                        </button>
+                    </div>
+
+                    {/* Mobile Dropdown */}
+                    {isMenuOpen && (
+                    <div className="absolute top-full right-15 mt-2 w-[180px] bg-[#F8F9FA] shadow-md rounded-2xl overflow-hidden z-50 transition-all duration-300 ease-in-out">
+                        {navItems.map((item) => (
+                        <NavLink
+                            key={item.label}
+                            to={item.path}
+                            onClick={() => setIsOpen(false)}
+                            className={({ isActive }) =>
+                            `px-5 py-2.5 text-[#667EEA]/80 text-sm md:text-base lg:text-[18px] font-inter hover:bg-gray-100 cursor-pointer flex justify-between items-center border-t first:border-t-0 border-[#E2E8F0] ${
+                                isActive ? "underline underline-offset-4 decoration-[#667EEA] font-semibold" : ""
+                            }`
+                            }
+                        >
+                            {item.label}
+                        </NavLink>
+                        ))}
+                    </div>
+                    )}
                     </div>
                 </div>
             </div>
