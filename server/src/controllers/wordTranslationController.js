@@ -250,8 +250,23 @@ const findById = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    const newWord = await WordTranslation.create(req.body);
-    return res.status(201).json(newWord);
+    const { categories, ...wordData } = req.body;
+    // Create the word
+    const newWord = await WordTranslation.create(wordData);
+    // Assign categories if provided
+    if (categories && Array.isArray(categories) && categories.length > 0) {
+      if (typeof newWord.setCategories === 'function') {
+        await newWord.setCategories(categories);
+        console.log('Assigned categories to new word', newWord.wordId, categories);
+      } else {
+        console.error('No setCategories method found on newWord instance');
+      }
+    }
+    // Return the new word with categories
+    const wordWithCategories = await WordTranslation.findByPk(newWord.wordId, {
+      include: [{ model: db.Category }],
+    });
+    return res.status(201).json(wordWithCategories);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Failed to create word' });
@@ -304,14 +319,37 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const [updated] = await WordTranslation.update(req.body, {
+    const { categories, ...wordData } = req.body;
+    // Update word fields
+    const [updated] = await WordTranslation.update(wordData, {
       where: { wordId: req.params.wordId },
     });
-    if (updated) {
-      const updatedWord = await WordTranslation.findByPk(req.params.wordId);
-      return res.status(200).json(updatedWord);
+    if (!updated) {
+      return res.status(404).json({ error: 'Word not found' });
     }
-    return res.status(404).json({ error: 'Word not found' });
+    // Update categories if provided
+    if (categories && Array.isArray(categories)) {
+      const word = await WordTranslation.findByPk(req.params.wordId);
+      if (word) {
+        if (typeof word.setCategories === 'function') {
+          await word.setCategories(categories);
+          console.log('Updated categories for word', req.params.wordId, 'to', categories);
+        } else {
+          // fallback: try setCategories from db.WordTranslation associations
+          if (word.setCategory) {
+            await word.setCategory(categories);
+            console.log('Used setCategory fallback for word', req.params.wordId);
+          } else {
+            console.error('No setCategories or setCategory method found on word instance');
+          }
+        }
+      }
+    }
+    // Return updated word with categories
+    const updatedWord = await WordTranslation.findByPk(req.params.wordId, {
+      include: [{ model: db.Category }],
+    });
+    return res.status(200).json(updatedWord);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Failed to update word' });
