@@ -107,7 +107,7 @@ export default function NavBar() {
 
                             {/* Dropdown */}
                             {isLangOpen && (
-                                <div className="absolute right-0 left-0 mt-2 w-[113px] bg-[#F8F9FA] shadow-md rounded-2xl overflow-hidden z-50">
+                                <div className="absolute left-0 mt-2 w-[113px] bg-[#F8F9FA] shadow-md rounded-2xl overflow-hidden z-50">
                                 {["ENG", "ខ្មែរ"].map((lang) => (
                                     <div
                                     key={lang}
@@ -139,7 +139,7 @@ export default function NavBar() {
 
                     {/* Mobile Dropdown */}
                     {isMenuOpen && (
-                    <div className="absolute top-full right-15 mt-2 w-[180px] bg-[#F8F9FA] shadow-md rounded-2xl overflow-hidden z-50 transition-all duration-300 ease-in-out">
+                    <div className="absolute top-full right-0 left-67 mt-2 w-[180px] bg-[#F8F9FA] shadow-md rounded-2xl overflow-hidden z-50 transition-all duration-300 ease-in-out">
                         {navItems.map((item) => (
                         <NavLink
                             key={item.label}
