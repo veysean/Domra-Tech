@@ -107,7 +107,7 @@ export default function Categories() {
     return (
         <div className="w-[1076px] self-stretch inline-flex flex-col justify-start items-start gap-5">
             <div className="p-0.5 lg:p-2.5 inline-flex justify-center items-center gap-2.5">
-                <div className="justify-start text-slate-600 text-base font-bold font-['Inter']">Filter by  category</div>
+                <div className="justify-start text-slate-600 text-sm lg:text-base font-bold font-['Inter']">Filter by  category</div>
                  <div className="lg:hidden" ref={dropdownRef}>
 
                 <button
