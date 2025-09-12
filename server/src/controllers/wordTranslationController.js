@@ -9,7 +9,7 @@ import db from '../models/index.js';
 import { Op } from 'sequelize';
 import { khnormal } from 'khmer-normalizer';
 
-const { WordTranslation } = db;
+const { WordTranslation, Category } = db;
 
 // Function to search for words (case-insensitive)
 /**
@@ -139,12 +139,24 @@ const searchWords = async (req, res) => {
  *         schema:
  *           type: integer
  *       - in: query
+ *         name: sortby
+ *         schema:
+ *           type: string
+ *           enum: [EnglishWord, FrenchWord, KhmerWord, category]
+ *         description: Field to sort by (default is EnglishWord)
+ *       - in: query
  *         name: sort
  *         required: false
  *         description: Sort order for EnglishWord (asc or desc)
  *         schema:
  *           type: string
  *           enum: [asc, desc]
+ *       - in: query
+ *         name: category
+ *         required: false
+ *         description: Filter words by category (supports one or multiple, separated by commas)
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Paginated list of word translations
@@ -157,12 +169,40 @@ const findAll = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
+    const sortBy = req.query.sortby || 'EnglishWord';
     const sortOrder = req.query.sort === 'desc' ? 'DESC' : 'ASC';
+    let categoryFilter = req.query.category
+      ? req.query.category.split(',').map(c => c.trim())
+      : null;
+
+    let order = [['EnglishWord', sortOrder]];
+    let include = [];
+
+    let categoryInclude = {
+      model: Category,
+      as: 'Categories',
+      attributes: ['categoryId', 'categoryName'],
+      through: { attributes: [] },
+    };
+
+    if (categoryFilter) {
+      categoryInclude.where = { categoryName: { [Op.in]: categoryFilter } };
+    }
+
+    include.push(categoryInclude);
+
+    if (['EnglishWord', 'KhmerWord', 'FrenchWord'].includes(sortBy)) {
+      order = [[sortBy, sortOrder]];
+    } else if (sortBy === 'category') {
+      order = [[{ model: Category, as: 'Categories' }, 'categoryName', sortOrder]];
+    }
 
     const words = await WordTranslation.findAndCountAll({
-      limit: limit,
-      offset: offset,
-      order: [['EnglishWord', sortOrder]],
+      limit,
+      offset,
+      include,
+      distinct: true,
+      order,
     });
 
     return res.status(200).json({
