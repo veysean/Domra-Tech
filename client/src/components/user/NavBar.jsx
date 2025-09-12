@@ -44,7 +44,7 @@ export default function NavBar() {
                     <div className="w-[147px] h-[28px] text-[#667EEA] lg:text-[24px] font-normal font-['Righteous']">Domra Tech</div>
                 </div>
                 {/* Mobile Menu Icon */}
-                <div className="md:hidden">
+                <div className="lg:hidden">
                     <button onClick={toggleMenu} className="text-[#667EEA]">
                         {isMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
                     </button>
@@ -71,9 +71,9 @@ export default function NavBar() {
                 )}
 
                 {/* Menu & Actions */}
-                <div className="hidden md:flex justify-between items-center w-full max-w-[1200px]">
+                <div className="hidden lg:flex justify-between items-center w-full max-w-[1200px]">
                     {/* Nav Links */}
-                    <div className="hidden ml-50 md:flex gap-10">
+                    <div className="hidden ml-50 lg:flex gap-10">
                         {navItems.map((item) => (
                             <NavLink
                                 key={item.label}
