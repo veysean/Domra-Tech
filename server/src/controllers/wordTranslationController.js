@@ -9,7 +9,7 @@ import db from '../models/index.js';
 import { Op } from 'sequelize';
 import { khnormal } from 'khmer-normalizer';
 
-const { WordTranslation } = db;
+const { WordTranslation, Category } = db;
 
 // Function to search for words (case-insensitive)
 /**
@@ -139,12 +139,24 @@ const searchWords = async (req, res) => {
  *         schema:
  *           type: integer
  *       - in: query
+ *         name: sortby
+ *         schema:
+ *           type: string
+ *           enum: [EnglishWord, FrenchWord, KhmerWord, category]
+ *         description: Field to sort by (default is EnglishWord)
+ *       - in: query
  *         name: sort
  *         required: false
  *         description: Sort order for EnglishWord (asc or desc)
  *         schema:
  *           type: string
  *           enum: [asc, desc]
+ *       - in: query
+ *         name: category
+ *         required: false
+ *         description: Filter words by category (supports one or multiple, separated by commas)
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Paginated list of word translations
@@ -157,12 +169,40 @@ const findAll = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
+    const sortBy = req.query.sortby || 'EnglishWord';
     const sortOrder = req.query.sort === 'desc' ? 'DESC' : 'ASC';
+    let categoryFilter = req.query.category
+      ? req.query.category.split(',').map(c => c.trim())
+      : null;
+
+    let order = [['EnglishWord', sortOrder]];
+    let include = [];
+
+    let categoryInclude = {
+      model: Category,
+      as: 'Categories',
+      attributes: ['categoryId', 'categoryName'],
+      through: { attributes: [] },
+    };
+
+    if (categoryFilter) {
+      categoryInclude.where = { categoryName: { [Op.in]: categoryFilter } };
+    }
+
+    include.push(categoryInclude);
+
+    if (['EnglishWord', 'KhmerWord', 'FrenchWord'].includes(sortBy)) {
+      order = [[sortBy, sortOrder]];
+    } else if (sortBy === 'category') {
+      order = [[{ model: Category, as: 'Categories' }, 'categoryName', sortOrder]];
+    }
 
     const words = await WordTranslation.findAndCountAll({
-      limit: limit,
-      offset: offset,
-      order: [['EnglishWord', sortOrder]],
+      limit,
+      offset,
+      include,
+      distinct: true,
+      order,
     });
 
     return res.status(200).json({
@@ -250,8 +290,23 @@ const findById = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    const newWord = await WordTranslation.create(req.body);
-    return res.status(201).json(newWord);
+    const { categories, ...wordData } = req.body;
+    // Create the word
+    const newWord = await WordTranslation.create(wordData);
+    // Assign categories if provided
+    if (categories && Array.isArray(categories) && categories.length > 0) {
+      if (typeof newWord.setCategories === 'function') {
+        await newWord.setCategories(categories);
+        console.log('Assigned categories to new word', newWord.wordId, categories);
+      } else {
+        console.error('No setCategories method found on newWord instance');
+      }
+    }
+    // Return the new word with categories
+    const wordWithCategories = await WordTranslation.findByPk(newWord.wordId, {
+      include: [{ model: db.Category }],
+    });
+    return res.status(201).json(wordWithCategories);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Failed to create word' });
@@ -304,14 +359,37 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const [updated] = await WordTranslation.update(req.body, {
+    const { categories, ...wordData } = req.body;
+    // Update word fields
+    const [updated] = await WordTranslation.update(wordData, {
       where: { wordId: req.params.wordId },
     });
-    if (updated) {
-      const updatedWord = await WordTranslation.findByPk(req.params.wordId);
-      return res.status(200).json(updatedWord);
+    if (!updated) {
+      return res.status(404).json({ error: 'Word not found' });
     }
-    return res.status(404).json({ error: 'Word not found' });
+    // Update categories if provided
+    if (categories && Array.isArray(categories)) {
+      const word = await WordTranslation.findByPk(req.params.wordId);
+      if (word) {
+        if (typeof word.setCategories === 'function') {
+          await word.setCategories(categories);
+          console.log('Updated categories for word', req.params.wordId, 'to', categories);
+        } else {
+          // fallback: try setCategories from db.WordTranslation associations
+          if (word.setCategory) {
+            await word.setCategory(categories);
+            console.log('Used setCategory fallback for word', req.params.wordId);
+          } else {
+            console.error('No setCategories or setCategory method found on word instance');
+          }
+        }
+      }
+    }
+    // Return updated word with categories
+    const updatedWord = await WordTranslation.findByPk(req.params.wordId, {
+      include: [{ model: db.Category }],
+    });
+    return res.status(200).json(updatedWord);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Failed to update word' });
