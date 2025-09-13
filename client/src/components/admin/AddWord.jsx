@@ -66,7 +66,7 @@ const AddWord = ({ onClose, onAdd, saving, error, success }) => {
                 value={form[field]}
                 onChange={handleChange}
                 className="mb-2 p-2 rounded bg-blue-20 border border-blue-100 w-full text-sm focus:ring-2 focus:ring-blue-200"
-                required
+                required={field !== "FrenchWord"}
               />
             </div>
           ))}
