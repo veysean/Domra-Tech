@@ -42,6 +42,7 @@ const AuthPage = () => {
                 animate="animateRight"
                 exit="exitRight"
                 transition={{ duration: 2}}
+                className="hidden md:flex items-center justify-center z-10 -mr-15"
               >
                 <PromoCard isSignUp={isSignUp} handleToggle={handleToggle} />
               </motion.div>
@@ -82,6 +83,7 @@ const AuthPage = () => {
                 animate="animateLeft"
                 exit="exitLeft"
                 transition={{ duration: 2}}
+                className="hidden lg:flex items-center justify-center -ml-15"
               >
                 <PromoCard isSignUp={isSignUp} handleToggle={handleToggle} />
               </motion.div>
