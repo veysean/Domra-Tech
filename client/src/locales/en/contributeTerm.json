@@ -2,10 +2,17 @@
     "contributeHeader" : "Contribute to Domra Tech",
     "contributeDesc" : "Your expertise can help researchers, students, and professionals find the right words. Contribute a new technical term to Domra today",
     "add" : "Add New Terms",
-    "addDes" : "Submit new technical terms with accurate Khmer translations",
+    "addDesc" : "Submit new technical terms with accurate Khmer translations",
     "submitTerm" : "Submit Term",
     "improve" : "Improve Translations",
-    "improveDes" : "Suggest better translations for existing terms",
-    "improveTranslation" : "Improve Translation"
-
+    "improveDesc" : "Suggest better translations for existing terms",
+    "guideline" : "Improve Translation Guidelines",
+    "step01" : "Step01",
+    "step02" : "Step02",
+    "step03" : "Step03",
+    "step1_desc" : "Navigate to home page and search your preferred word.",
+    "step2_desc" : "Click on the word to view details and click on request.",
+    "step3_desc" : "Input all the required informations and click submit to improve your translation and wait for review.",
+    "Next" : "Next",
+    "previous" : "Previous"
 }
