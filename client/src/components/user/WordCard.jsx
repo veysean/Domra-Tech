@@ -106,8 +106,8 @@ export default function WordCard({word}){
                 <div data-property-1="Default" className="w-[450px] md:w-[530px] lg:w-[565px] p-5 lg:p-9 bg-white rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] flex flex-col justify-start items-start gap-7 hover:shadow-[0px_8px_8px_0px_rgba(0,0,0,0.25)]">
                     <div className="self-stretch inline-flex justify-between items-start"> 
                         <div className="w-full inline-flex flex-col justify-start items-start gap-2 lg:gap-3">
-                            <div className="self-stretch justify-start text-gray-700 text-xl md:text-2xl lg:text-3xl font-medium font-['Inter']">{word?.EnglishWord || "No Word" }</div>
-                            <div className="justify-start text-indigo-500 text-xl md:text-2xl lg:text-3xl font-normal font-['Inter']">{word?.KhmerWord || ""}</div>
+                            <div className="self-stretch justify-start text-gray-700 text-xl md:text-2xl lg:text-3xl font-medium">{word?.EnglishWord || "No Word" }</div>
+                            <div className="justify-start text-indigo-500 text-xl md:text-2xl lg:text-3xl font-normal">{word?.KhmerWord || ""}</div>
                         </div>
                         {/* Fav */}
                         <div 
