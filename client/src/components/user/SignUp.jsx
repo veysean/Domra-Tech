@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { FcGoogle } from "react-icons/fc"; // Google icon
 import { FaUser } from "react-icons/fa";   // Guest/User icon
 import { HiArrowLeft } from "react-icons/hi"; // arrow icon
+import { Eye, EyeOff } from "lucide-react";
 import { authServices } from "../../api";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -12,6 +13,8 @@ const SignUpCard = () => {
   const [step, setStep] = useState(1);
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
+  const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ 
     email: "",
     password: "",
@@ -21,6 +24,19 @@ const SignUpCard = () => {
 
   const handleNext = (e) => {
     e.preventDefault();
+    if(!formData.email && !formData.password) {
+      setError("Email and Password are required");
+      return;
+    }
+    else if(!formData.email) {
+      setError("Email is required");
+      return;
+    }
+    else if(!formData.password) {
+      setError("Password is required");
+      return;
+    }
+    setError(null);
     setStep(2);
   };
 
@@ -28,10 +44,23 @@ const SignUpCard = () => {
     e.preventDefault();
    // console.log("Sign Up data:", { firstName, lastName, email, password });
     // connect to sign-up API here
+    if(!formData.firstName && !formData.lastName) {
+      setError("First Name and Last Name are required");
+      return;
+    }
+    else if(!formData.firstName) {
+      setError("First Name is required");
+      return;
+    }
+    else if(!formData.lastName) {
+      setError("Last Name is required");
+      return;
+    }
     try{
       const res = await authServices.register(formData);
       login(res.data.token); // decode and store token
       navigate("/");
+      setError(null);
     } catch (error) {
       console.error("Error during sign-up:", error);
     }
@@ -39,11 +68,13 @@ const SignUpCard = () => {
   };
 
   const handleBack = () => {
+    setError(null);
     setStep(1);
   };
 
   return (
     <div className="w-[505px] h-[549px] relative bg-white rounded-[30px] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.25)] overflow-hidden">
+      
       <h2 className="absolute left-[217px] top-[47px] text-3xl font-['Righteous'] gradient-text">
         {t("signup")}
       </h2>
@@ -66,15 +97,31 @@ const SignUpCard = () => {
         </div>
 
         {/* Password */}
-        <div className="flex flex-col gap-2.5">
-          <label className="text-indigo-500 text-xl font-['Inter']">{t("password")}: </label>
+        <div className="flex flex-col gap-2.5 relative">
+          <label className="text-indigo-500 text-xl font-['Inter']">
+            {t("password")}:
+          </label>
+
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Enter your password"
             value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light"
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
+            className="p-2.5 pr-10 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light"
           />
+
+          {/* Toggle button */}
+          {formData.password && (
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-3 top-12 text-gray-500 hover:text-indigo-500"
+          >
+          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          </button>
+          )}
         </div>
 
         {/* Divider */}
@@ -102,7 +149,12 @@ const SignUpCard = () => {
           </span>
         </div>
         </Link>
-
+        {/* Error Message */}
+        {error && (
+          <div className="self-stretch p-2 bg-red-100 text-red-700 text-sm rounded-lg mt-2">
+            {error}
+          </div>
+        )}
         {/* Sign up Button */}
         <button
           type="submit"
@@ -148,7 +200,12 @@ const SignUpCard = () => {
                 className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light leading-snug"
               />
             </div>
-
+            {/* Error Message */}
+            {error && (
+              <div className="self-stretch p-2 bg-red-100 text-red-700 text-sm rounded-lg mt-2">
+                {error}
+              </div>
+            )}
             {/* Sign Up Button */}
             <button
               type="submit"
