@@ -43,10 +43,12 @@ db.CorrectionRequest.belongsTo(db.WordTranslation, { foreignKey: 'wordId' });
 db.WordTranslation.belongsToMany(db.Category, {
   through: db.WordCategory,
   foreignKey: 'wordId',
+  otherKey: 'categoryId'
 });
 db.Category.belongsToMany(db.WordTranslation, {
   through: db.WordCategory,
   foreignKey: 'categoryId',
+  otherKey: 'wordId'
 });
 
 // User - WordRequest

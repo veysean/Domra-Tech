@@ -14,7 +14,7 @@ export default function Footer() {
             <div className="w-full lg:w-[451px] flex flex-col items-start">
                 {/* Logo */}
                 <div className="w-full lg:w-[279px] pb-5 lg:pb-10 flex flex-col items-start gap-3 lg:gap-5">
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center lg:gap-2.5">
                     <div className="w-[46px] h-[28px] text-[#667EEA] text-2xl lg:text-[32px] font-bold font-inter">KH</div>
                     <div className="w-[179px] h-[28px] text-[#667EEA] text-2xl lg:text-[32px] font-normal font-['Righteous']">Domra Tech</div>
                 </div>
