@@ -1,16 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { CategoryServices } from "../../api";
+import { FiMenu, FiX } from "react-icons/fi";
 
 export default function Categories() {
 
     const [categories, setCategories] = useState([]);
     const [activeCategory, setActiveCategory] = useState("Categories");
+    const [openCat, setOpenCat] = useState(false);
+    const dropdownRef = useRef(null);
+
+    const toggleCategory = () => setOpenCat((prev) => !prev);
 
     useEffect(() => {
         const fetchCategories = async () => {
         try {
             const res = await CategoryServices.findAll();
-            console.log("API Response:", res.data);
             setCategories(res.data || []); 
         } catch (err) {
             console.error("Failed to fetch categories:", err);
@@ -18,6 +22,16 @@ export default function Categories() {
         };
 
         fetchCategories();
+    }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            setOpenCat(false); 
+        }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
     const getCategoryIcon = (categoryName, isActive) => {
@@ -51,14 +65,14 @@ export default function Categories() {
                     <path d="M2 1C0.895431 1 0 1.89543 0 3V13C0 14.1046 0.895431 15 2 15H14C15.1046 15 16 14.1046 16 13V3C16 1.89543 15.1046 1 14 1H2ZM14 2C14.5523 2 15 2.44772 15 3V13C15 13.5523 14.5523 14 14 14H2C1.44772 14 1 13.5523 1 13V3C1 2.44772 1.44772 2 2 2H14Z" fill={iconColor}/>
                 </svg>
             ),
-            'Artificial Intelligence (AI)': (
+            'Artificial intelligence (AI)': (
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M6 12.5C6 12.2239 6.22386 12 6.5 12H9.5C9.77614 12 10 12.2239 10 12.5C10 12.7761 9.77614 13 9.5 13H6.5C6.22386 13 6 12.7761 6 12.5Z" fill={iconColor}/>
                     <path d="M3 8.06155C3 6.76041 4.23471 5.76462 5.53019 5.88584C6.23775 5.95205 7.07092 6 8 6C8.92908 6 9.76225 5.95205 10.4698 5.88584C11.7653 5.76462 13 6.76041 13 8.06155V9.21922C13 9.67809 12.6875 10.075 12.2354 10.1536C11.3904 10.3006 9.8946 10.5 8 10.5C6.1054 10.5 4.60964 10.3006 3.76458 10.1536C3.3125 10.075 3 9.67809 3 9.21922V8.06155ZM7.54195 7.23501C7.46308 7.22158 7.38255 7.24672 7.32532 7.30262L6.40429 8.20222C5.67721 8.15847 5.04611 8.09004 4.53396 8.01982C4.39717 8.00107 4.27107 8.09676 4.25232 8.23355C4.23356 8.37034 4.32925 8.49643 4.46604 8.51519C5.01572 8.59055 5.69797 8.6637 6.48603 8.7078C6.55606 8.71172 6.62451 8.68605 6.67468 8.63704L7.42865 7.90061L8.27598 9.61099C8.31213 9.68395 8.38155 9.73474 8.46203 9.74711C8.54251 9.75947 8.62397 9.73187 8.68036 9.67313L9.6124 8.70211C10.3589 8.65757 11.0073 8.58739 11.534 8.51519C11.6707 8.49643 11.7664 8.37034 11.7477 8.23355C11.7289 8.09676 11.6028 8.00107 11.466 8.01982C10.9283 8.09354 10.2594 8.16531 9.48603 8.20859C9.42289 8.21212 9.36343 8.23945 9.31964 8.28508L8.56605 9.07017L7.72402 7.37048C7.6885 7.29879 7.62082 7.24843 7.54195 7.23501Z" fill={iconColor}/>
                     <path d="M8.5 1.86622C8.7989 1.69331 9 1.37014 9 1C9 0.447715 8.55229 0 8 0C7.44772 0 7 0.447715 7 1C7 1.37014 7.2011 1.69331 7.5 1.86622V3H5.5C3.01472 3 1 5.01472 1 7.5V8C0.447715 8 0 8.44771 0 9V11C0 11.5523 0.447715 12 1 12V13C1 14.1046 1.89543 15 3 15H13C14.1046 15 15 14.1046 15 13V12C15.5523 12 16 11.5523 16 11V9C16 8.44771 15.5523 8 15 8V7.5C15 5.01472 12.9853 3 10.5 3H8.5V1.86622ZM14 7.5V13C14 13.5523 13.5523 14 13 14H3C2.44772 14 2 13.5523 2 13V7.5C2 5.567 3.567 4 5.5 4H10.5C12.433 4 14 5.567 14 7.5Z" fill={iconColor}/>
                 </svg>
             ),
-            'Machine Learning': (
+            'Machine learning': (
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clipPath="url(#clip0_827_676)">
                     <path d="M5 0C5.13261 0 5.25979 0.0526784 5.35355 0.146447C5.44732 0.240215 5.5 0.367392 5.5 0.5V2H6.5V0.5C6.5 0.367392 6.55268 0.240215 6.64645 0.146447C6.74021 0.0526784 6.86739 0 7 0C7.13261 0 7.25979 0.0526784 7.35355 0.146447C7.44732 0.240215 7.5 0.367392 7.5 0.5V2H8.5V0.5C8.5 0.367392 8.55268 0.240215 8.64645 0.146447C8.74021 0.0526784 8.86739 0 9 0C9.13261 0 9.25979 0.0526784 9.35355 0.146447C9.44732 0.240215 9.5 0.367392 9.5 0.5V2H10.5V0.5C10.5 0.367392 10.5527 0.240215 10.6464 0.146447C10.7402 0.0526784 10.8674 0 11 0C11.1326 0 11.2598 0.0526784 11.3536 0.146447C11.4473 0.240215 11.5 0.367392 11.5 0.5V2C12.163 2 12.7989 2.26339 13.2678 2.73223C13.7366 3.20107 14 3.83696 14 4.5H15.5C15.6326 4.5 15.7598 4.55268 15.8536 4.64645C15.9473 4.74021 16 4.86739 16 5C16 5.13261 15.9473 5.25979 15.8536 5.35355C15.7598 5.44732 15.6326 5.5 15.5 5.5H14V6.5H15.5C15.6326 6.5 15.7598 6.55268 15.8536 6.64645C15.9473 6.74021 16 6.86739 16 7C16 7.13261 15.9473 7.25979 15.8536 7.35355C15.7598 7.44732 15.6326 7.5 15.5 7.5H14V8.5H15.5C15.6326 8.5 15.7598 8.55268 15.8536 8.64645C15.9473 8.74021 16 8.86739 16 9C16 9.13261 15.9473 9.25979 15.8536 9.35355C15.7598 9.44732 15.6326 9.5 15.5 9.5H14V10.5H15.5C15.6326 10.5 15.7598 10.5527 15.8536 10.6464C15.9473 10.7402 16 10.8674 16 11C16 11.1326 15.9473 11.2598 15.8536 11.3536C15.7598 11.4473 15.6326 11.5 15.5 11.5H14C14 12.163 13.7366 12.7989 13.2678 13.2678C12.7989 13.7366 12.163 14 11.5 14V15.5C11.5 15.6326 11.4473 15.7598 11.3536 15.8536C11.2598 15.9473 11.1326 16 11 16C10.8674 16 10.7402 15.9473 10.6464 15.8536C10.5527 15.7598 10.5 15.6326 10.5 15.5V14H9.5V15.5C9.5 15.6326 9.44732 15.7598 9.35355 15.8536C9.25979 15.9473 9.13261 16 9 16C8.86739 16 8.74021 15.9473 8.64645 15.8536C8.55268 15.7598 8.5 15.6326 8.5 15.5V14H7.5V15.5C7.5 15.6326 7.44732 15.7598 7.35355 15.8536C7.25979 15.9473 7.13261 16 7 16C6.86739 16 6.74021 15.9473 6.64645 15.8536C6.55268 15.7598 6.5 15.6326 6.5 15.5V14H5.5V15.5C5.5 15.6326 5.44732 15.7598 5.35355 15.8536C5.25979 15.9473 5.13261 16 5 16C4.86739 16 4.74021 15.9473 4.64645 15.8536C4.55268 15.7598 4.5 15.6326 4.5 15.5V14C3.83696 14 3.20107 13.7366 2.73223 13.2678C2.26339 12.7989 2 12.163 2 11.5H0.5C0.367392 11.5 0.240215 11.4473 0.146447 11.3536C0.0526784 11.2598 0 11.1326 0 11C0 10.8674 0.0526784 10.7402 0.146447 10.6464C0.240215 10.5527 0.367392 10.5 0.5 10.5H2V9.5H0.5C0.367392 9.5 0.240215 9.44732 0.146447 9.35355C0.0526784 9.25979 0 9.13261 0 9C0 8.86739 0.0526784 8.74021 0.146447 8.64645C0.240215 8.55268 0.367392 8.5 0.5 8.5H2V7.5H0.5C0.367392 7.5 0.240215 7.44732 0.146447 7.35355C0.0526784 7.25979 0 7.13261 0 7C0 6.86739 0.0526784 6.74021 0.146447 6.64645C0.240215 6.55268 0.367392 6.5 0.5 6.5H2V5.5H0.5C0.367392 5.5 0.240215 5.44732 0.146447 5.35355C0.0526784 5.25979 0 5.13261 0 5C0 4.86739 0.0526784 4.74021 0.146447 4.64645C0.240215 4.55268 0.367392 4.5 0.5 4.5H2C2 3.83696 2.26339 3.20107 2.73223 2.73223C3.20107 2.26339 3.83696 2 4.5 2V0.5C4.5 0.367392 4.55268 0.240215 4.64645 0.146447C4.74021 0.0526784 4.86739 0 5 0ZM4.5 3C4.10218 3 3.72064 3.15804 3.43934 3.43934C3.15804 3.72064 3 4.10218 3 4.5V11.5C3 11.8978 3.15804 12.2794 3.43934 12.5607C3.72064 12.842 4.10218 13 4.5 13H11.5C11.8978 13 12.2794 12.842 12.5607 12.5607C12.842 12.2794 13 11.8978 13 11.5V4.5C13 4.10218 12.842 3.72064 12.5607 3.43934C12.2794 3.15804 11.8978 3 11.5 3H4.5ZM5 6.5C5 6.10218 5.15804 5.72064 5.43934 5.43934C5.72064 5.15804 6.10218 5 6.5 5H9.5C9.89782 5 10.2794 5.15804 10.5607 5.43934C10.842 5.72064 11 6.10218 11 6.5V9.5C11 9.89782 10.842 10.2794 10.5607 10.5607C10.2794 10.842 9.89782 11 9.5 11H6.5C6.10218 11 5.72064 10.842 5.43934 10.5607C5.15804 10.2794 5 9.89782 5 9.5V6.5ZM6.5 6C6.36739 6 6.24021 6.05268 6.14645 6.14645C6.05268 6.24021 6 6.36739 6 6.5V9.5C6 9.63261 6.05268 9.75979 6.14645 9.85355C6.24021 9.94732 6.36739 10 6.5 10H9.5C9.63261 10 9.75979 9.94732 9.85355 9.85355C9.94732 9.75979 10 9.63261 10 9.5V6.5C10 6.36739 9.94732 6.24021 9.85355 6.14645C9.75979 6.05268 9.63261 6 9.5 6H6.5Z" fill={iconColor}/>
@@ -87,20 +101,72 @@ export default function Categories() {
         };
 
     
-        return categoryIcons[categoryName] || categoryIcons['General'];
+        return categoryIcons[categoryName];
     };
 
     return (
         <div className="w-[1076px] self-stretch inline-flex flex-col justify-start items-start gap-5">
-            <div className="p-2.5 inline-flex justify-center items-center gap-2.5">
-                <div className="justify-start text-slate-600 text-base font-bold font-['Inter']">Filter by  category :</div>
+            <div className="p-0.5 lg:p-2.5 inline-flex justify-center items-center gap-2.5">
+                <div className="justify-start text-slate-600 text-sm lg:text-base font-bold font-['Inter']">Filter by  category</div>
+                 <div className="lg:hidden" ref={dropdownRef}>
+
+                <button
+                    onClick={toggleCategory}
+                    className="text-[#667EEA]"
+                >
+                    {openCat ? <div className="text-[#667EEA] font-bold">
+                                    <svg width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1 1C2.91168 2.74775 4.87954 4.25225 6.79122 6L13 1.3125" stroke="#4A5568" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </div>: <div className="w-[19px]">
+                                    <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1 1C2.95262 3.34315 4.04738 4.65685 6 7L1 13" stroke="#4A5568" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </div>}
+                </button>
+                {/* Dropdown list */}
+                {openCat && (
+                <ul className="absolute mt-2 w-64 bg-white shadow-lg rounded-lg p-2 z-10">
+                    {/* "All Category" option */}
+                    <li
+                        onClick={() => {
+                        setActiveCategory("All Category");
+                        }}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition  ${
+                        activeCategory === "All Category" ? "bg-[#667EEA] text-white" : "hover:bg-gray-100 text-gray-700"
+                        }`}
+                    >
+                        All Category
+                    </li>
+
+                    {/* Other categories from API */}
+                    {categories.map((cat) => {
+                    const isActive = activeCategory === cat.categoryName;
+                    return (
+                        <li
+                        key={cat.categoryId}
+                        onClick={() => {
+                            setActiveCategory(cat.categoryName);
+                            
+                        }}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition 
+                            ${isActive ? "bg-[#667EEA] text-white" : "hover:bg-gray-100 text-gray-700"}`}
+                        >
+                        {getCategoryIcon(cat.categoryName, isActive)}
+                        <span>{cat.categoryName}</span>
+                        </li>
+                    );
+                    })}
+                </ul>
+                )}
+            </div>
             </div>
             <div className="self-stretch inline-flex justify-start items-start gap-7 flex-wrap content-start">
                 <div className="w-full flex justify-start items-start gap-7 flex-wrap content-start">
                     {/* Static "Categories" button */}
                     <button 
                         onClick={() => setActiveCategory("Categories")}
-                        className={`w-36 h-10 px-2.5 py-5 bg-[#6677EA] rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 flex justify-center items-center gap-2.5 hover:shadow-[0px_3px_3px_0px_rgba(0,0,0,0.20)]
+                        className={`hidden h-10 px-2.5 py-5 bg-[#6677EA] rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 lg:flex justify-center items-center gap-2.5 hover:shadow-[0px_3px_3px_0px_rgba(0,0,0,0.20)]
                         ${
                             activeCategory === "Categories"
                             ? "bg-[#6677EA] text-white"
@@ -114,7 +180,7 @@ export default function Categories() {
                                 </svg>
                             </div>
                         </div>
-                        <div className="justify-start text-base font-medium font-['Inter']">Categories</div>
+                        <div className="justify-start text-base font-medium font-['Inter']">All Categories</div>
                     </button>
                     {/* Category button */}
                     {categories.map((cat) =>  {
@@ -123,7 +189,7 @@ export default function Categories() {
                         <button 
                             key={cat.categoryId}
                             onClick={() => setActiveCategory(cat.categoryName)}
-                            className={`h-10 px-2.5 py-5 rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 flex justify-center items-center gap-2.5 hover:shadow-[0px_3px_3px_0px_rgba(0,0,0,0.20)]
+                            className={`hidden h-10 px-2.5 py-5 rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 lg:flex justify-center items-center gap-2.5 hover:shadow-[0px_3px_3px_0px_rgba(0,0,0,0.20)]
                             ${
                                 isActive
                                 ? "bg-[#6677EA] text-white"

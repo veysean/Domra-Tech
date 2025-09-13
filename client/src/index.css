@@ -14,3 +14,6 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;     /* Firefox */
 }
+html, body {
+  overflow-x: hidden;
+}

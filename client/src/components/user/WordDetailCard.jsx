@@ -4,13 +4,13 @@ import { useState } from "react";
 export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
   const [showReference, setShowReference] = useState(false);
   return (
-    <div className="w-[565px] p-7 bg-white border-t-4 border-indigo-500 rounded-[30px] shadow-md overflow-y-auto scrollbar-hide flex flex-col gap-7">
+    <div className="w-[400px] md:w-[500px] lg:w-[565px] p-7 bg-white border-t-4 border-indigo-500 rounded-[30px] shadow-md overflow-y-auto scrollbar-hide flex flex-col gap-7">
       {/* Header: Word details */}
       <div className="flex justify-between items-start">
         <div className="flex flex-col gap-3">
-          <p className="text-[#2D3748] text-xl lg:text-3xl font-medium font-inter">{word?.EnglishWord}</p>
-          <p className="text-[#667EEA] text-xl lg:text-3xl font-normal font-inter">{word?.KhmerWord}</p>
-          <p className="text-[#667EEA] text-xl lg:text-3xl font-normal font-inter">{word?.FrenchWord}</p>
+          <p className="text-[#2D3748] text-xl md:text-2xl lg:text-3xl font-medium font-inter">{word?.EnglishWord}</p>
+          <p className="text-[#667EEA] text-xl md:text-2xl lg:text-3xl font-normal font-inter">{word?.KhmerWord}</p>
+          <p className="text-[#667EEA] text-xl md:text-2xl lg:text-3xl font-normal font-inter">{word?.FrenchWord}</p>
         </div>
         {/* Favorite icon */}
         <div className="relative w-6 h-6 cursor-pointer hover:bg-[#E9ECEF] rounded flex items-center justify-center" onClick={toggleFav}>
@@ -32,12 +32,12 @@ export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
 
       {/* Definition */}
       <Section title="Definition">
-        <p className="text-[#667EEA] text-base">{word?.definition}</p>
+        <p className="text-[#667EEA] text-xs md:text-sm lg:text-base">{word?.definition}</p>
       </Section>
 
       {/* Example */}
       <Section title="Example">
-        <p className="text-[#667EEA]">{word?.example || "No Example"}</p>
+        <p className="text-[#667EEA] text-xs md:text-sm lg:text-base">{word?.example || "No Example"}</p>
       </Section>
 
       {/* Reference (collapsible) */}
@@ -51,11 +51,11 @@ export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
 
       {/*detail card Footer */}
       <div className="pt-7 border-t border-slate-200 flex justify-between items-center">
-        <p className="text-slate-500 text-base font-medium">
+        <p className="text-slate-500 text-xs lg:text-base font-medium">
           Added: {word?.createdAt?.slice(0, 10) || "N/A"}
         </p>
 
-        <button onClick={onRequest} className="h-10 px-4 bg-[#FFC107] rounded-[20px] flex items-center gap-2 text-white text-base font-medium hover:brightness-105">
+        <button onClick={onRequest} className="h-10 px-2 lg:px-4 bg-[#FFC107] rounded-[20px] flex items-center gap-2 text-white text-xs lg:text-base font-medium hover:brightness-105">
           <svg
             width="16"
             height="16"
@@ -78,8 +78,8 @@ export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
 /* --- Subcomponents --- */
 function Section({ title, children }) {
   return (
-    <div className="p-5 bg-[#E9ECEF] rounded-[20px] border-l-4 border-indigo-500 flex flex-col gap-3">
-      <p className="text-[#4A5568] font-medium">{title}</p>
+    <div className="p-3 lg:p-5 bg-[#E9ECEF] rounded-[20px] border-l-4 border-indigo-500 flex flex-col gap-3">
+      <p className="text-[#4A5568] text-xs font-medium md:text-sm lg:text-base">{title}</p>
       {children}
     </div>
   );
@@ -88,7 +88,7 @@ function Section({ title, children }) {
 function CollapsedReference() {
   return (
     <div className="h-10 p-5 bg-gray-50 rounded-[20px] border-l-4 border-indigo-500 flex items-center justify-between">
-      <p className="text-[#4A5568] text-base font-medium">Reference</p>
+      <p className="text-[#4A5568] text-xs md:text-sm lg:text-base font-medium">Reference</p>
       <svg
         width="10"
         height="18"
@@ -125,9 +125,9 @@ export const renderReference = ({reference}) => {
 function ExpandedReference({ reference }) {
 
   return (
-    <div className="min-h-36 p-5 bg-[#E9ECEF] rounded-[20px] border-l-4 border-indigo-500 flex flex-col gap-3">
+    <div className="min-h-20 lg:min-h-36 p-5 bg-[#E9ECEF] rounded-[20px] border-l-4 border-indigo-500 flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <p className="text-slate-500 text-base font-medium">Reference</p>
+        <p className="text-slate-500 text-xs md:text-sm lg:text-base font-medium">Reference</p>
         <svg
           width="21"
           height="11"
@@ -143,7 +143,7 @@ function ExpandedReference({ reference }) {
           />
         </svg>
       </div>
-      <a href={renderReference({ reference: reference })} target="_blank" rel="noopener noreferrer" className="text-sm underline text-[#667EEA] break-words">
+      <a href={renderReference({ reference: reference })} target="_blank" rel="noopener noreferrer" className=" text-xs lg:text-sm underline text-[#667EEA] break-words">
         {renderReference({ reference: reference })}
       </a>
     </div>
