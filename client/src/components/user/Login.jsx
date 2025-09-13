@@ -80,7 +80,7 @@ const Login = () => {
         >
           {/* Email */}
           <div className="flex flex-col gap-2.5">
-            <label className="text-indigo-500 text-xl font-['Inter']">
+            <label className="text-indigo-500 text-xl">
               Email:
             </label>
             <input
@@ -94,7 +94,7 @@ const Login = () => {
 
           {/* Password */}
           <div className="flex flex-col gap-2.5">
-            <label className="text-indigo-500 text-xl font-['Inter']">
+            <label className="text-indigo-500 text-xl">
               Password:
             </label>
             <input
