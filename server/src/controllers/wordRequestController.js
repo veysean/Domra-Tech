@@ -1,4 +1,5 @@
 import db from "../models/index.js";
+import { Op } from 'sequelize';
 /**
  * @swagger
  * tags:
@@ -106,6 +107,52 @@ import db from "../models/index.js";
  *         description: Unauthorized. Login required.
  *       500:
  *         description: Server error
+ */
+/**
+ * @swagger
+ * /wordRequests/today:
+ *   get:
+ *     summary: Retrieve word requests created today
+ *     tags: [WordRequest]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of word requests created today
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       wordRequestId:
+ *                         type: integer
+ *                       newEnglishWord:
+ *                         type: string
+ *                       newFrenchWord:
+ *                         type: string
+ *                       newKhmerWord:
+ *                         type: string
+ *                       newDefinition:
+ *                         type: string
+ *                       newExample:
+ *                         type: string
+ *                       reference:
+ *                         type: string
+ *                       userId:
+ *                         type: integer
+ *                       status:
+ *                         type: string
+ *                         enum: [pending, accepted, denied, deleted]
+ *                       check:
+ *                         type: boolean
+ *                       createdAt:
+ *                         type: string
+ *                         format: date-time
  */
 
 /**
@@ -266,6 +313,38 @@ export const getAllWordRequests = async (req, res) => {
   }
 };
 
+export const getTodayWordRequests = async (req, res) => {
+  try {
+    // Get today's date range in local time
+    const now = new Date();
+    const startOfDay = new Date(now.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(now.setHours(23, 59, 59, 999));
+
+    // Build filter: only today's requests
+    const whereCondition = {
+      createdAt: {
+        [Op.between]: [startOfDay, endOfDay]
+      },
+      ...(req.user.role !== 'admin' && { userId: req.user.userId })
+    };
+
+    const wordRequests = await db.WordRequest.findAll({
+      where: whereCondition,
+      order: [['wordRequestId', 'DESC']],
+      include: [
+        {
+          model: db.User,
+          attributes: ['userId', 'firstName', 'lastName']
+        }
+      ]
+    });
+
+    res.status(200).json({ data: wordRequests });
+  } catch (error) {
+    console.error("Error fetching today's word requests:", error);
+    res.status(500).json({ error: "Failed to fetch today's word requests." });
+  }
+};
 
 // Get word request by ID
 export const getWordRequestById = async (req, res) => {
@@ -297,10 +376,22 @@ export const getWordRequestById = async (req, res) => {
 // Controller for making word requests from both user and admin
 export const createWordRequest = async (req, res) => {
   try {
+    const { newEnglishWord } = req.body;
+
+    if (!newEnglishWord || typeof newEnglishWord !== 'string' || newEnglishWord.trim() === '') {
+      return res.status(400).json({ error: 'newEnglishWord is required and must be a non-empty string.' });
+    }
+
     const payload = {
-      ...req.body,
-      userId: req.user.userId,
-      check: req.body.check ?? false
+      newEnglishWord: newEnglishWord.trim(),
+      newFrenchWord: req.body.newFrenchWord || null,
+      newKhmerWord: req.body.newKhmerWord || null,
+      newDefinition: req.body.newDefinition || null,
+      newExample: req.body.newExample || null,
+      reference: req.body.reference || null,
+      status: req.body.status || 'pending',
+      check: req.body.check ?? false,
+      userId: req.user.userId
     };
 
     const newRequest = await db.WordRequest.create(payload);
