@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { userServices } from "../../api";
+import { useEffect } from "react";
 
 export default function ProfileForm({ userData, setUserData }) {
   const [formData, setFormData] = useState({
     firstName: userData?.firstName || "",
-    lastName: userData?.lastName || "",
-    email: userData?.email || "",
+    lastName: userData?.lastName || ""
   });
 
   const [passwordData, setPasswordData] = useState({
@@ -13,6 +13,16 @@ export default function ProfileForm({ userData, setUserData }) {
     newPassword: "",
     confirmPassword: "",
   });
+  
+   useEffect(() => {
+    if (userData) {
+      setFormData({
+        firstName: userData.firstName || "",
+        lastName: userData.lastName || "",
+        email: userData.email || ""
+      });
+    }
+  }, [userData]);
 
   const [message, setMessage] = useState(null); // success/error messages
   const [messageType, setMessageType] = useState("success"); // "success" | "error"
@@ -30,8 +40,8 @@ export default function ProfileForm({ userData, setUserData }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await userServices.updateUserProfile(formData);
-      const updatedUser = await userServices.getUserProfile();
+      await userServices.updateProfile(formData);
+      const updatedUser = await userServices.getProfile();
       setUserData(updatedUser.data);
       setMessage("Profile updated successfully");
       setMessageType("success");
@@ -41,6 +51,7 @@ export default function ProfileForm({ userData, setUserData }) {
       setMessageType("error");
     }
   };
+  
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
