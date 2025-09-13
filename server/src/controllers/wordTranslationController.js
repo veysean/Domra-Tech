@@ -9,7 +9,7 @@ import db from '../models/index.js';
 import { Op } from 'sequelize';
 import { khnormal } from 'khmer-normalizer';
 
-const { WordTranslation } = db;
+const { WordTranslation, Category } = db;
 
 // Function to search for words (case-insensitive)
 /**
@@ -67,8 +67,6 @@ const { WordTranslation } = db;
  *                   type: string
  *                   example: Failed to search for words
  */
-
-
 const searchWords = async (req, res) => {
   try {
     const searchTerm = req.query.q;
@@ -77,28 +75,37 @@ const searchWords = async (req, res) => {
       return res.status(400).json({ error: 'Search term is required' });
     }
 
-    const normalizedSearchTerm = khnormal(searchTerm.toLowerCase());
+    const rawSearchTerm = searchTerm.toLowerCase(); 
+    const normalizedSearchTerm = khnormal(searchTerm); 
 
     const words = await WordTranslation.findAll({
       where: {
         [Op.or]: [
-          // Search EnglishWord (case-insensitive)
           db.sequelize.where(
             db.sequelize.fn('lower', db.sequelize.col('EnglishWord')),
-            { [Op.like]: `%${searchTerm.toLowerCase()}%` }
+            { [Op.like]: `%${rawSearchTerm}%` }
           ),
-          // Search FrenchWord (case-insensitive)
           db.sequelize.where(
             db.sequelize.fn('lower', db.sequelize.col('FrenchWord')),
-            { [Op.like]: `%${searchTerm.toLowerCase()}%` }
+            { [Op.like]: `%${rawSearchTerm}%` }
           ),
-          // Search normalizedWord for Khmer (normalized and case-insensitive)
           db.sequelize.where(
-            db.sequelize.fn('lower', db.sequelize.col('normalizedWord')),
+            db.sequelize.col('normalizedWord'),
             { [Op.like]: `%${normalizedSearchTerm}%` }
           )
         ]
-      }
+      },
+      order: [
+        [db.sequelize.literal(`CASE 
+          WHEN lower("EnglishWord") = '${rawSearchTerm}' THEN 0
+          WHEN lower("FrenchWord") = '${rawSearchTerm}' THEN 1
+          WHEN "normalizedWord" = '${normalizedSearchTerm}' THEN 2
+          WHEN lower("EnglishWord") LIKE '${rawSearchTerm}%' THEN 3
+          WHEN lower("FrenchWord") LIKE '${rawSearchTerm}%' THEN 4
+          WHEN "normalizedWord" LIKE '${normalizedSearchTerm}%' THEN 5
+          ELSE 6 END`), 'ASC'],
+        [db.sequelize.fn('length', db.sequelize.col('EnglishWord')), 'ASC']
+      ]
     });
 
     return res.status(200).json(words);
@@ -108,6 +115,7 @@ const searchWords = async (req, res) => {
     return res.status(500).json({ error: 'Failed to search for words' });
   }
 };
+
 
 // Function to find all word translations with pagination
 
@@ -130,6 +138,25 @@ const searchWords = async (req, res) => {
  *         description: Number of items per page
  *         schema:
  *           type: integer
+ *       - in: query
+ *         name: sortby
+ *         schema:
+ *           type: string
+ *           enum: [EnglishWord, FrenchWord, KhmerWord, category]
+ *         description: Field to sort by (default is EnglishWord)
+ *       - in: query
+ *         name: sort
+ *         required: false
+ *         description: Sort order for EnglishWord (asc or desc)
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *       - in: query
+ *         name: category
+ *         required: false
+ *         description: Filter words by category (supports one or multiple, separated by commas)
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Paginated list of word translations
@@ -142,40 +169,42 @@ const findAll = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
-    const categoryId = req.query.categoryId;
+    const sortBy = req.query.sortby || 'EnglishWord';
+    const sortOrder = req.query.sort === 'desc' ? 'DESC' : 'ASC';
+    let categoryFilter = req.query.category
+      ? req.query.category.split(',').map(c => c.trim())
+      : null;
 
-    let where = {};
+    let order = [['EnglishWord', sortOrder]];
     let include = [];
-    if (categoryId) {
-      include.push({
-        model: db.Category,
-        where: { categoryId: Number(categoryId) },
-        through: { attributes: [] },
-        attributes: [],
-        required: true, // Ensures INNER JOIN for filtering
-      });
+
+    let categoryInclude = {
+      model: Category,
+      as: 'Categories',
+      attributes: ['categoryId', 'categoryName'],
+      through: { attributes: [] },
+    };
+
+    if (categoryFilter) {
+      categoryInclude.where = { categoryName: { [Op.in]: categoryFilter } };
     }
 
-    // Debug logging
-    console.log('findAll called with categoryId:', categoryId);
-    console.log('Sequelize include:', JSON.stringify(include, null, 2));
+    include.push(categoryInclude);
+
+    if (['EnglishWord', 'KhmerWord', 'FrenchWord'].includes(sortBy)) {
+      order = [[sortBy, sortOrder]];
+    } else if (sortBy === 'category') {
+      order = [[{ model: Category, as: 'Categories' }, 'categoryName', sortOrder]];
+    }
 
     const words = await WordTranslation.findAndCountAll({
-      where,
+      limit,
+      offset,
       include,
-      limit: limit,
-      offset: offset,
+      distinct: true,
+      order,
     });
 
-    // Print the number of words returned for debugging
-    console.log('Words returned:', words.rows.length, 'of', words.count);
-
-    return res.status(200).json({
-      totalItems: words.count,
-      totalPages: Math.ceil(words.count / limit),
-      currentPage: page,
-      words: words.rows,
-    });
     return res.status(200).json({
       totalItems: words.count,
       totalPages: Math.ceil(words.count / limit),
@@ -183,7 +212,7 @@ const findAll = async (req, res) => {
       words: words.rows,
     });
   } catch (error) {
-    console.error('findAll error:', error);
+    console.error(error);
     return res.status(500).json({ error: 'Failed to retrieve words' });
   }
 };
@@ -210,9 +239,7 @@ const findAll = async (req, res) => {
 
 const findById = async (req, res) => {
   try {
-    const word = await WordTranslation.findByPk(req.params.wordId, {
-      include: [{ model: db.Category }],
-    });
+    const word = await WordTranslation.findByPk(req.params.wordId);
     if (!word) {
       return res.status(404).json({ error: 'Word not found' });
     }
@@ -221,6 +248,7 @@ const findById = async (req, res) => {
     console.error(error);
     return res.status(500).json({ error: 'Failed to retrieve word' });
   }
+  
 };
 
 // Function to create a new word translation

@@ -52,9 +52,9 @@ export default function RequestChangingForm({ onCancel, wordId }) {
   };
 
   return (
-    <div className="bg-white w-[657px] rounded-[30px]">
-      <div className="w-[657px] p-7 bg-gradient-to-l from-indigo-500/50 to-purple-800/50 rounded-[30px] shadow-lg inline-flex flex-col justify-center items-center gap-7">
-        <div className="self-stretch h-10 text-center justify-start text-white text-3xl font-bold font-['Inter']">
+    <div className="bg-white w-[450px] md:w-[600px] lg:w-[657px] rounded-[30px]">
+      <div className="w-[450px] md:w-[600px] lg:w-[657px] p-7 bg-gradient-to-l from-indigo-500/50 to-purple-800/50 rounded-[30px] shadow-lg inline-flex flex-col justify-center items-center gap-7">
+        <div className="self-stretch h-10 text-center justify-start text-white text-2xl lg:text-3xl font-bold font-['Inter']">
           Request Changing
         </div>
 
@@ -76,7 +76,7 @@ export default function RequestChangingForm({ onCancel, wordId }) {
         >
           {/* English Word */}
           <div className="self-stretch flex flex-col justify-start items-start gap-[5px]">
-            <label className="self-stretch text-gray-700 text-xl font-normal font-['Inter']">
+            <label className="self-stretch text-gray-700 text-base lg:text-xl font-normal font-['Inter']">
               English Word
             </label>
             <input
@@ -91,7 +91,7 @@ export default function RequestChangingForm({ onCancel, wordId }) {
 
           {/* Khmer Word */}
           <div className="self-stretch flex flex-col justify-start items-start gap-[5px]">
-            <label className="self-stretch text-gray-700 text-xl font-normal font-['Inter']">
+            <label className="self-stretch text-gray-700 text-base lg:text-xl font-normal font-['Inter']">
               Khmer Word
             </label>
             <input
@@ -106,7 +106,7 @@ export default function RequestChangingForm({ onCancel, wordId }) {
 
           {/* French Word */}
           <div className="self-stretch flex flex-col justify-start items-start gap-[5px]">
-            <label className="self-stretch text-gray-700 text-xl font-normal font-['Inter']">
+            <label className="self-stretch text-gray-700 text-base lg:text-xl font-normal font-['Inter']">
               French Word
             </label>
             <input
@@ -121,7 +121,7 @@ export default function RequestChangingForm({ onCancel, wordId }) {
 
           {/* Word Reference */}
           <div className="self-stretch flex flex-col justify-start items-start gap-[5px]">
-            <label className="self-stretch text-gray-700 text-xl font-normal font-['Inter']">
+            <label className="self-stretch text-gray-700 text-base lg:text-xl font-normal font-['Inter']">
               Word Reference
             </label>
             <input
@@ -138,7 +138,7 @@ export default function RequestChangingForm({ onCancel, wordId }) {
           <div className="inline-flex justify-start items-center gap-[5px]">
             <button
               type="button"
-              className="w-24 h-10 rounded-[20px] bg-gray-500 text-white text-base font-medium font-['Inter'] hover:bg-gray-600"
+              className="w-24 h-10 rounded-[20px] bg-gray-500 text-white text-sm lg:text-base font-medium font-['Inter'] hover:bg-gray-600"
               onClick={() => {
                 setFormData({
                   wordId: wordId,
@@ -155,7 +155,7 @@ export default function RequestChangingForm({ onCancel, wordId }) {
             </button>
             <button
               type="submit"
-              className="w-24 h-10 rounded-[20px] bg-indigo-500 text-white text-base font-medium font-['Inter'] hover:bg-indigo-600"
+              className="w-24 h-10 rounded-[20px] bg-indigo-500 text-white text-sm lg:text-base font-medium font-['Inter'] hover:bg-indigo-600"
             >
               Submit
             </button>
