@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 const API = axios.create({
-    baseURL: 'http://localhost:3000/api', // backend URL
+    baseURL: 'https://domra-tech-production-4ff1.up.railway.app/api', // backend URL
 });
 
 const token = localStorage.getItem('token');
@@ -20,14 +20,14 @@ export const authServices = {
 export const WordTranslationServices = {
   findAll: (page = 1, limit = 10, categoryId = "") =>
     API.get("/words", {
-      params: { page, limit, categoryId },
+      params: { page, limit, ...(categoryId && categoryId !== "all" && { categoryId })  },
     }),
 
   findById: (id) => API.get(`/words/${id}`),
 
   searchWords: (query, page = 1, limit = 10, categoryId = "") =>
     API.get("/words/search", {
-      params: { q: query, page, limit, categoryId },
+      params: { q: query, page, limit, ...(categoryId && categoryId !== "all" && { categoryId }) },
     }),
 
   create: (wordData) => API.post('/admin/words', wordData),
