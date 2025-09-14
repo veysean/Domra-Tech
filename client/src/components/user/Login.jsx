@@ -66,17 +66,17 @@ const Login = () => {
   }
 
   return (
-    <div className="w-[505px] h-[549px] relative rounded-[30px]">
-      <div className="w-[505px] h-[549px] left-0 top-0 absolute bg-white rounded-[30px] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.25)] overflow-hidden">
+    <div className="m-auto lg:w-[505px] h-[549px] lg:relative rounded-[30px]">
+      <div className="w-full flex flex-col gap-4 p-10 align-middle lg:w-[505px] h-[549px] left-0 top-0 lg:absolute bg-white rounded-[30px] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.25)] overflow-hidden">
         {/* Title */}
-        <h2 className="absolute left-[217px] top-[47px] text-3xl font-['Righteous'] gradient-text">
+        <h2 className="lg:absolute text-center left-[217px] top-[47px] text-3xl font-['Righteous'] gradient-text">
           Login
         </h2>
 
         {/* Form */}
         <form
           onSubmit={handleSubmit}
-          className="w-96 left-[69px] top-[113px] absolute flex flex-col gap-5"
+          className="w-96 left-[69px] top-[113px] lg:absolute flex flex-col gap-5"
         >
           {/* Email */}
           <div className="flex flex-col gap-2.5">
