@@ -39,12 +39,14 @@ export default function ContributeTerm() {
             animate={{ opacity: 1, y: 0, transition: { duration: 0.4, delay: 0.1} }}
             exit={{ opacity: 0, y: -20, transition: { duration: 0.4, delay: 0.1} }}
         >
-            <div className="contribute-term-page pb-10 px-4 md:px-0">
+            <div className="contribute-term-page pb-10 md:px-0">
+                
                 <HomeHeroSection header={t("contributeHeader")} desc={t("contributeDesc")} />
+                
+                <div className="max-w-[1156px] m-auto p-4">
                 <div className="flex justify-center my-10">
                     <GuidLine />
                 </div>
-
                 {!isRequestNewWord && (
                     <div className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-10 md:gap-5 max-w-[1156px] mx-auto w-full">
                         
@@ -98,7 +100,7 @@ export default function ContributeTerm() {
                         </motion.div>
                     </div>
                 )}
-
+                </div>
             </div>
         </motion.div>
     );
