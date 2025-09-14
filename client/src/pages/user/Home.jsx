@@ -110,20 +110,29 @@ export default function Home() {
 
 
     return (
-        <div className="home-page flex flex-col gap-10">
-            {/* Hero Section */}
+        <div className="home-page flex flex-col gap-10 md:px-0 overflow-x-hidden">
+        <div className="w-full mx-auto">
             <HomeHeroSection header={t("header")} desc={t("desc")} />
-
-            {/* Category section with See more */}
-            <CategorySearch onSearchChange={handleSearchChange} onSearchSubmit={handleSearchSubmit}  onSearchFocus={handleSearchFocus} onCategoryChange={handleCategoryChange}/>
-
-            {/* Loading indicator */}
-            {isLoading && <div className="text-center">Loading...</div>}
-
-            {/* Word list */}
-            <div className="flex flex-col items-center gap-5 w-full">
-                <WordList ref={wordListRef} words={words} />
-             </div>
         </div>
+
+        <div className="w-full max-w-[1156px] px-4  mx-auto">
+            <CategorySearch
+            onSearchChange={handleSearchChange}
+            onSearchSubmit={handleSearchSubmit}
+            onSearchFocus={handleSearchFocus} onCategoryChange={handleCategoryChange}
+            />
+        </div>
+
+        {isLoading && (
+            <div className="text-center text-gray-600 text-lg md:text-xl">
+            Loading...
+            </div>
+        )}
+
+        <div className="flex flex-col items-center gap-5 w-full px-4  max-w-[1156px] mx-auto">
+            <WordList ref={wordListRef} words={words} />
+        </div>
+        </div>
+
     );
 }

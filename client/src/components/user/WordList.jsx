@@ -164,7 +164,7 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
     const pageNumbers = getPageNumbers();
 
     return (
-        <div className="word-list-container">
+        <div className="word-list-container w-full">
             {/*show found terms*/}
             <div className="text-base md:text-xl lg:text-xl text-gray-700 mb-10 font-semibold">
                 {words.length} {words.length === 1 ? 'term' : 'terms'} found
