@@ -31,6 +31,7 @@ export default function Home() {
     const wordListRef = useRef();
 
     const debouncedQuery = useDebounce(query, 300);
+    const [selectedCategory, setSelectedCategory] = useState(null);
 
     // Fetch all words on initial load
     useEffect(() => {
@@ -56,7 +57,7 @@ export default function Home() {
                 // If query is empty, fetch all words
                 try {
                     setIsLoading(true);
-                    const res = await WordTranslationServices.findAll(1, 1000);
+                    const res = await WordTranslationServices.findAll(1, 1000, selectedCategory);
                     setWords(res.data.words || []);
                 } catch (error) {
                     console.error("Error fetching all words:", error);
@@ -68,7 +69,7 @@ export default function Home() {
             
             try {
                 setIsLoading(true);
-                const res = await WordTranslationServices.searchWords(debouncedQuery);
+                const res = await WordTranslationServices.searchWords(debouncedQuery, 1, 1000, selectedCategory);
                 setWords(res.data || []);
             } catch (error) {
                 console.error("Error searching words:", error);
@@ -78,7 +79,7 @@ export default function Home() {
         };
         
         handleSearch();
-    }, [debouncedQuery]);
+    }, [debouncedQuery, selectedCategory]);
 
     // Handle manual search submission 
     const handleSearchSubmit = (searchQuery) => {
@@ -98,6 +99,15 @@ export default function Home() {
         }
     };
 
+    // Handle category change
+  const handleCategoryChange = (categoryName, categoryId) => {
+    if (categoryName === "All Category" || categoryName === "Categories") {
+      setSelectedCategory("all"); // Use "all" to indicate no category filtering
+    } else {
+      setSelectedCategory(categoryId); // Set the selected category ID
+    }
+  };
+
 
     return (
         <div className="home-page flex flex-col gap-10 md:px-0 overflow-x-hidden">
@@ -109,7 +119,7 @@ export default function Home() {
             <CategorySearch
             onSearchChange={handleSearchChange}
             onSearchSubmit={handleSearchSubmit}
-            onSearchFocus={handleSearchFocus}
+            onSearchFocus={handleSearchFocus} onCategoryChange={handleCategoryChange}
             />
         </div>
 

@@ -20,14 +20,14 @@ export const authServices = {
 export const WordTranslationServices = {
   findAll: (page = 1, limit = 10, categoryId = "") =>
     API.get("/words", {
-      params: { page, limit, categoryId },
+      params: { page, limit, ...(categoryId && categoryId !== "all" && { categoryId })  },
     }),
 
   findById: (id) => API.get(`/words/${id}`),
 
   searchWords: (query, page = 1, limit = 10, categoryId = "") =>
     API.get("/words/search", {
-      params: { q: query, page, limit, categoryId },
+      params: { q: query, page, limit, ...(categoryId && categoryId !== "all" && { categoryId }) },
     }),
 
   create: (wordData) => API.post('/admin/words', wordData),

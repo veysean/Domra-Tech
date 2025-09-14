@@ -2,7 +2,7 @@
 import SearchBar from "./SearchBar";
 import CategoryFilter from "./CategoryFilter";
 
-export default function CategorySearch({ onSearchChange, onSearchSubmit, onSearchFocus }) {
+export default function CategorySearch({ onSearchChange, onSearchSubmit, onSearchFocus, onCategoryChange }) {
     const handleSearch = (query) => {
         onSearchChange(query);
     };
@@ -25,7 +25,7 @@ export default function CategorySearch({ onSearchChange, onSearchSubmit, onSearc
                 <SearchBar onSearchChange={handleSearch} onSearchSubmit={handleSearchSubmit}  onSearchFocus={handleSearchFocus}/>
 
                 {/* Categories filter */}
-                <CategoryFilter />
+                <CategoryFilter onCategoryChange={onCategoryChange}/>
             </div>
         </div>
     );

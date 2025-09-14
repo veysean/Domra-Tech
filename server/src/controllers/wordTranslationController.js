@@ -26,6 +26,13 @@ const { WordTranslation, Category } = db;
  *         schema:
  *           type: string
  *         description: The search term to look for in EnglishWord, FrenchWord, or normalized Khmer word.
+ *       - in: query
+ *         name: categoryId
+ *         required: false
+ *         description: Filter search results by category ID. Use "all" to search across all categories.
+ *         schema:
+ *           type: string
+ *           example: "1"
  *     responses:
  *       200:
  *         description: List of matching word translations
@@ -70,6 +77,7 @@ const { WordTranslation, Category } = db;
 const searchWords = async (req, res) => {
   try {
     const searchTerm = req.query.q;
+    const categoryId = req.query.categoryId;
 
     if (!searchTerm) {
       return res.status(400).json({ error: 'Search term is required' });
@@ -77,6 +85,18 @@ const searchWords = async (req, res) => {
 
     const rawSearchTerm = searchTerm.toLowerCase(); 
     const normalizedSearchTerm = khnormal(searchTerm); 
+
+    let include = [];
+
+    if (categoryId && categoryId !== "all") {
+      include.push({
+        model: Category,
+        as: 'Categories',
+        attributes: [],
+        through: { attributes: [] },
+        where: { categoryId: categoryId }
+      });
+    }
 
     const words = await WordTranslation.findAll({
       where: {
@@ -95,6 +115,7 @@ const searchWords = async (req, res) => {
           )
         ]
       },
+      include,
       order: [
         [db.sequelize.literal(`CASE 
           WHEN lower("EnglishWord") = '${rawSearchTerm}' THEN 0
@@ -152,14 +173,16 @@ const searchWords = async (req, res) => {
  *           type: string
  *           enum: [asc, desc]
  *       - in: query
- *         name: category
+ *         name: categoryId
  *         required: false
- *         description: Filter words by category (supports one or multiple, separated by commas)
+ *         description: Filter words by category ID
  *         schema:
  *           type: string
  *     responses:
  *       200:
  *         description: Paginated list of word translations
+ *       400:
+ *         description: Invalid parameters
  *       500:
  *         description: Failed to retrieve words
  */
@@ -171,25 +194,19 @@ const findAll = async (req, res) => {
     const offset = (page - 1) * limit;
     const sortBy = req.query.sortby || 'EnglishWord';
     const sortOrder = req.query.sort === 'desc' ? 'DESC' : 'ASC';
-    let categoryFilter = req.query.category
-      ? req.query.category.split(',').map(c => c.trim())
-      : null;
+    const categoryId = req.query.categoryId;
 
     let order = [['EnglishWord', sortOrder]];
-    let include = [];
-
-    let categoryInclude = {
+    let include = [{
       model: Category,
       as: 'Categories',
       attributes: ['categoryId', 'categoryName'],
       through: { attributes: [] },
-    };
+    }];
 
-    if (categoryFilter) {
-      categoryInclude.where = { categoryName: { [Op.in]: categoryFilter } };
+    if (categoryId && categoryId !== "all") {
+      include[0].where = { categoryId: categoryId };
     }
-
-    include.push(categoryInclude);
 
     if (['EnglishWord', 'KhmerWord', 'FrenchWord'].includes(sortBy)) {
       order = [[sortBy, sortOrder]];
