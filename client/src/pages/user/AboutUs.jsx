@@ -7,7 +7,7 @@ export default function AboutUs() {
     const { t } = useTranslation("aboutUs");
 
     return (
-        <div className="flex flex-col items-center justify-start gap-10 px-4 md:px-0">
+        <div className="flex flex-col items-center justify-start gap-10">
             {/* Header */}
             <div className="h-10 lg:h-24 w-full flex justify-around items-center bg-gradient-to-l from-indigo-500/80 to-purple-800/80 overflow-hidden">
                 {[...Array(3)].map((_, i) => (
