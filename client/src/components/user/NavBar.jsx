@@ -40,13 +40,13 @@ export default function NavBar() {
                 <div className="relative flex justify-between items-center lg:px-10 mx-auto w-full">
                     {/* Logo */}
                     <div className="flex items-center lg:gap-2.5">
-                        <div className="w-[36px] h-[28px] text-[#667EEA] lg:text-[24px] font-bold font-inter">KH</div>
-                        <div className="w-[147px] h-[28px] text-[#667EEA] lg:text-[24px] font-normal font-['Righteous']">Domra Tech</div>
+                        <div className="w-[36px] h-[28px] text-[#667EEA] lg:text-[24px] font-bold font-['Inter']">KH</div>
+                        <div className="w-[90px] lg:w-[147px] h-[28px] text-[#667EEA] lg:text-[24px] font-normal font-['Righteous']">Domra Tech</div>
                     </div>
                     <div className="flex items-center gap-1 ml-0 sm:ml-auto lg:ml-0">
 
                     {/* Menu & Actions */}
-                    <div className="lg:flex justify-between items-center w-full max-w-[1200px]">
+                    <div className="lg:flex justify-between  items-center w-full max-w-[1200px]">
                         {/* Nav Links */}
                         <div className="hidden ml-auto mr-50 lg:flex gap-10">
                             {navItems.map((item) => (
@@ -144,15 +144,15 @@ export default function NavBar() {
                         <NavLink
                             key={item.label}
                             to={item.path}
-                            onClick={() => setIsOpen(false)}
+                            onClick={() => setIsMenuOpen(false)}
                             className={({ isActive }) =>
-                            `px-5 py-2.5 text-[#667EEA]/80 text-sm md:text-base lg:text-[18px] font-inter hover:bg-gray-100 cursor-pointer flex justify-between items-center border-t first:border-t-0 border-[#E2E8F0] ${
+                                `px-5 py-2.5 text-[#667EEA]/80 text-sm md:text-base lg:text-[18px] font-inter hover:bg-gray-100 cursor-pointer flex justify-between items-center border-t first:border-t-0 border-[#E2E8F0] ${
                                 isActive ? "underline underline-offset-4 decoration-[#667EEA] font-semibold" : ""
-                            }`
+                                }`
                             }
-                        >
+                            >
                             {item.label}
-                        </NavLink>
+                            </NavLink>
                         ))}
                     </div>
                     )}

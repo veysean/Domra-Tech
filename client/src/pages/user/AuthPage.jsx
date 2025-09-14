@@ -30,6 +30,15 @@ const AuthPage = () => {
 
   return (
     <div className="flex w-screen h-screen items-center justify-center bg-gradient-to-l from-indigo-500/50 to-purple-800/50 overflow-hidden">
+      {/* Toggle Button for Small Screens */}
+      <div className="md:hidden absolute top-6 right-6 z-20">
+        <button
+          onClick={handleToggle}
+          className="px-4 py-2 bg-indigo-500 text-white rounded-full text-sm font-semibold hover:bg-indigo-600 transition"
+        >
+          {isSignUp ? "Go to Login" : "Go to Sign Up"}
+        </button>
+      </div>
       <div className="flex relative">
         <AnimatePresence mode="wait">
           {isSignUp ? (
