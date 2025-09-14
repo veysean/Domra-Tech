@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 const API = axios.create({
-    baseURL: 'http://localhost:3000/api', // backend URL
+    baseURL: 'http://domra-tech-production-4ff1.up.railway.app/api', // backend URL
 });
 
 const token = localStorage.getItem('token');
