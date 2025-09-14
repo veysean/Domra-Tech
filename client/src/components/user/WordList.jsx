@@ -16,7 +16,11 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
     }));
 
     useEffect(() => {
-        if (propWords && propWords.length > 0) {
+        setCurrentPage(1);
+    }, [propWords]);
+
+    useEffect(() => {
+        if (propWords !== undefined && propWords !== null) {
             setWords(propWords);
             setTotalPages(Math.ceil(propWords.length / limit));
             return;
@@ -51,7 +55,7 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
                         setTotalPages(1);
                     }
                 } else {
-                    res = await WordTranslationServices.findAll();
+                    res = await WordTranslationServices.findAll(currentPage, limit);
                     setWords(res.data.words || []);
                     setTotalPages(Math.ceil((res.data.words || []).length / limit));
                 }
@@ -62,7 +66,7 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
             }
         };
 
-        if (!propWords || propWords.length === 0) {
+        if (propWords === undefined || propWords === null) {
             fetchWords();
         }
     }, [propWords, currentPage, limit, searchQuery]);
@@ -84,15 +88,18 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
     };
 
     const getDisplayedWords = () => {
-        if (propWords && propWords.length > 0) {
+        if (propWords !== undefined && propWords !== null) {
             const startIndex = (currentPage - 1) * limit;
             const endIndex = startIndex + limit;
             return propWords.slice(startIndex, endIndex);
         }
-        return words;
+        const startIndex = (currentPage - 1) * limit;
+        const endIndex = startIndex + limit;
+        return words.slice(startIndex, endIndex);
     };
 
     const displayedWords = getDisplayedWords();
+    const totalWords = propWords !== undefined && propWords !== null ? propWords.length : words.length;
 
     // Generate page numbers for pagination with ellipsis
     const getPageNumbers = () => {
@@ -150,7 +157,7 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
         return <div className="text-center py-10">Loading words...</div>;
     }
 
-    if (displayedWords.length === 0) {
+    if (totalWords === 0) {
         return <div className="text-center py-10">No words found</div>;
     }
 
