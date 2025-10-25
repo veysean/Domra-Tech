@@ -39,6 +39,27 @@ export default (sequelize, DataTypes) => {
             type: DataTypes.ENUM('admin', 'user'),
             allowNull: false,
             defaultValue: 'user'
+        },
+        passwordResetToken: {
+            type: DataTypes.STRING(255),
+            allowNull: true,
+        },
+        passwordResetExpires: {
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
+        emailVerificationToken: {
+            type: DataTypes.STRING(255),
+            allowNull: true
+        },
+        emailVerificationExpires: {
+            type: DataTypes.DATE,
+            allowNull: true
+        },
+        status: {
+            type: DataTypes.ENUM('unverified', 'verified', 'deleted'),
+            allowNull: false,
+            defaultValue: 'unverified'
         }
         }, {
             tableName: 'User'

@@ -9,6 +9,9 @@ const router = express.Router();
 router.post('/register', validation.registerValidationRules(), validation.validate, authController.register);
 
 router.post('/login',validation.loginValidationRules(), validation.validate, authController.login);
+router.get('/verify-email', authController.verifyEmail);
+router.post('/forgot-password', authController.forgotPassword);
+router.post('/reset-password', authController.resetPassword);
 
 // Route to redirect to Google's login page
 /**
