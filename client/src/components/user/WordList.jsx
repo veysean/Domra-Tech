@@ -188,25 +188,49 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
                         Prev
                     </button>
                     
-                    {/* Page Numbers */}
-                    <div className="flex space-x-1 gap-[5px]">
-                        {pageNumbers.map((page, index) => (
-                            page === '...' ? (
-                                <span key={`ellipsis-${index}`} className="px-3 py-2">...</span>
-                            ) : (
-                                <button
-                                    key={page}
-                                    onClick={() => handlePageChange(page)}
-                                    className={`px-3 py-2 rounded-md ${
-                                        currentPage === page
-                                            ? 'bg-[#667EEA] text-white'
-                                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                    }`}
-                                >
-                                    {page}
-                                </button>
-                            )
-                        ))}
+                    {/* Page Numbers + Input page number */}
+                    <div className="flex items-center space-x-2 gap-[5px]">
+                       {/* page button */}
+                        <div className="flex space-x-1 gap-[5px]">
+                            {pageNumbers.map((page, index) => (
+                                page === '...' ? (
+                                    <span key={`ellipsis-${index}`} className="px-3 py-2">...</span>
+                                ) : (
+                                    <button
+                                        key={page}
+                                        onClick={() => handlePageChange(page)}
+                                        className={`px-3 py-2 rounded-md ${
+                                            currentPage === page
+                                                ? 'bg-[#667EEA] text-white'
+                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                        }`}
+                                    >
+                                        {page}
+                                    </button>
+                                )
+                            ))}
+                        </div>
+
+                        {/* Page input */}
+                        <div className="flex items-center space-x-1">
+                            <span className="text-gray-600 text-sm">Go to</span>
+                            <input
+                                type="number"
+                                min="1"
+                                max={totalPages}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        const value = parseInt(e.target.value);
+                                        if (value >= 1 && value <= totalPages) {
+                                            handlePageChange(value);
+                                            e.target.value = ""; // clear input
+                                        }
+                                    }
+                                }}
+                                className="w-14 px-2 py-1 border rounded-md text-center focus:outline-none focus:ring-2 focus:ring-[#667EEA]"
+                                placeholder="#"
+                            />
+                        </div>
                     </div>
                     
                     {/* Next Button */}
