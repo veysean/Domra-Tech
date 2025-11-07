@@ -7,6 +7,7 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [pageInput, setPageInput] = useState("1");
     const limit = 10;
 
     useImperativeHandle(ref, () => ({
@@ -18,6 +19,10 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
     useEffect(() => {
         setCurrentPage(1);
     }, [propWords]);
+
+    useEffect(()=>{
+        setPageInput(String(currentPage));
+    }, [currentPage]);
 
     useEffect(() => {
         if (propWords !== undefined && propWords !== null) {
@@ -218,17 +223,17 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
                                 type="number"
                                 min="1"
                                 max={totalPages}
+                                value={pageInput}
+                                onChange={(e) => setPageInput(e.target.value)} // allows typing or deleting freely
                                 onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        const value = parseInt(e.target.value);
-                                        if (value >= 1 && value <= totalPages) {
-                                            handlePageChange(value);
-                                            e.target.value = ""; // clear input
-                                        }
+                                if (e.key === "Enter") {
+                                    const value = parseInt(pageInput);
+                                    if (!isNaN(value) && value >= 1 && value <= totalPages) {
+                                    handlePageChange(value);
                                     }
+                                }
                                 }}
                                 className="w-14 px-2 py-1 border rounded-md text-center focus:outline-none focus:ring-2 focus:ring-[#667EEA]"
-                                placeholder="#"
                             />
                         </div>
                     </div>
