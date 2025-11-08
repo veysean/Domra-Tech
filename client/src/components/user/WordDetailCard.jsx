@@ -1,8 +1,13 @@
 import { useState } from "react";
-
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
   const [showReference, setShowReference] = useState(false);
+  const { auth } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   return (
     <div className="w-[400px] md:w-[500px] lg:w-[565px] p-7 bg-white border-t-4 border-indigo-500 rounded-[30px] shadow-md overflow-y-auto scrollbar-hide flex flex-col gap-7">
       {/* Header: Word details */}
@@ -55,7 +60,17 @@ export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
           Added: {word?.createdAt?.slice(0, 10) || "N/A"}
         </p>
 
-        <button onClick={onRequest} className="h-10 px-2 lg:px-4 bg-[#FFC107] rounded-[20px] flex items-center gap-2 text-white text-xs lg:text-base font-medium hover:brightness-105">
+        <button 
+          onClick={()=> {
+            if(auth){
+              onRequest();
+            } else{
+              navigate("/auth");
+            }
+          }}
+        
+          className="h-10 px-2 lg:px-4 bg-[#FFC107] rounded-[20px] flex items-center gap-2 text-white text-xs lg:text-base font-medium hover:brightness-105"
+        >
           <svg
             width="16"
             height="16"
