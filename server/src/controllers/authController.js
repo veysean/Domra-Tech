@@ -464,7 +464,6 @@ const forgotPassword = async (req, res) => {
  *         description: Internal server error.
  */
 
-const bcrypt = require('bcrypt');
 
 const resetPassword = async (req, res) => {
   try {
