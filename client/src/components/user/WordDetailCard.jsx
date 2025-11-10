@@ -50,7 +50,7 @@ export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
         {!showReference ? (
           <CollapsedReference />
         ) : (
-          <ExpandedReference reference={word?.reference} />
+          <ExpandedReference reference={word?.reference} referenceText={word?.referenceText}/>
         )}
       </div>
 
@@ -137,7 +137,10 @@ export const renderReference = ({reference}) => {
     }
 };
 
-function ExpandedReference({ reference }) {
+function ExpandedReference({ reference, referenceText }) {
+  if(!reference){
+    return null;
+  }
 
   return (
     <div className="min-h-20 lg:min-h-36 p-5 bg-[#E9ECEF] rounded-[20px] border-l-4 border-indigo-500 flex flex-col gap-3">
@@ -158,8 +161,13 @@ function ExpandedReference({ reference }) {
           />
         </svg>
       </div>
-      <a href={renderReference({ reference: reference })} target="_blank" rel="noopener noreferrer" className=" text-xs lg:text-sm underline text-[#667EEA] break-words">
-        {renderReference({ reference: reference })}
+      <a
+        href={reference}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-xs lg:text-sm underline text-[#667EEA] break-words"
+      >
+        {referenceText || reference}
       </a>
     </div>
   );
