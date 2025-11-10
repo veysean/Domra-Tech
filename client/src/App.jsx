@@ -15,6 +15,8 @@ import Categories from './pages/user/Categories';
 import AboutUs from './pages/user/AboutUs';
 import AuthPage from "./pages/user/AuthPage";
 import Profile from "./pages/user/Profile";
+import ForgotPassword from "./pages/user/ForgetPassword";
+import ResetPassword from "./pages/user/ResetPassword";
 
 // Admin Pages
 import UsersPage from "./pages/admin/User";
@@ -72,6 +74,24 @@ function AppRoutes() {
           path="/auth"
           element={
             <AuthPage />
+          }
+        />
+
+        <Route
+          path="/forgot-password"
+          element={
+            <MainLayout>
+              <ForgotPassword />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/auth/reset-password"
+          element={
+            <MainLayout>
+              <ResetPassword />
+            </MainLayout>
           }
         />
 
