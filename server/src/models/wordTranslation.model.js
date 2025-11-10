@@ -26,7 +26,13 @@ export default (sequelize, DataTypes) => {
     example: {
       type: DataTypes.TEXT
     },
+    imageURL: {
+      type: DataTypes.STRING(255),
+    },
     reference: {
+      type: DataTypes.TEXT
+    },
+    referenceText: {
       type: DataTypes.TEXT
     }
   }, {
