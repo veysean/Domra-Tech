@@ -397,7 +397,7 @@ const forgotPassword = async (req, res) => {
 
         await user.save();
 
-        const resetURL = `http://localhost:5173/auth/reset-password?token=${resetToken}`;
+        const resetURL = `${process.env.FRONTEND_URL}/auth/reset-password?token=${resetToken}`;
 
         await emailService.sendPasswordResetEmail(user.email, resetURL);
 
@@ -435,6 +435,10 @@ const forgotPassword = async (req, res) => {
  *                 type: string
  *                 format: password
  *                 example: NewSecurePassword123!
+ *               confirmPassword:
+ *                  type: string
+ *                  format: password
+ *                  example: NewSecurePassword123!
  *     responses:
  *       200:
  *         description: Password has been reset successfully.
@@ -460,12 +464,19 @@ const forgotPassword = async (req, res) => {
  *         description: Internal server error.
  */
 
+const bcrypt = require('bcrypt');
+
 const resetPassword = async (req, res) => {
   try {
-    const { token, password } = req.body;
-  
-    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const { token, password, confirmPassword } = req.body;
 
+    // 1. Check password confirmation
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: 'Passwords do not match.' });
+    }
+
+    // 2. Hash the token and find user
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
     const user = await User.findOne({
       where: {
         passwordResetToken: hashedToken,
@@ -477,17 +488,20 @@ const resetPassword = async (req, res) => {
       return res.status(400).json({ message: 'Token is invalid or has expired.' });
     }
 
-    // the password field and save the user
-    user.password = password;
+    // 3. Hash the new password
+    user.password = await bcrypt.hash(password, 12);
+
+    // 4. Clear reset fields
     user.passwordResetToken = null;
     user.passwordResetExpires = null;
+
     await user.save();
-    
+
     return res.status(200).json({ message: 'Password has been reset successfully.' });
 
   } catch (error) {
     console.error('Reset password error:', error);
-    return res.status(500).json({ message: 'Failed to reset password.', error: error.message });
+    return res.status(500).json({ message: 'Internal server error.' });
   }
 };
 
