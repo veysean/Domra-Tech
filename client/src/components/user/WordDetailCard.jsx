@@ -1,8 +1,13 @@
 import { useState } from "react";
-
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
   const [showReference, setShowReference] = useState(false);
+  const { auth } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   return (
     <div className="w-[400px] md:w-[500px] lg:w-[565px] p-7 bg-white border-t-4 border-indigo-500 rounded-[30px] shadow-md overflow-y-auto scrollbar-hide flex flex-col gap-7">
       {/* Header: Word details */}
@@ -45,7 +50,7 @@ export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
         {!showReference ? (
           <CollapsedReference />
         ) : (
-          <ExpandedReference reference={word?.reference} />
+          <ExpandedReference reference={word?.reference} referenceText={word?.referenceText}/>
         )}
       </div>
 
@@ -55,7 +60,17 @@ export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
           Added: {word?.createdAt?.slice(0, 10) || "N/A"}
         </p>
 
-        <button onClick={onRequest} className="h-10 px-2 lg:px-4 bg-[#FFC107] rounded-[20px] flex items-center gap-2 text-white text-xs lg:text-base font-medium hover:brightness-105">
+        <button 
+          onClick={()=> {
+            if(auth){
+              onRequest();
+            } else{
+              navigate("/auth");
+            }
+          }}
+        
+          className="h-10 px-2 lg:px-4 bg-[#FFC107] rounded-[20px] flex items-center gap-2 text-white text-xs lg:text-base font-medium hover:brightness-105"
+        >
           <svg
             width="16"
             height="16"
@@ -122,7 +137,10 @@ export const renderReference = ({reference}) => {
     }
 };
 
-function ExpandedReference({ reference }) {
+function ExpandedReference({ reference, referenceText }) {
+  if(!reference){
+    return null;
+  }
 
   return (
     <div className="min-h-20 lg:min-h-36 p-5 bg-[#E9ECEF] rounded-[20px] border-l-4 border-indigo-500 flex flex-col gap-3">
@@ -143,8 +161,13 @@ function ExpandedReference({ reference }) {
           />
         </svg>
       </div>
-      <a href={renderReference({ reference: reference })} target="_blank" rel="noopener noreferrer" className=" text-xs lg:text-sm underline text-[#667EEA] break-words">
-        {renderReference({ reference: reference })}
+      <a
+        href={reference}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-xs lg:text-sm underline text-[#667EEA] break-words"
+      >
+        {referenceText || reference}
       </a>
     </div>
   );

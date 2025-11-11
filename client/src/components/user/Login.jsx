@@ -133,7 +133,10 @@ const Login = () => {
           </button>
 
           {/* Forgot Password */}
-          <div className="text-center underline border-slate-200 text-slate-500 text-xs font-light leading-snug cursor-pointer">
+          <div
+            onClick={() => navigate("/forgot-password")}
+            className="text-center underline text-slate-500 text-xs font-light leading-snug cursor-pointer"
+          >
             Forgot password?
           </div>
         </form>

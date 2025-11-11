@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { CorrectionServices } from "../../api";
+import {jwtDecode} from 'jwt-decode';
 
 export default function RequestChangingForm({ onCancel, wordId }) {
   const [formData, setFormData] = useState({
@@ -24,7 +25,16 @@ export default function RequestChangingForm({ onCancel, wordId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await CorrectionServices.requestCorrection(formData);
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("User not authenticated");
+    
+    const decoded = jwtDecode(token);
+    const userId = decoded.userId;
+    
+    if (!userId) throw new Error("Invalid token: missing userId");
+
+    const payload = { ...formData, userId };
+      const response = await CorrectionServices.requestCorrection(payload);
       console.log("Form Submitted:", response.data);
       setSuccessMessage("✅ Request submitted successfully!");
       setErrorMessage("");
