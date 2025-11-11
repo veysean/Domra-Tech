@@ -7,6 +7,7 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [pageInput, setPageInput] = useState("1");
     const limit = 10;
 
     useImperativeHandle(ref, () => ({
@@ -18,6 +19,10 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
     useEffect(() => {
         setCurrentPage(1);
     }, [propWords]);
+
+    useEffect(()=>{
+        setPageInput(String(currentPage));
+    }, [currentPage]);
 
     useEffect(() => {
         if (propWords !== undefined && propWords !== null) {
@@ -188,25 +193,49 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
                         Prev
                     </button>
                     
-                    {/* Page Numbers */}
-                    <div className="flex space-x-1 gap-[5px]">
-                        {pageNumbers.map((page, index) => (
-                            page === '...' ? (
-                                <span key={`ellipsis-${index}`} className="px-3 py-2">...</span>
-                            ) : (
-                                <button
-                                    key={page}
-                                    onClick={() => handlePageChange(page)}
-                                    className={`px-3 py-2 rounded-md ${
-                                        currentPage === page
-                                            ? 'bg-[#667EEA] text-white'
-                                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                    }`}
-                                >
-                                    {page}
-                                </button>
-                            )
-                        ))}
+                    {/* Page Numbers + Input page number */}
+                    <div className="flex items-center space-x-2 gap-[5px]">
+                       {/* page button */}
+                        <div className="flex space-x-1 gap-[5px]">
+                            {pageNumbers.map((page, index) => (
+                                page === '...' ? (
+                                    <span key={`ellipsis-${index}`} className="px-3 py-2">...</span>
+                                ) : (
+                                    <button
+                                        key={page}
+                                        onClick={() => handlePageChange(page)}
+                                        className={`px-3 py-2 rounded-md ${
+                                            currentPage === page
+                                                ? 'bg-[#667EEA] text-white'
+                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                        }`}
+                                    >
+                                        {page}
+                                    </button>
+                                )
+                            ))}
+                        </div>
+
+                        {/* Page input */}
+                        <div className="flex items-center space-x-1">
+                            <span className="text-gray-600 text-sm">Go to</span>
+                            <input
+                                type="number"
+                                min="1"
+                                max={totalPages}
+                                value={pageInput}
+                                onChange={(e) => setPageInput(e.target.value)} // allows typing or deleting freely
+                                onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    const value = parseInt(pageInput);
+                                    if (!isNaN(value) && value >= 1 && value <= totalPages) {
+                                    handlePageChange(value);
+                                    }
+                                }
+                                }}
+                                className="w-14 px-2 py-1 border rounded-md text-center focus:outline-none focus:ring-2 focus:ring-[#667EEA]"
+                            />
+                        </div>
                     </div>
                     
                     {/* Next Button */}

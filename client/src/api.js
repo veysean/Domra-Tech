@@ -14,6 +14,10 @@ if (token) {
 export const authServices = {
   register: (userData) => API.post('/auth/register', userData),
   login: (credentials) => API.post('/auth/login', credentials),
+  // Request password reset link
+  forgotPassword: (email) => API.post('/auth/forgot-password', { email }),
+  // Reset password with token + confirmation
+  resetPassword: (data) => API.post('/auth/reset-password', data),
 };
 
 // word translation services

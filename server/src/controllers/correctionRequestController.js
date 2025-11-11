@@ -61,7 +61,7 @@ const createCorrectionRequest = async (req, res) => {
   try {
      
     const payload = {
-      userId: req.user.userId,
+      userId: req.body.userId,
       ...req.body
     }
 
