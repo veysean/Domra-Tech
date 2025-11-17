@@ -286,53 +286,107 @@ const verifyEmail = async (req, res) => {
  *         description: Server error
  */
 
-const login = async (req, res) => {
-  try {
-    const { email, password, googleId } = req.body;
+// const login = async (req, res) => {
+//   try {
+//     const { email, password, googleId } = req.body;
     
-    const user = await User.findOne({ where: { email } });
+//     const user = await User.findOne({ where: { email } });
 
-    if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found.' });
+//     }
 
-    // Check if it's a traditional login (with password)
-    if (password && user.password) {
-      const isMatch = await user.comparePassword(password);
-      if (!isMatch) {
-        return res.status(401).json({ message: 'Invalid credentials.' });
+//     // Check if it's a traditional login (with password)
+//     if (password) {
+//       const isMatch = await bcrypt.compare(password, user.password);
+//       if (!isMatch) {
+//         return res.status(401).json({ message: 'Invalid credentials.' });
+//       }
+//     } else if (googleId && user.googleId === googleId) {
+//       // Google login
+//     } else {
+//       return res.status(401).json({ message: 'Invalid credentials.' });
+//     }
+
+//     // Generate JWT for both types of login
+//     const token = jwt.sign(
+//       { userId: user.userId, role: user.role },
+//       process.env.JWT_SECRET,
+//       { expiresIn: '1h' }
+//     );
+    
+//     const userResponse = {
+//       userId: user.userId,
+//       firstName: user.firstName,
+//       lastName: user.lastName,
+//       email: user.email,
+//       role: user.role,
+//     };
+
+//     return res.status(200).json({ message: 'Logged in successfully!', user: userResponse , token });
+
+//   } catch (error) {
+//     console.error('Login error:', error);
+//     return res.status(500).json({ message: 'Failed to log in.', error: error.message });
+//   }
+// };
+
+  const login = async (req, res) => {
+    try {
+      const { email, password, googleId } = req.body;
+
+      // 1. Find user by email
+      const user = await User.findOne({ where: { email } });
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found." });
       }
-    }
-    // Check if it's a third-party login (with googleId)
-    else if (googleId && user.googleId === googleId) {
-      // User is authenticated, proceed
-    }
-    else {
-      return res.status(401).json({ message: 'Invalid credentials.' });
-    }
 
-    // Generate JWT for both types of login
-    const token = jwt.sign(
-      { userId: user.userId, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-    
-    const userResponse = {
-      userId: user.userId,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      role: user.role,
-    };
+      // 2. Traditional login (password-based)
+      if (password) {
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) {
+          return res.status(401).json({ message: "Invalid credentials." });
+        }
+      }
+      // 3. Third-party login (Google)
+      else if (googleId && user.googleId === googleId) {
+        // User authenticated via Google
+      }
+      // 4. If neither condition matches
+      else {
+        return res.status(401).json({ message: "Invalid credentials." });
+      }
 
-    return res.status(200).json({ message: 'Logged in successfully!', user: userResponse , token });
+      // 5. Generate JWT
+      const token = jwt.sign(
+        { userId: user.userId, role: user.role },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
 
-  } catch (error) {
-    console.error('Login error:', error);
-    return res.status(500).json({ message: 'Failed to log in.', error: error.message });
-  }
-};
+      // 6. Prepare response payload
+      const userResponse = {
+        userId: user.userId,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        role: user.role,
+      };
+
+      return res.status(200).json({
+        message: "Logged in successfully!",
+        user: userResponse,
+        token,
+      });
+    } catch (error) {
+      console.error("Login error:", error);
+      return res.status(500).json({
+        message: "Failed to log in.",
+        error: error.message,
+      });
+    }
+  };
 
 // Function to handle forgot password
 /**
@@ -465,44 +519,83 @@ const forgotPassword = async (req, res) => {
  */
 
 
-const resetPassword = async (req, res) => {
-  try {
-    const { token, password, confirmPassword } = req.body;
+// const resetPassword = async (req, res) => {
+//   try {
+//     const { token, password, confirmPassword } = req.body;
 
-    // 1. Check password confirmation
-    if (password !== confirmPassword) {
-      return res.status(400).json({ message: 'Passwords do not match.' });
-    }
+//     // 1. Check password confirmation
+//     if (password !== confirmPassword) {
+//       return res.status(400).json({ message: 'Passwords do not match.' });
+//     }
 
-    // 2. Hash the token and find user
-    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
-    const user = await User.findOne({
-      where: {
-        passwordResetToken: hashedToken,
-        passwordResetExpires: { [Op.gt]: Date.now() }
+//     // 2. Hash the token and find user
+//     const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+//     const user = await User.findOne({
+//       where: {
+//         passwordResetToken: hashedToken,
+//         passwordResetExpires: { [Op.gt]: Date.now() }
+//       }
+//     });
+
+//     if (!user) {
+//       return res.status(400).json({ message: 'Token is invalid or has expired.' });
+//     }
+
+//     // 3. Hash the new password
+//     user.password = await bcrypt.hash(password, 12);
+
+//     // 4. Clear reset fields
+//     user.passwordResetToken = null;
+//     user.passwordResetExpires = null;
+
+//     await user.save();
+
+//     return res.status(200).json({ message: 'Password has been reset successfully.' });
+
+//   } catch (error) {
+//     console.error('Reset password error:', error);
+//     return res.status(500).json({ message: 'Internal server error.' });
+//   }
+// };
+
+  const resetPassword = async (req, res) => {
+    try {
+      const { token, password, confirmPassword } = req.body;
+
+      // 1. Check password confirmation
+      if (password !== confirmPassword) {
+        return res.status(400).json({ message: "Passwords do not match." });
       }
-    });
 
-    if (!user) {
-      return res.status(400).json({ message: 'Token is invalid or has expired.' });
+      // 2. Hash the token and find user
+      const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+      const user = await User.findOne({
+        where: {
+          passwordResetToken: hashedToken,
+          passwordResetExpires: { [Op.gt]: Date.now() },
+        },
+      });
+
+      if (!user) {
+        return res.status(400).json({ message: "Token is invalid or has expired." });
+      }
+
+      // 3. Assign plain password (hooks will hash automatically)
+      user.password = password;
+
+      // 4. Clear reset fields
+      user.passwordResetToken = null;
+      user.passwordResetExpires = null;
+
+      // 5. Save user (beforeUpdate hook will hash password)
+      await user.save();
+
+      return res.status(200).json({ message: "Password has been reset successfully." });
+    } catch (error) {
+      console.error("Reset password error:", error);
+      return res.status(500).json({ message: "Internal server error." });
     }
-
-    // 3. Hash the new password
-    user.password = await bcrypt.hash(password, 12);
-
-    // 4. Clear reset fields
-    user.passwordResetToken = null;
-    user.passwordResetExpires = null;
-
-    await user.save();
-
-    return res.status(200).json({ message: 'Password has been reset successfully.' });
-
-  } catch (error) {
-    console.error('Reset password error:', error);
-    return res.status(500).json({ message: 'Internal server error.' });
-  }
-};
+  };
 
 
 export default {
