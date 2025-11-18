@@ -134,22 +134,6 @@ const SignUpCard = () => {
           <div className="w-28 h-px bg-slate-500" /></div>
 
         {/* Continue with Google */}
-        {/* <GoogleLogin
-          onSuccess={async (credentialResponse) => {
-            try {
-              const res = await authServices.googleRegister({
-                token: credentialResponse.credential,
-              });
-              login(res.data.token); // store JWT in AuthContext
-              navigate("/");
-            } catch (err) {
-              console.error("Google sign-up error:", err);
-              setError("Google sign-up failed");
-            }
-          }}
-          onError={() => {
-            setError("Google sign-up failed");
-          }} */}
         <GoogleLogin
           clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}
           onSuccess={async (credentialResponse) => {
