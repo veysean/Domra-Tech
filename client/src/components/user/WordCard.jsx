@@ -101,10 +101,10 @@ export default function WordCard({word}){
        {/* Word Card */}
         <div 
         onClick={handleCardClick}
-        className="w-full max-w-md md:max-w-lg lg:max-w-xl rounded-[20px] overflow-hidden shadow-sm hover:shadow-lg cursor-pointer select-none mb-6"
+        className="w-full max-w-md md:max-w-lg lg:max-w-xl border-t-4 border-[#E4A54D] rounded-[20px] overflow-hidden shadow-sm hover:shadow-lg cursor-pointer select-none mb-6"
         >
         {/* Gradient Header */}
-        <div className="h-1 bg-gradient-to-r from-[#667EEA]/80 to-[#764BA2]/80" />
+        {/*<div className="h-1 bg-[#E4A54D]" />*/}
 
         {/* Main Card */}
         <div 

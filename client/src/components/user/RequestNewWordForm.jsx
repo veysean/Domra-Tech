@@ -54,7 +54,7 @@ export default function RequestNewWordForm ({ onCancel, user }) {
 
 
 return (
-    <div className="w-full max-w-[657px] p-5 md:p-7 bg-gradient-to-l from-indigo-500/50 to-purple-800/50 rounded-[30px] shadow-lg flex flex-col justify-center items-center gap-5 md:gap-7 mx-auto">
+    <div className="w-full max-w-[657px] p-5 md:p-7 main-color from-indigo-500/50 to-purple-800/50 rounded-[30px] shadow-lg flex flex-col justify-center items-center gap-5 md:gap-7 mx-auto">
       <div className="w-full text-center text-white text-3xl md:text-4xl font-bold font-['Inter']">
         Add New Term
       </div>
@@ -167,7 +167,7 @@ return (
           </button>
           <button
             type="submit"
-            className="w-full sm:w-24 h-10 rounded-[20px] bg-indigo-500 text-white text-base font-medium font-['Inter'] hover:bg-indigo-600"
+            className="w-full sm:w-24 h-10 rounded-[20px] main-color2 text-white text-base font-medium font-['Inter'] hover:bg-[#DD9229]"
           >
             Submit
           </button>

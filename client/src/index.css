@@ -4,6 +4,12 @@
   .gradient-text {
     @apply bg-gradient-to-r from-indigo-500/80 to-purple-800/80 bg-clip-text text-transparent;
   }
+  .main-color{
+    @apply bg-[#3F51B5];
+  }
+  .main-color2{
+    @apply bg-[#E4A54D];
+  }
 }
 
 /* hide scrollbar but keep scroll functionality */

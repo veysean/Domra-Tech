@@ -53,14 +53,14 @@ export default function ContributeTerm() {
                         {/* Add new word request */}
                         <div className="group w-full md:w-[467px] p-7 bg-white rounded-[30px] outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col justify-center items-center gap-5 hover:shadow-lg transition-shadow duration-300">
                             <div className="flex flex-col justify-center items-center gap-5 md:gap-12 w-full">
-                                <div className="h-10 text-center text-indigo-500 text-3xl font-medium group-hover:font-bold w-full">{t('add')}</div>
+                                <div className="h-10 text-center text-[#3F51B5] text-3xl font-medium group-hover:font-bold w-full">{t('add')}</div>
                                 <div className="text-center text-slate-600 text-base font-normal">{t('addDesc')}</div>
                             </div>
                             <div className="w-full md:w-80 h-72 p-2.5 flex justify-center items-center">
                                 <img className="w-60 h-56 object-contain" src={contributeImg} alt="Contribute" />
                             </div>
                             <button 
-                                className="px-5 py-3.5 bg-indigo-500 rounded-[30px] text-white text-xl font-bold hover:bg-indigo-600 mt-3"
+                                className="px-5 py-3.5 main-color2 rounded-[30px] text-white text-xl font-bold hover:bg-[#DD9229] mt-3"
                                 onClick={() => auth ? setIsRequestNewWord(true) : navigate("/auth")}
                             >
                                 {t('submitTerm')}
@@ -70,14 +70,14 @@ export default function ContributeTerm() {
                         {/* Request changing */}
                         <div className="group w-full md:w-[467px] p-7 bg-white rounded-[30px] outline-1 outline-offset-[-1px] outline-slate-200 flex flex-col justify-center items-center gap-5 hover:shadow-lg transition-shadow duration-300">
                             <div className="flex flex-col justify-center items-center gap-5 md:gap-12 w-full">
-                                <div className="h-10 text-center text-indigo-500 text-3xl font-medium group-hover:font-bold w-full">{t('improve')}</div>
+                                <div className="h-10 text-center text-[#3F51B5] text-3xl font-medium group-hover:font-bold w-full">{t('improve')}</div>
                                 <div className="text-center text-slate-600 text-base font-normal">{t('improveDesc')}</div>
                             </div>
                             <div className="w-full md:w-80 h-72 p-2.5 flex justify-center items-center">
                                 <img className="w-60 h-56 object-contain" src={requestImg} alt="Request" />
                             </div>
                             <button 
-                                className="px-5 py-3.5 bg-indigo-500 rounded-[30px] text-white text-xl font-bold hover:bg-indigo-600 mt-3"
+                                className="px-5 py-3.5 main-color2 rounded-[30px] text-white text-xl font-bold hover:bg-[#DD9229] mt-3"
                                 onClick={() => auth ? navigate("/") : navigate("/auth")}
                             >
                                 {t('improve')}
