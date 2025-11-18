@@ -4,6 +4,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { FiMenu, FiX } from "react-icons/fi";
 import i18n from "../../i18n";
 import { t } from "i18next";
+import logo from '../../assets/logo2.png';
 export default function NavBar() {
 
     const { auth, logout } = useContext(AuthContext);
@@ -39,10 +40,16 @@ export default function NavBar() {
             <div className="w-full bg-white border-b border-[#E2E8F0] px-6 py-4">
                 <div className="relative flex justify-between items-center lg:px-10 mx-auto w-full">
                     {/* Logo */}
-                    <div className="flex items-center lg:gap-2.5">
-                        <div className="w-[36px] h-[28px] text-[#667EEA] lg:text-[24px] font-bold font-['Inter']">KH</div>
-                        <div className="w-[90px] lg:w-[147px] h-[28px] text-[#667EEA] lg:text-[24px] font-normal font-['Righteous']">Domra Tech</div>
+                    <div className="flex items-center gap-2">
+                    <Link to="/" className="flex items-center">
+                        <img
+                        src={logo}
+                        alt="Domra Tech Logo"
+                        className="h-8 md:h-10 lg:h-12 w-auto object-contain"
+                        />
+                    </Link>
                     </div>
+
                     <div className="flex items-center gap-1 ml-0 sm:ml-auto lg:ml-0">
 
                     {/* Menu & Actions */}
@@ -55,7 +62,7 @@ export default function NavBar() {
                                     to={item.path}
                                     className={({ isActive }) =>
                                         `h-[28px] text-[#667EEA] text-[20px] font-inter cursor-pointer ${
-                                        isActive ? "underline underline-offset-4 decoration-[#667EEA]" : ""
+                                        isActive ? "text-[#E4A54D] underline underline-offset-4 decoration-[#E4A54D]" : ""
                                         }`
                                     }
                                     >
