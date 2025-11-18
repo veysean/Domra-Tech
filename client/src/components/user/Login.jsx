@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { AuthContext } from "../../contexts/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 const Login = () => {
 
   const [error, setError] = useState("");
@@ -17,6 +18,7 @@ const Login = () => {
   });
 
   const { login } = useContext(AuthContext);
+  const { t, i18n } = useTranslation();
 
   //handle form submit
   const handleSubmit = async (e) => {
@@ -70,7 +72,7 @@ const Login = () => {
       <div className="w-full flex flex-col gap-4 p-10 align-middle lg:w-[505px] h-[549px] left-0 top-0 lg:absolute bg-white rounded-[30px] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.25)] overflow-hidden">
         {/* Title */}
         <h2 className="lg:absolute text-center left-[217px] top-[47px] text-3xl font-['Righteous'] gradient-text">
-          Login
+          {t('login')}
         </h2>
 
         {/* Form */}
@@ -81,11 +83,11 @@ const Login = () => {
           {/* Email */}
           <div className="flex flex-col gap-2.5">
             <label className="text-indigo-500 text-xl">
-              Email:
+              {t('email')}:
             </label>
             <input
               type="email"
-              placeholder="Enter your email"
+              placeholder={t('email_placehoder')}
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               autoComplete="current-password"
@@ -96,11 +98,11 @@ const Login = () => {
           {/* Password */}
           <div className="flex flex-col gap-2.5">
             <label className="text-indigo-500 text-xl">
-              Password:
+              {t('password')}:
             </label>
             <input
               type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
+              placeholder={t('password_placehoder')}
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light leading-snug"
@@ -130,7 +132,7 @@ const Login = () => {
             type="submit"
             className="p-2.5 bg-indigo-500 rounded-xl text-white text-sm font-extrabold hover:bg-indigo-500/80"
           >
-            Login
+            {t('login')}
           </button>
 
           {/* Forgot Password */}
@@ -138,7 +140,7 @@ const Login = () => {
             onClick={() => navigate("/forgot-password")}
             className="text-center underline text-slate-500 text-xs font-light leading-snug cursor-pointer"
           >
-            Forgot password?
+            {t('forgotPassword')}
           </div>
         </form>
       </div>

@@ -90,7 +90,7 @@ const SignUpCard = () => {
           <label className="text-indigo-500 text-xl font-['Inter']">{t("email")}: </label>
           <input
             type="email"
-            placeholder="Enter your email"
+            placeholder={t("email_placehoder")}
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light"
@@ -105,7 +105,7 @@ const SignUpCard = () => {
 
           <input
             type={showPassword ? "text" : "password"}
-            placeholder="Enter your password"
+            placeholder={t("password_placehoder")}
             value={formData.password}
             onChange={(e) =>
               setFormData({ ...formData, password: e.target.value })
@@ -129,13 +129,14 @@ const SignUpCard = () => {
         <div className="flex items-center gap-3.5 mt-2">
           <div className="w-28 h-px bg-slate-500" />
             <span className="w-28 text-center text-slate-500 text-sm font-['Inter']">
-              or continue with
+              {t("continue_with")}
             </span>
           <div className="w-28 h-px bg-slate-500" /></div>
 
         {/* Continue with Google */}
         <GoogleLogin
           clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}
+          buttonText={t('continue_with_google')}
           onSuccess={async (credentialResponse) => {
             try {
               const res = await authServices.googleRegister({
@@ -149,13 +150,36 @@ const SignUpCard = () => {
           }}
           onError={() => setError("Google sign-up failed")}
         />
+{/*         
+        <div className="w-96 px-5 py-2.5 bg-slate-200 rounded-xl flex items-center gap-5 cursor-pointer">
+          <FcGoogle className="w-5 h-5 text-gray-600" />
+          <span className="text-gray-600 text-sm font-['Inter']">
+            {t('continue_with_google')}
+          </span>
+
+          <GoogleLogin
+            clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}
+            onSuccess={async (credentialResponse) => {
+              try {
+                const res = await authServices.googleRegister({
+                  token: credentialResponse.credential,
+                });
+                login(res.data.token);
+                navigate('/');
+              } catch (err) {
+                setError(err.response?.data?.message || 'Google sign-up failed');
+              }
+            }}
+            onError={() => setError('Google sign-up failed')}
+          />
+        </div> */}
 
         {/* Continue as Guest */}
         <Link to={"/"}>
         <div className="w-96 px-5 py-2.5 bg-slate-200 rounded-xl flex items-center gap-20 cursor-pointer">
          <FaUser className="w-5 h-5 text-gray-600" />
           <span className="text-gray-600 text-sm font-['Inter']">
-            Continue as guest
+            {t('continue_as_guest')}
           </span>
         </div>
         </Link>
@@ -170,7 +194,7 @@ const SignUpCard = () => {
           type="submit"
           className="self-stretch p-2.5 bg-indigo-500 rounded-xl text-white text-sm font-extrabold mt-3 hover:bg-indigo-500/80"
         >
-          Next
+          {t('next')}
         </button>
       </form>
       )}
@@ -205,7 +229,7 @@ const SignUpCard = () => {
               <label className="text-indigo-500 text-xl font-['Inter']">Last Name:</label>
               <input
                 type="text"
-                placeholder="Enter your last name"
+                placeholder={('enter_your_name')}
                 value={formData.lastName}
                 onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                 className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light leading-snug"
@@ -222,7 +246,7 @@ const SignUpCard = () => {
               type="submit"
               className="p-2.5 bg-indigo-500 rounded-xl text-white text-sm font-extrabold hover:bg-indigo-500/80"
             >
-              Sign Up
+              {t('signup')}
             </button>
           </form>
         )}
