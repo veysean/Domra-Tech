@@ -96,44 +96,6 @@ const { User } = db;
  *                   example: Failed to register user.
  */
 
-// const register = async (req, res) => {
-//   try {
-//     const { firstName, lastName, email, password, googleId } = req.body;
-
-//     const existingUser = await User.findOne({ where: { email } });
-//     if (existingUser) {
-//       return res.status(409).json({ message: 'User with this email already exists.' });
-//     }
-
-//     const verificationToken = crypto.randomBytes(32).toString('hex');
-//     const userData = {
-//       firstName,
-//       lastName,
-//       email,
-//       role: 'user',
-//       googleId: googleId || null,
-//       emailVerificationToken: verificationToken,
-//       emailVerificationExpires: new Date(Date.now() + 3600000), // 1 hour
-//       status: 'unverified',
-//     };
-
-//     if (password) {
-//       userData.password = password;
-//     }
-
-//     const newUser = await User.create(userData);
-    
-//     await emailService.sendVerificationEmail(newUser.email, verificationToken);
-
-//     // No JWT is generated here. The user must verify their email first.
-//     return res.status(201).json({ message: 'User registered successfully. Please check your email to verify your account.' });
-
-//   } catch (error) {
-//     console.error('Registration error:', error);
-//     return res.status(500).json({ message: 'Failed to register user.', error: error.message });
-//   }
-// };
-
   const register = async (req, res) => {
     try {
       const { firstName, lastName, email, password, googleId } = req.body;
