@@ -31,7 +31,7 @@ export default function RequestHistory() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-indigo-500 mb-6">Request History</h2>
+      <h2 className="text-2xl font-bold text-indigo-500 mb-6 hidden lg:block">Request History</h2>
       <div className="w-full max-w-screen mx-auto p-6 bg-white rounded-2xl shadow-md">
 
       {/* Correction Requests */}
