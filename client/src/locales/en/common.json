@@ -6,7 +6,7 @@
   "login" : "Login",
   "signup" : "Sign Up",
   "email" : "Email",
-  "password" : "password",
+  "password" : "Password",
   "email_placehoder" : "Enter your email",
   "password_placehoder" : "Enter your password", 
   "eng" : "ENG",
@@ -19,6 +19,12 @@
   "login_des" : "Translate technical terms between English Khmer and French — faster, smarter, and easier.",
   "filterByCategory" : "Filter by category",
   "ourCategory" : "our category",
-  "next" : "Next"
-
+  "next" : "Next",
+  "forgotPassword": "Forgot password?",
+  "continue_with": "or continue with",
+  "continue_as_guest":"Continue as guest",
+   "enter_your_name":"Enter your name",
+   "continue_with_google": "Continue with Google",
+   "reference": "Reference",
+   "added":"Added"
 }

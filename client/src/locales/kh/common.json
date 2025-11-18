@@ -7,8 +7,8 @@
   "signup": "ចុះឈ្មោះ",
   "email" : "អុីម៉ែល",
   "password" : "លេខសម្ងាត់", 
-  "password_placehoder" : "Enter your password", 
-  "email_placehoder" : "Enter your password", 
+  "password_placehoder" : "បញ្ចូលពាក្យសម្ងាត់", 
+  "email_placehoder" : "បញ្ចូលលេខអុិម៉ែល", 
   "eng": "ភាសា",
   "profile": "ប្រវត្តិរូប",
   "seeMore": "មើល​បន្ថែម",
@@ -19,5 +19,12 @@
   "login_des" : "បកប្រែពាក្យបច្ចេកទេសរវាងភាសាអង់គ្លេស ខ្មែរ និងបារាំង — បានលឿន ឆ្លាតវៃ និងងាយស្រួលជាងមុន។",
   "filterByCategory" : "ច្រោះតាមប្រភេទ",
   "ourCategory" : "ប្រភេទរបស់យើង",
-  "next" : "បន្ទាប់"
+  "next" : "បន្ទាប់",
+  "forgotPassword": "ភ្លេចពាក្យសម្ងាត់?",
+  "continue_with": "បន្តជាមួយ",
+  "continue_as_guest":"បន្តជាភ្ញៀវ",
+  "enter_your_name":"បញ្ចុលឈ្មោះ",
+  "continue_with_google": "បន្តជាមួយ Google",
+  "reference": "ឯកសារយោង",
+   "added":"បញ្ចូល"
 }
