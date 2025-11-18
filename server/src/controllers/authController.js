@@ -96,41 +96,138 @@ const { User } = db;
  *                   example: Failed to register user.
  */
 
-const register = async (req, res) => {
-  try {
-    const { firstName, lastName, email, password, googleId } = req.body;
+// const register = async (req, res) => {
+//   try {
+//     const { firstName, lastName, email, password, googleId } = req.body;
 
-    const existingUser = await User.findOne({ where: { email } });
-    if (existingUser) {
-      return res.status(409).json({ message: 'User with this email already exists.' });
-    }
+//     const existingUser = await User.findOne({ where: { email } });
+//     if (existingUser) {
+//       return res.status(409).json({ message: 'User with this email already exists.' });
+//     }
 
-    const verificationToken = crypto.randomBytes(32).toString('hex');
-    const userData = {
-      firstName,
-      lastName,
-      email,
-      role: 'user',
-      googleId: googleId || null,
-      emailVerificationToken: verificationToken,
-      emailVerificationExpires: new Date(Date.now() + 3600000), // 1 hour
-      status: 'unverified',
-    };
+//     const verificationToken = crypto.randomBytes(32).toString('hex');
+//     const userData = {
+//       firstName,
+//       lastName,
+//       email,
+//       role: 'user',
+//       googleId: googleId || null,
+//       emailVerificationToken: verificationToken,
+//       emailVerificationExpires: new Date(Date.now() + 3600000), // 1 hour
+//       status: 'unverified',
+//     };
 
-    if (password) {
-      userData.password = password;
-    }
+//     if (password) {
+//       userData.password = password;
+//     }
 
-    const newUser = await User.create(userData);
+//     const newUser = await User.create(userData);
     
-    await emailService.sendVerificationEmail(newUser.email, verificationToken);
+//     await emailService.sendVerificationEmail(newUser.email, verificationToken);
 
-    // No JWT is generated here. The user must verify their email first.
-    return res.status(201).json({ message: 'User registered successfully. Please check your email to verify your account.' });
+//     // No JWT is generated here. The user must verify their email first.
+//     return res.status(201).json({ message: 'User registered successfully. Please check your email to verify your account.' });
 
+//   } catch (error) {
+//     console.error('Registration error:', error);
+//     return res.status(500).json({ message: 'Failed to register user.', error: error.message });
+//   }
+// };
+
+  const register = async (req, res) => {
+    try {
+      const { firstName, lastName, email, password, googleId } = req.body;
+
+      const existingUser = await User.findOne({ where: { email } });
+      if (existingUser) {
+        return res.status(409).json({ message: 'User with this email already exists.' });
+      }
+
+      const userData = {
+        firstName,
+        lastName,
+        email,
+        role: 'user',
+        googleId: googleId || null,
+        status: googleId ? 'verified' : 'unverified',
+      };
+
+      if (password) {
+        userData.password = password;
+      }
+
+      if (!googleId) {
+        const verificationToken = crypto.randomBytes(32).toString('hex');
+        userData.emailVerificationToken = verificationToken;
+        userData.emailVerificationExpires = new Date(Date.now() + 3600000); // 1 hour
+      }
+
+      const newUser = await User.create(userData);
+
+      if (!googleId) {
+        await emailService.sendVerificationEmail(newUser.email, userData.emailVerificationToken);
+        return res.status(201).json({ message: 'User registered successfully. Please check your email to verify your account.' });
+      }
+
+      // For Google sign-up, return JWT immediately
+      const jwtToken = jwt.sign(
+        { userId: newUser.userId, role: newUser.role, status: newUser.status },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      );
+
+      return res.status(201).json({ message: 'Google sign-up successful.', token: jwtToken });
+
+    } catch (error) {
+      console.error('Registration error:', error);
+      return res.status(500).json({ message: 'Failed to register user.', error: error.message });
+    }
+  };
+
+// Controller for google register
+import { OAuth2Client } from "google-auth-library";
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+export const googleRegister = async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    // Verify Google token
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { email, given_name, family_name, sub } = payload;
+
+    // Check if user exists
+    let user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      // Create new user
+      user = await User.create({
+        firstName: given_name,
+        lastName: family_name,
+        email,
+        googleId: sub,
+        status: "verified",
+        role: "user",
+      });
+    }
+
+    // Generate JWT
+    const jwtToken = jwt.sign(
+      { userId: user.userId, role: user.role, status: user.status },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    return res.status(200).json({ message: "Google sign-up successful", token: jwtToken });
   } catch (error) {
-    console.error('Registration error:', error);
-    return res.status(500).json({ message: 'Failed to register user.', error: error.message });
+    console.error("Google sign-up error:", error);
+    return res.status(500).json({ message: "Google sign-up failed", error: error.message });
   }
 };
 
@@ -603,5 +700,6 @@ export default {
   login,
   verifyEmail,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  googleRegister
 };
