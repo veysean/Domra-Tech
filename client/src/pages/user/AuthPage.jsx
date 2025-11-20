@@ -29,7 +29,7 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="flex w-screen h-screen items-center justify-center bg-gradient-to-l from-indigo-500/50 to-purple-800/50 overflow-hidden">
+    <div className="flex w-screen h-screen items-center justify-center main-color opacity-90 overflow-hidden">
       {/* Toggle Button for Small Screens */}
       <div className="md:hidden absolute top-6 right-6 z-20">
         <button
