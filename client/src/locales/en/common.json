@@ -23,8 +23,9 @@
   "forgotPassword": "Forgot password?",
   "continue_with": "or continue with",
   "continue_as_guest":"Continue as guest",
-   "enter_your_name":"Enter your name",
-   "continue_with_google": "Continue with Google",
-   "reference": "Reference",
-   "added":"Added"
+  "enter_your_name":"Enter your name",
+  "continue_with_google": "Continue with Google",
+  "reference": "Reference",
+  "added":"Added",
+  "rightReserved":"2025 Domra. All rights reserved."
 }
