@@ -10,6 +10,12 @@
   .main-color2{
     @apply bg-[#E4A54D];
   }
+  .text-main-color{
+    @apply text-[#3F51B5];
+  }
+  .text-main-color2{
+    @apply text-[#E4A54D];
+  }
 }
 
 /* hide scrollbar but keep scroll functionality */
