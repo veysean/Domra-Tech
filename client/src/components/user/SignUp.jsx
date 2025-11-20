@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../../contexts/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
 const SignUpCard = () => {
   const { t } = useTranslation();
   const [step, setStep] = useState(1);
@@ -133,12 +134,21 @@ const SignUpCard = () => {
           <div className="w-28 h-px bg-slate-500" /></div>
 
         {/* Continue with Google */}
-        <div className="w-96 px-5 py-2.5 bg-slate-200 rounded-xl flex items-center gap-20 cursor-pointer">
-           <FcGoogle className="w-5 h-5" />
-            <span className="text-gray-600 text-sm font-['Inter']">
-              Continue with Google
-            </span>
-        </div>
+        <GoogleLogin
+          clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}
+          onSuccess={async (credentialResponse) => {
+            try {
+              const res = await authServices.googleRegister({
+                token: credentialResponse.credential,
+              });
+              login(res.data.token);
+              navigate("/");
+            } catch (err) {
+              setError(err.response?.data?.message || "Google sign-up failed");
+            }
+          }}
+          onError={() => setError("Google sign-up failed")}
+        />
 
         {/* Continue as Guest */}
         <Link to={"/"}>
@@ -185,6 +195,7 @@ const SignUpCard = () => {
                 placeholder="Enter your first name"
                 value={formData.firstName}
                 onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                autoComplete="current-password"
                 className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light leading-snug"
               />
             </div>
