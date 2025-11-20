@@ -1,26 +1,17 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import db from '../models/index.js';
-import dotenv from 'dotenv';
-dotenv.config({ path: '../.env' });
 
 const { User } = db;
 
 // Passport session setup
-passport.serializeUser((user, done) => {
-    done(null, user.userId);
-});
-
-passport.deserializeUser(async (userId, done) => {
-    const user = await User.findByPk(userId);
-    done(null, user);
-});
-
+// ...
 // Configure the Google strategy
 passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
+    // rely on process.env being loaded by server.js
+    clientID: process.env.GOOGLE_CLIENT_ID, 
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/api/auth/google/callback"
+    callbackURL: "http://localhost:3002/api/auth/google/callback" 
   },
   async (accessToken, refreshToken, profile, done) => {
     try {

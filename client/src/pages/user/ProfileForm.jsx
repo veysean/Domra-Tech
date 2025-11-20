@@ -85,7 +85,7 @@ export default function ProfileForm({ userData, setUserData }) {
 
   return (
     <>
-      <div className="text-indigo-500 text-2xl font-bold">Your Profile</div>
+      <div className="text-indigo-500 text-2xl font-bold hidden lg:block">Your Profile</div>
 
       {/* Show messages */}
       {message && (

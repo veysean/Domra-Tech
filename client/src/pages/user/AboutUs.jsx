@@ -62,7 +62,7 @@ export default function AboutUs() {
                     <PictureCard imageSrc={image} name="Ms. Oeng Gechty" role="Frontend Developer" />
                     <PictureCard imageSrc={image} name="Ms. Sar Sovannita" role="Frontend Developer" />
                     <PictureCard imageSrc={image} name="Ms. Chum Chanlinna" role="Frontend Developer" />
-                    <PictureCard imageSrc={image} name="Ms. Kon Sotheara" role="Frontend Developer" />
+                    {/* <PictureCard imageSrc={image} name="Ms. Kon Sotheara" role="Frontend Developer" /> */}
                 </div>
             </div>
         </div>

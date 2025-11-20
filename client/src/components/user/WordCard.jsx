@@ -5,6 +5,7 @@ import { renderReference } from "./WordDetailCard";
 import RequestChangingForm from "./RequestChangingForm";
 import { FavoriteServices } from "../../api";
 import { AuthContext } from "../../contexts/AuthContext";
+import { useTranslation } from "react-i18next";
 
 export default function WordCard({word}){
     const [open, setOpen] = useState(false);
@@ -15,6 +16,8 @@ export default function WordCard({word}){
     const [message, setMessage] = useState("");
     const [showMessage, setShowMessage] = useState(false);
     const [showTooltip, setShowTooltip] = useState(false);
+    
+    const { t } = useTranslation();
     let hoverTimeout;
 
     //check if a word is already in fav
@@ -101,10 +104,10 @@ export default function WordCard({word}){
        {/* Word Card */}
         <div 
         onClick={handleCardClick}
-        className="w-full max-w-md md:max-w-lg lg:max-w-xl rounded-[20px] overflow-hidden shadow-sm hover:shadow-lg cursor-pointer select-none mb-6"
+        className="w-full max-w-md md:max-w-lg lg:max-w-xl border-t-4 border-[#E4A54D] rounded-[20px] overflow-hidden shadow-sm hover:shadow-lg cursor-pointer select-none mb-6"
         >
         {/* Gradient Header */}
-        <div className="h-1 bg-gradient-to-r from-[#667EEA]/80 to-[#764BA2]/80" />
+        {/*<div className="h-1 bg-[#E4A54D]" />*/}
 
         {/* Main Card */}
         <div 
@@ -156,7 +159,7 @@ export default function WordCard({word}){
             {/* Bottom Section */}
             <div className="pt-7 border-t border-slate-200 flex justify-between items-center">
             <div className="text-slate-500 text-xs md:text-sm lg:text-base font-medium">
-                Added: {word?.createdAt?.slice(0, 10) || "N/A"}
+                {t('added')}: {word?.createdAt?.slice(0, 10) || "N/A"}
             </div>
 
             <button
@@ -166,7 +169,7 @@ export default function WordCard({word}){
                 <svg className="w-4 h-4" viewBox="0 0 16 16" fill="white">
                 <path d="M1 3.5C1 2.67157 1.67157 2 2.5 2H5.26394C6.22171 2 7.02474 2.55996 7.57542 3.18398C7.98525 3.64839 8.47872 4 9 4H13.5007C14.3296 4 15 4.67203 15 5.5V6.13933C15.5696 6.40467 15.9394 7.0161 15.8556 7.68605L15.2151 12.8101C15.0588 14.0612 13.9953 15 12.7344 15H3.26557C2.00476 15 0.941261 14.0612 0.784877 12.8101L0.144373 7.68605C0.0606283 7.0161 0.430461 6.40467 1 6.13933V3.5Z"/>
                 </svg>
-                <span className="text-white text-xs md:text-sm lg:text-base font-medium">Reference</span>
+                <span className="text-white text-xs md:text-sm lg:text-base font-medium">{t('reference')}</span>
             </button>
             </div>
         </div>

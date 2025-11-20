@@ -1,0 +1,17 @@
+{
+    "ourCat":"Our Categories",
+    "ds":"Data Science",
+    "cs":"Computer Science",
+    "programming":"Programming",
+    "webDev":"Web Development",
+    "ai":"Artificial Intelligence (AI)",
+    "ml":"Machine Learning",
+    "general":"General",
+    "dsDefinition":"Techniques for analyzing, modeling, and visualizing data to extract insights and support decisions.",
+    "csDefinition":"Core concepts of computing, including algorithms, programming, systems, and software design.",
+    "programmingDefinition":"Writing code to solve problems, build software, and automate tasks using languages like Python, JavaScript, and more.",
+    "webDevDefinition":"Creating websites and web apps through front-end design, back-end logic, and web technologies like HTML, CSS, and JavaScript.",
+    "aiDefinition":"Designing systems that simulate human intelligence, including reasoning, learning, and decision-making.",
+    "mlDefinition":"Training algorithms to learn patterns from data and make predictions or decisions without explicit programming.",
+    "generalDefinition":"Broad concepts and tools across computing, electronics, and digital systems that support innovation and everyday tech use."
+}

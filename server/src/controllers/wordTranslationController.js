@@ -8,6 +8,7 @@
 import db from '../models/index.js';
 import { Op } from 'sequelize';
 import { khnormal } from 'khmer-normalizer';
+import path from 'path';
 
 const { WordTranslation, Category } = db;
 
@@ -15,7 +16,7 @@ const { WordTranslation, Category } = db;
 /**
  * @swagger
  * /words/search:
- *   get:
+ *    get:
  *     summary: Search for words in English, French, or Khmer (case-insensitive)
  *     description: Returns a list of word translations that match the search query. The search is case-insensitive and supports normalized Khmer input.
  *     tags: [WordTranslations]
@@ -137,6 +138,262 @@ const searchWords = async (req, res) => {
   }
 };
 
+//wordcard for share feature 
+/**
+ * @swagger
+ * /wordcards/{wordId}:
+ *   get:
+ *     summary: Retrieve public data for a word card
+ *     description: Provides unauthenticated access to the basic word card data (English, Khmer, definition, etc.) for display on public share pages and within the React frontend's word-view route.
+ *     tags:
+ *       - WordTranslations
+ *     parameters:
+ *       - in: path
+ *         name: wordId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The unique identifier of the Word Translation card.
+ *     responses:
+ *       200:
+ *         description: Public word card data successfully retrieved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 wordId:
+ *                   type: integer
+ *                   example: 123
+ *                 EnglishWord:
+ *                   type: string
+ *                   example: "Hello"
+ *                 FrenchWord:
+ *                   type: string
+ *                   example: "Bonjour"
+ *                 KhmerWord:
+ *                   type: string
+ *                   example: "សួស្តី"
+ *                 source:
+ *                   type: string
+ *                   example: >
+ *                     Domra Lexicon: សួស្តី
+ *                 definition:
+ *                   type: string
+ *                   example: >
+ *                     Khmer: សួស្តី | Definition: Hello"
+ *                 usageExample:
+ *                   type: string
+ *                   example: "We said 'Hello' to the tourists."
+ *                 reference:
+ *                   type: string
+ *                   example: "General Cambodian Lexicon"
+ *       404:
+ *         description: Word card not found for the given ID.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Word not found"
+ */
+
+const getPublicWordCard = async (req, res) => {
+    try {
+        const word = await WordTranslation.findByPk(req.params.wordId, {
+            // Include only necessary fields for public view
+            attributes: ['wordId', 'EnglishWord', 'FrenchWord', 'KhmerWord', 'definition', 'example', 'reference'],
+        });
+
+        if (!word) {
+            return res.status(404).json({ error: 'Word not found' });
+        }
+
+        return res.status(200).json(word);
+    } catch (error) {
+        console.error('Error fetching public word card:', error);
+        return res.status(500).json({ error: 'Failed to retrieve word data' });
+    }
+};
+
+// pre written snippet, the sharable link (flyer)
+/**
+ * @swagger
+ * /words/{wordId}/share:
+ *   get:
+ *     summary: Generate a shareable link and details for a word translation
+ *     tags: [WordTranslations]
+ *     parameters:
+ *       - in: path
+ *         name: wordId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Word ID
+ *     responses:
+ *       200:
+ *         description: Shareable word details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 url:
+ *                   type: string
+ *                   example: "https://frontend.example.com/word/123"
+ *                 title:
+ *                   type: string
+ *                   example: >
+ *                     Domra Lexicon: សួស្តី
+ *                 text:
+ *                   type: string
+ *                   example: >
+ *                     Khmer: សួស្តី | Definition: Hello
+ *       404:
+ *         description: Word not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Word not found"
+ */
+
+
+const findById = async (req, res) => {
+    try {
+        const word = await WordTranslation.findByPk(req.params.wordId);
+        if (!word) {
+            return res.status(404).json({ error: 'Word not found' });
+        }
+
+        const LIVE_DOMAIN = process.env.FRONTEND_BASE_URL;
+        const wordString = word.KhmerWord || word.EnglishWord || 'Word Card';
+        const definitionSnippet = word.definition ? word.definition.substring(0, 100) + '...' : 'Check out this word card.';
+
+        return res.status(200).json({
+            url: `${LIVE_DOMAIN}/share/${word.wordId}`, 
+            title: `${wordString} | Domra Lexicon`,
+            text: `Khmer: ${word.KhmerWord || word.EnglishWord} - ${definitionSnippet}`
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Failed to retrieve word' });
+    }
+};
+
+// render share card page 
+/**
+ * @swagger
+ * /share/{wordId}:
+ *   get:
+ *     summary: Renders the public HTML page for sharing a word card
+ *     description: This route serves static HTML with dynamic Open Graph/Twitter meta tags for rich social media previews. It immediately redirects the user's browser to the React app.
+ *     tags:
+ *       - WordTranslations
+ *     parameters:
+ *       - in: path
+ *         name: wordId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the word translation to share
+ *     responses:
+ *       200:
+ *         description: HTML page containing dynamic word card meta tags and a redirect.
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *               example: |
+ *                 <!DOCTYPE html>
+ *                 <html>
+ *                   <head>
+ *                     <meta property="og:title" content="Word Name">
+ *                     <meta property="og:description" content="Word card description">
+ *                     <meta property="og:type" content="website">
+ *                   </head>
+ *                   <body>
+ *                     <script>
+ *                       window.location.href = "http://localhost:5173";
+ *                     </script>
+ *                   </body>
+ *                 </html>
+ *       404:
+ *         description: Word not found
+ */
+const renderSharedCardPage = async (req, res) => {
+    try {
+        const word = await WordTranslation.findByPk(req.params.wordId);
+
+        if (!word) {
+            // Send a basic 404 HTML page
+            res.setHeader('Content-Type', 'text/html');
+            return res.status(404).send('<!DOCTYPE html><html><head><title>Not Found</title></head><body><h1>Word Card Not Found</h1></body></html>');
+        }
+
+        const LIVE_DOMAIN = process.env.FRONTEND_BASE_URL; 
+        
+        // --- Dynamic Meta Tag Preparation ---
+        const wordString = word.KhmerWord || word.EnglishWord || 'Word Card';
+        // Use a default description if none is available
+        const definitionSnippet = word.definition ? word.definition.substring(0, 150) + '...' : 'Check out this word card from Domra Lexicon.';
+        
+        // Final public share URL (used by bots)
+        const pageUrl = `${LIVE_DOMAIN}/share/${word.wordId}`; 
+        // URL for the preview image
+        const imageUrl = `${LIVE_DOMAIN}/Domra-logo.png`; 
+        // The URL where the React app will handle the dynamic view
+        const redirectUrl = `${LIVE_DOMAIN}/word-view/${word.wordId}`; 
+
+        // 1. Build the Dynamic Meta Tags String
+        const metaTags = `
+            <meta property="og:title" content="${wordString} | Domra Lexicon">
+            <meta property="og:description" content="${definitionSnippet}">
+            <meta property="og:type" content="website">
+            <meta property="og:url" content="${pageUrl}">
+            <meta property="og:image" content="${imageUrl}">
+            <meta property="og:site_name" content="Domra Lexicon">
+
+            <meta name="twitter:card" content="summary_large_image">
+            <meta name="twitter:title" content="${wordString}">
+            <meta name="twitter:description" content="${definitionSnippet}">
+            <meta name="twitter:image" content="${imageUrl}">
+        `;
+
+        // 2. Build the full HTML response with redirect
+        const htmlResponse = `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>${wordString} | Domra Lexicon</title>
+                ${metaTags}
+                
+                <meta http-equiv="refresh" content="0;url=${redirectUrl}">
+            </head>
+            <body>
+                <h1>Redirecting to Word Card: ${wordString}</h1>
+                <p>If you are not redirected, click here: <a href="${redirectUrl}">${redirectUrl}</a></p>
+            </body>
+            </html>
+        `;
+
+        // 3. Send the response as raw HTML
+        res.setHeader('Content-Type', 'text/html');
+        res.status(200).send(htmlResponse);
+
+    } catch (error) {
+        console.error('Error rendering shared page:', error);
+        res.status(500).send('<h1>Internal Server Error</h1>');
+    }
+};
+
 
 // Function to find all word translations with pagination
 
@@ -232,40 +489,6 @@ const findAll = async (req, res) => {
     console.error(error);
     return res.status(500).json({ error: 'Failed to retrieve words' });
   }
-};
-
-
-// Function to find a single word translation by ID
-/**
- * @swagger
- * /words/{wordId}:
- *   get:
- *     summary: Get a word by ID
- *     tags: [WordTranslations]
- *     parameters:
- *       - in: path
- *         name: wordId
- *         required: true
- *         schema:
- *           type: integer
- *         description: Word ID
- *     responses:
- *       200:
- *         description: Word details
- */
-
-const findById = async (req, res) => {
-  try {
-    const word = await WordTranslation.findByPk(req.params.wordId);
-    if (!word) {
-      return res.status(404).json({ error: 'Word not found' });
-    }
-    return res.status(200).json(word);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Failed to retrieve word' });
-  }
-  
 };
 
 // Function to create a new word translation
@@ -463,4 +686,6 @@ export default {
   update,
   remove,
   searchWords,
+  getPublicWordCard, 
+  renderSharedCardPage,
 };
