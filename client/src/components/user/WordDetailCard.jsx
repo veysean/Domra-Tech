@@ -9,7 +9,7 @@ export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
   const navigate = useNavigate();
 
   return (
-    <div className="w-[400px] md:w-[500px] lg:w-[565px] p-7 bg-white border-t-4 border-indigo-500 rounded-[30px] shadow-md overflow-y-auto scrollbar-hide flex flex-col gap-7">
+    <div className="w-[400px] md:w-[500px] lg:w-[565px] p-7 bg-white border-t-4 border-[#E4A54D] rounded-[30px] shadow-md overflow-y-auto scrollbar-hide flex flex-col gap-7">
       {/* Header: Word details */}
       <div className="flex justify-between items-start">
         <div className="flex flex-col gap-3">
@@ -55,7 +55,7 @@ export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
       </div>
 
       {/*detail card Footer */}
-      <div className="pt-7 border-t border-slate-200 flex justify-between items-center">
+      <div className="pt-7 border-t border-[#3F51B5] flex justify-between items-center">
         <p className="text-slate-500 text-xs lg:text-base font-medium">
           Added: {word?.createdAt?.slice(0, 10) || "N/A"}
         </p>
@@ -69,7 +69,7 @@ export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
             }
           }}
         
-          className="h-10 px-2 lg:px-4 bg-[#FFC107] rounded-[20px] flex items-center gap-2 text-white text-xs lg:text-base font-medium hover:brightness-105"
+          className="h-10 px-2 lg:px-4 bg-[#E4A54D] rounded-[20px] flex items-center gap-2 text-white text-xs lg:text-base font-medium hover:brightness-105"
         >
           <svg
             width="16"
