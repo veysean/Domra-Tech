@@ -10,7 +10,7 @@ import {
 from "../controllers/wordRequestController.js"
 import authMiddleware from '../middleware/authMiddleware.js';
 
-const { verifyAuth, checkAdminRole } = authMiddleware;
+const { verifyAuth } = authMiddleware;
 
 const WordRequestRouter = express.Router();
 

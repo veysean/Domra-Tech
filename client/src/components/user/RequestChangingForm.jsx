@@ -63,7 +63,7 @@ export default function RequestChangingForm({ onCancel, wordId }) {
 
   return (
     <div className="bg-white w-[450px] md:w-[600px] lg:w-[657px] rounded-[30px]">
-      <div className="w-[450px] md:w-[600px] lg:w-[657px] p-7 bg-gradient-to-l from-indigo-500/50 to-purple-800/50 rounded-[30px] shadow-lg inline-flex flex-col justify-center items-center gap-7">
+      <div className="w-[450px] md:w-[600px] lg:w-[657px] p-7 main-color from-indigo-500/50 to-purple-800/50 rounded-[30px] shadow-lg inline-flex flex-col justify-center items-center gap-7">
         <div className="self-stretch h-10 text-center justify-start text-white text-2xl lg:text-3xl font-bold font-['Inter']">
           Request Changing
         </div>
@@ -165,7 +165,7 @@ export default function RequestChangingForm({ onCancel, wordId }) {
             </button>
             <button
               type="submit"
-              className="w-24 h-10 rounded-[20px] bg-indigo-500 text-white text-sm lg:text-base font-medium font-['Inter'] hover:bg-indigo-600"
+              className="w-24 h-10 rounded-[20px] main-color2 text-white text-sm lg:text-base font-medium font-['Inter'] hover:bg-[#DD9229]"
             >
               Submit
             </button>

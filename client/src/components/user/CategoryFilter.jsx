@@ -176,10 +176,10 @@ export default function Categories({ onCategoryChange }) {
                     {/* Static "Categories" button */}
                     <button 
                         onClick={() => handleCategorySelect("Categories")}
-                        className={`hidden h-10 px-2.5 py-5 bg-[#6677EA] rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 lg:flex justify-center items-center gap-2.5 hover:shadow-[0px_3px_3px_0px_rgba(0,0,0,0.20)]
+                        className={`hidden h-10 px-2.5 py-5 bg-[#3F51B5] rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 lg:flex justify-center items-center gap-2.5 hover:shadow-[0px_3px_3px_0px_rgba(0,0,0,0.20)]
                         ${
                             activeCategory === "Categories"
-                            ? "bg-[#6677EA] text-white"
+                            ? "main-color2 text-white"
                             : "bg-transparent text-slate-600 hover:bg-[#F1F5F9]"
                         }`}>
                         <div className="w-4 h-4 relative">
@@ -202,7 +202,7 @@ export default function Categories({ onCategoryChange }) {
                             className={`hidden h-10 px-2.5 py-5 rounded-[20px] outline-1 outline-offset-[-1px] outline-slate-200 lg:flex justify-center items-center gap-2.5 hover:shadow-[0px_3px_3px_0px_rgba(0,0,0,0.20)]
                             ${
                                 isActive
-                                ? "bg-[#6677EA] text-white"
+                                ? "main-color2 text-white"
                                 : "bg-transparent text-slate-600 hover:bg-[#F1F5F9]"
                             }`}>
                             <div className="w-4 h-4 relative">

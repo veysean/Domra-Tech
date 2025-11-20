@@ -12,6 +12,7 @@ router.post('/login',validation.loginValidationRules(), validation.validate, aut
 router.get('/verify-email', authController.verifyEmail);
 router.post('/forgot-password', authController.forgotPassword);
 router.post('/reset-password', authController.resetPassword);
+router.post("/google-register", authController.googleRegister);
 
 // Route to redirect to Google's login page
 /**

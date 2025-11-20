@@ -96,41 +96,100 @@ const { User } = db;
  *                   example: Failed to register user.
  */
 
-const register = async (req, res) => {
+  const register = async (req, res) => {
+    try {
+      const { firstName, lastName, email, password, googleId } = req.body;
+
+      const existingUser = await User.findOne({ where: { email } });
+      if (existingUser) {
+        return res.status(409).json({ message: 'User with this email already exists.' });
+      }
+
+      const userData = {
+        firstName,
+        lastName,
+        email,
+        role: 'user',
+        googleId: googleId || null,
+        status: googleId ? 'verified' : 'unverified',
+      };
+
+      if (password) {
+        userData.password = password;
+      }
+
+      if (!googleId) {
+        const verificationToken = crypto.randomBytes(32).toString('hex');
+        userData.emailVerificationToken = verificationToken;
+        userData.emailVerificationExpires = new Date(Date.now() + 3600000); // 1 hour
+      }
+
+      const newUser = await User.create(userData);
+
+      if (!googleId) {
+        await emailService.sendVerificationEmail(newUser.email, userData.emailVerificationToken);
+        return res.status(201).json({ message: 'User registered successfully. Please check your email to verify your account.' });
+      }
+
+      // For Google sign-up, return JWT immediately
+      const jwtToken = jwt.sign(
+        { userId: newUser.userId, role: newUser.role, status: newUser.status },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      );
+
+      return res.status(201).json({ message: 'Google sign-up successful.', token: jwtToken });
+
+    } catch (error) {
+      console.error('Registration error:', error);
+      return res.status(500).json({ message: 'Failed to register user.', error: error.message });
+    }
+  };
+
+// Controller for google register
+import { OAuth2Client } from "google-auth-library";
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+export const googleRegister = async (req, res) => {
   try {
-    const { firstName, lastName, email, password, googleId } = req.body;
+    const { token } = req.body;
 
-    const existingUser = await User.findOne({ where: { email } });
-    if (existingUser) {
-      return res.status(409).json({ message: 'User with this email already exists.' });
+    // Verify Google token
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { email, given_name, family_name, sub } = payload;
+
+    // Check if user exists
+    let user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      // Create new user
+      user = await User.create({
+        firstName: given_name,
+        lastName: family_name,
+        email,
+        googleId: sub,
+        status: "verified",
+        role: "user",
+      });
     }
 
-    const verificationToken = crypto.randomBytes(32).toString('hex');
-    const userData = {
-      firstName,
-      lastName,
-      email,
-      role: 'user',
-      googleId: googleId || null,
-      emailVerificationToken: verificationToken,
-      emailVerificationExpires: new Date(Date.now() + 3600000), // 1 hour
-      status: 'unverified',
-    };
+    // Generate JWT
+    const jwtToken = jwt.sign(
+      { userId: user.userId, role: user.role, status: user.status },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
 
-    if (password) {
-      userData.password = password;
-    }
-
-    const newUser = await User.create(userData);
-    
-    await emailService.sendVerificationEmail(newUser.email, verificationToken);
-
-    // No JWT is generated here. The user must verify their email first.
-    return res.status(201).json({ message: 'User registered successfully. Please check your email to verify your account.' });
-
+    return res.status(200).json({ message: "Google sign-up successful", token: jwtToken });
   } catch (error) {
-    console.error('Registration error:', error);
-    return res.status(500).json({ message: 'Failed to register user.', error: error.message });
+    console.error("Google sign-up error:", error);
+    return res.status(500).json({ message: "Google sign-up failed", error: error.message });
   }
 };
 
@@ -286,53 +345,107 @@ const verifyEmail = async (req, res) => {
  *         description: Server error
  */
 
-const login = async (req, res) => {
-  try {
-    const { email, password, googleId } = req.body;
+// const login = async (req, res) => {
+//   try {
+//     const { email, password, googleId } = req.body;
     
-    const user = await User.findOne({ where: { email } });
+//     const user = await User.findOne({ where: { email } });
 
-    if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found.' });
+//     }
 
-    // Check if it's a traditional login (with password)
-    if (password && user.password) {
-      const isMatch = await user.comparePassword(password);
-      if (!isMatch) {
-        return res.status(401).json({ message: 'Invalid credentials.' });
+//     // Check if it's a traditional login (with password)
+//     if (password) {
+//       const isMatch = await bcrypt.compare(password, user.password);
+//       if (!isMatch) {
+//         return res.status(401).json({ message: 'Invalid credentials.' });
+//       }
+//     } else if (googleId && user.googleId === googleId) {
+//       // Google login
+//     } else {
+//       return res.status(401).json({ message: 'Invalid credentials.' });
+//     }
+
+//     // Generate JWT for both types of login
+//     const token = jwt.sign(
+//       { userId: user.userId, role: user.role },
+//       process.env.JWT_SECRET,
+//       { expiresIn: '1h' }
+//     );
+    
+//     const userResponse = {
+//       userId: user.userId,
+//       firstName: user.firstName,
+//       lastName: user.lastName,
+//       email: user.email,
+//       role: user.role,
+//     };
+
+//     return res.status(200).json({ message: 'Logged in successfully!', user: userResponse , token });
+
+//   } catch (error) {
+//     console.error('Login error:', error);
+//     return res.status(500).json({ message: 'Failed to log in.', error: error.message });
+//   }
+// };
+
+  const login = async (req, res) => {
+    try {
+      const { email, password, googleId } = req.body;
+
+      // 1. Find user by email
+      const user = await User.findOne({ where: { email } });
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found." });
       }
-    }
-    // Check if it's a third-party login (with googleId)
-    else if (googleId && user.googleId === googleId) {
-      // User is authenticated, proceed
-    }
-    else {
-      return res.status(401).json({ message: 'Invalid credentials.' });
-    }
 
-    // Generate JWT for both types of login
-    const token = jwt.sign(
-      { userId: user.userId, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-    
-    const userResponse = {
-      userId: user.userId,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      role: user.role,
-    };
+      // 2. Traditional login (password-based)
+      if (password) {
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) {
+          return res.status(401).json({ message: "Invalid credentials." });
+        }
+      }
+      // 3. Third-party login (Google)
+      else if (googleId && user.googleId === googleId) {
+        // User authenticated via Google
+      }
+      // 4. If neither condition matches
+      else {
+        return res.status(401).json({ message: "Invalid credentials." });
+      }
 
-    return res.status(200).json({ message: 'Logged in successfully!', user: userResponse , token });
+      // 5. Generate JWT
+      const token = jwt.sign(
+        { userId: user.userId, role: user.role },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
 
-  } catch (error) {
-    console.error('Login error:', error);
-    return res.status(500).json({ message: 'Failed to log in.', error: error.message });
-  }
-};
+      // 6. Prepare response payload
+      const userResponse = {
+        userId: user.userId,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        role: user.role,
+      };
+
+      return res.status(200).json({
+        message: "Logged in successfully!",
+        user: userResponse,
+        token,
+      });
+    } catch (error) {
+      console.error("Login error:", error);
+      return res.status(500).json({
+        message: "Failed to log in.",
+        error: error.message,
+      });
+    }
+  };
 
 // Function to handle forgot password
 /**
@@ -465,44 +578,83 @@ const forgotPassword = async (req, res) => {
  */
 
 
-const resetPassword = async (req, res) => {
-  try {
-    const { token, password, confirmPassword } = req.body;
+// const resetPassword = async (req, res) => {
+//   try {
+//     const { token, password, confirmPassword } = req.body;
 
-    // 1. Check password confirmation
-    if (password !== confirmPassword) {
-      return res.status(400).json({ message: 'Passwords do not match.' });
-    }
+//     // 1. Check password confirmation
+//     if (password !== confirmPassword) {
+//       return res.status(400).json({ message: 'Passwords do not match.' });
+//     }
 
-    // 2. Hash the token and find user
-    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
-    const user = await User.findOne({
-      where: {
-        passwordResetToken: hashedToken,
-        passwordResetExpires: { [Op.gt]: Date.now() }
+//     // 2. Hash the token and find user
+//     const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+//     const user = await User.findOne({
+//       where: {
+//         passwordResetToken: hashedToken,
+//         passwordResetExpires: { [Op.gt]: Date.now() }
+//       }
+//     });
+
+//     if (!user) {
+//       return res.status(400).json({ message: 'Token is invalid or has expired.' });
+//     }
+
+//     // 3. Hash the new password
+//     user.password = await bcrypt.hash(password, 12);
+
+//     // 4. Clear reset fields
+//     user.passwordResetToken = null;
+//     user.passwordResetExpires = null;
+
+//     await user.save();
+
+//     return res.status(200).json({ message: 'Password has been reset successfully.' });
+
+//   } catch (error) {
+//     console.error('Reset password error:', error);
+//     return res.status(500).json({ message: 'Internal server error.' });
+//   }
+// };
+
+  const resetPassword = async (req, res) => {
+    try {
+      const { token, password, confirmPassword } = req.body;
+
+      // 1. Check password confirmation
+      if (password !== confirmPassword) {
+        return res.status(400).json({ message: "Passwords do not match." });
       }
-    });
 
-    if (!user) {
-      return res.status(400).json({ message: 'Token is invalid or has expired.' });
+      // 2. Hash the token and find user
+      const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+      const user = await User.findOne({
+        where: {
+          passwordResetToken: hashedToken,
+          passwordResetExpires: { [Op.gt]: Date.now() },
+        },
+      });
+
+      if (!user) {
+        return res.status(400).json({ message: "Token is invalid or has expired." });
+      }
+
+      // 3. Assign plain password (hooks will hash automatically)
+      user.password = password;
+
+      // 4. Clear reset fields
+      user.passwordResetToken = null;
+      user.passwordResetExpires = null;
+
+      // 5. Save user (beforeUpdate hook will hash password)
+      await user.save();
+
+      return res.status(200).json({ message: "Password has been reset successfully." });
+    } catch (error) {
+      console.error("Reset password error:", error);
+      return res.status(500).json({ message: "Internal server error." });
     }
-
-    // 3. Hash the new password
-    user.password = await bcrypt.hash(password, 12);
-
-    // 4. Clear reset fields
-    user.passwordResetToken = null;
-    user.passwordResetExpires = null;
-
-    await user.save();
-
-    return res.status(200).json({ message: 'Password has been reset successfully.' });
-
-  } catch (error) {
-    console.error('Reset password error:', error);
-    return res.status(500).json({ message: 'Internal server error.' });
-  }
-};
+  };
 
 
 export default {
@@ -510,5 +662,6 @@ export default {
   login,
   verifyEmail,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  googleRegister
 };
