@@ -87,20 +87,21 @@ const AdminLogin = () => {
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light leading-snug"
             />
+            {/* Error Message */}
+            {error && (
+              <div className="text-red-600 text-sm mt-2 font-medium ">
+                {error}
+              </div>
+            )}
           </div>
-
           {/* Login Button */}
           <button
             type="submit"
             className="p-2.5 bg-indigo-500 rounded-xl text-white text-sm font-extrabold hover:bg-indigo-500/80"
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
 
-          {/* Forgot Password */}
-          {/* <div className="text-center underline border-slate-200 text-slate-500 text-xs font-light leading-snug cursor-pointer">
-            Forgot password?
-          </div> */}
         </form>
       </div>
     </div>
