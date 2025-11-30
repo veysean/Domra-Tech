@@ -92,12 +92,13 @@ const WordRequestPopup = ({ request, onClose }) => {
         <div>
             <p className="text-sm font-semibold text-gray-500 mb-2">Check</p>
             <div className="p-2 rounded bg-gray-100 text-sm flex items-center gap-2">
-            <input
+            {/* <input
                 type="checkbox"
                 checked={request.check}
-                onChange={() => handleToggleCheck(request)}
-                className="cursor-pointer"
-            />
+                // onChange={() => handleToggleCheck(request)}
+                 disabled
+                className="cursor-default"
+            /> */}
             <span>{request.check ? "Checked" : "Unchecked"}</span>
             </div>
         </div>

@@ -371,7 +371,49 @@ export const getWordRequestById = async (req, res) => {
   }
 };
 
+// Controller for fetching word requests with optional filters
+export const getWordRequests = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, status, check, search } = req.query;
 
+    const offset = (page - 1) * limit;
+    const where = {};
+
+    // Apply status filter if provided
+    if (status) {
+      where.status = status;
+    }
+
+    // Apply check filter if provided
+    if (check === "checked") {
+      where.check = true;
+    } else if (check === "unchecked") {
+      where.check = false;
+    }
+
+    // Apply search filter if provided
+    if (search) {
+      where.newEnglishWord = { [db.Sequelize.Op.like]: `%${search}%` };
+    }
+
+    const { count, rows } = await db.WordRequest.findAndCountAll({
+      where,
+      offset,
+      limit: parseInt(limit),
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.json({
+      totalItems: count,
+      totalPages: Math.ceil(count / limit),
+      currentPage: parseInt(page),
+      data: rows,
+    });
+  } catch (error) {
+    console.error("Error fetching word requests:", error);
+    res.status(500).json({ error: "Failed to fetch word requests." });
+  }
+};
 
 // Controller for making word requests from both user and admin
 export const createWordRequest = async (req, res) => {
@@ -403,24 +445,53 @@ export const createWordRequest = async (req, res) => {
 };
 
 
-//COntroller for update the word requests from both user and admin (Transfer it to Translation table)
+// Helper to capitalize the first letter
+const capitalizeFirst = (str) => {
+  if (!str || typeof str !== "string") return str;
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+// Controller for update the word requests from both user and admin
+// If status is changed to "accepted", transfer it to Translation table
 export const updateWordRequest = async (req, res) => {
   try {
     const { id } = req.params;
     const request = await db.WordRequest.findByPk(id);
 
     if (!request) {
-      return res.status(404).json({ error: 'Word request not found.' });
+      return res.status(404).json({ error: "Word request not found." });
     }
 
+    // Update the request with incoming data
     await request.update(req.body);
-    res.status(200).json(request);
+
+    // If status is accepted, copy into WordTranslation
+    if (request.status === "accepted") {
+      // Check if translation already exists to avoid duplicates
+      const existingTranslation = await db.WordTranslation.findOne({
+        where: { EnglishWord: request.newEnglishWord }
+      });
+
+      if (!existingTranslation) {
+        await db.WordTranslation.create({
+          EnglishWord: capitalizeFirst(request.newEnglishWord),
+          FrenchWord: capitalizeFirst(request.newFrenchWord),
+          KhmerWord: capitalizeFirst(request.newKhmerWord),
+          definition: capitalizeFirst(request.newDefinition),
+          example: capitalizeFirst(request.newExample),
+          imageURL: request.imageURL,
+          reference: request.reference,
+          referenceText: request.referenceText
+        });
+      }
+    }
+
+    return res.status(200).json(request);
   } catch (error) {
-    console.error('Error updating word request:', error);
-    res.status(500).json({ error: 'Failed to update word request.' });
+    console.error("Error updating word request:", error);
+    return res.status(500).json({ error: "Failed to update word request." });
   }
 };
-
 
 // Controller for delete the word request that user created
 export const deleteWordRequest = async (req, res) => {
