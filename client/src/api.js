@@ -19,6 +19,8 @@ export const authServices = {
   // Reset password with token + confirmation
   resetPassword: (data) => API.post('/auth/reset-password', data),
   googleRegister: (data) => API.post("/auth/google-register", data),
+  // verify email
+  verifyEmail: (token) => API.get(`/auth/verify-email?token=${token}`),
 };
 
 // word translation services
