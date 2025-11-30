@@ -32,7 +32,7 @@ const WordsTable = ({ words: initialWords }) => {
     setSuccess(null);
     try {
       // Fetch the latest word info with categories from backend
-      const res = await WordTranslationServices.findById(word.wordId);
+      const res = await WordTranslationServices.getFullWord(word.wordId);
       setEditWord(res.data);
     } catch (err) {
       setEditWord(word); // fallback to local if fetch fails
