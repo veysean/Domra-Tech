@@ -1,0 +1,19 @@
+{
+    "requestTitle" : "Request Changing",
+    "engWord" : "English Word",
+    "khWord" : "Khmer Word",
+    "french" : "French Word",
+    "wRef" : "Reference",
+    "cancel" : "Cancel",
+    "submit" : "Submit",
+    "enterEng": "Enter English word",
+    "enterKh": "Enter Khmer word",
+    "enterFr": "Enter French word",
+    "enterRef": "Enter reference",
+
+    "addNewTerm": "Add New Term",
+    "wDef" : "Definition",
+    "wEx" : "Example",
+    "enterDef" : "Enter definition",
+    "enterEx" : "Enter Example"
+}
