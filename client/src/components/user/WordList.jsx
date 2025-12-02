@@ -1,6 +1,7 @@
 import { useEffect, useState, forwardRef, useImperativeHandle } from "react";
 import { WordTranslationServices } from "../../api";
 import WordCard from "./WordCard";
+import { useTranslation } from "react-i18next";
 
 export default function WordList({ words: propWords, isHomepage = false, searchQuery = "", ref }) {
     const [words, setWords] = useState([]);
@@ -9,6 +10,7 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
     const [loading, setLoading] = useState(false);
     const [pageInput, setPageInput] = useState("1");
     const limit = 10;
+    const { t } = useTranslation();
 
     useImperativeHandle(ref, () => ({
         resetToFirstPage: () => {
@@ -188,9 +190,9 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
                     <button 
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
-                        className="px-3 py-2 bg-[#667EEA] text-white disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center rounded-md"
+                        className="px-3 py-2 main-color text-white disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center rounded-md"
                     >
-                        Prev
+                        {t('prev')}
                     </button>
                     
                     {/* Page Numbers + Input page number */}
@@ -206,7 +208,7 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
                                         onClick={() => handlePageChange(page)}
                                         className={`px-3 py-2 rounded-md ${
                                             currentPage === page
-                                                ? 'bg-[#667EEA] text-white'
+                                                ? 'main-color2 text-white'
                                                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                                         }`}
                                     >
@@ -218,7 +220,7 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
 
                         {/* Page input */}
                         <div className="flex items-center space-x-1">
-                            <span className="text-gray-600 text-sm">Go to</span>
+                            <span className="text-gray-600 text-sm">{t('goto')}</span>
                             <input
                                 type="number"
                                 min="1"
@@ -242,9 +244,9 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
                     <button 
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages}
-                        className="px-3 py-2 bg-[#667EEA] text-white disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center rounded-md"
+                        className="px-3 py-2 main-color text-white disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center rounded-md"
                     >
-                        Next
+                        {t('next')}
                     </button>
                 </div>
             )}
