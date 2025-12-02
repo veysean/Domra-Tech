@@ -1,25 +1,15 @@
 // server/src/services/emailService.js
-
+import fs from 'fs';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 dotenv.config({ path: '../.env' });
 
-// const transporter = nodemailer.createTransport({
-//     service: 'gmail',
-//     auth: {
-//         user: process.env.EMAIL_USERNAME,
-//         pass: process.env.EMAIL_PASSWORD
-//     }
-// });
-
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true, // use SSL
-  auth: {
-    user: process.env.EMAIL_USERNAME,
-    pass: process.env.EMAIL_PASSWORD,
-  },
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_PASSWORD
+    }
 });
 
 export const sendVerificationEmail = async (email, verificationToken) => {
@@ -37,6 +27,7 @@ export const sendVerificationEmail = async (email, verificationToken) => {
         console.log('Verification email sent successfully to:', email);
     } catch (error) {
         console.error('Failed to send verification email:', error);
+        console.error(error);
         throw new Error('Failed to send email.');
     }
 };
