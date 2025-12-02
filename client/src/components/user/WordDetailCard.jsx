@@ -2,11 +2,13 @@ import { useState } from "react";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
+import { useTranslation } from "react-i18next";
 
 export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
   const [showReference, setShowReference] = useState(false);
   const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <div className="w-[400px] md:w-[500px] lg:w-[565px] p-7 bg-white border-t-4 border-[#E4A54D] rounded-[30px] shadow-md overflow-y-auto scrollbar-hide flex flex-col gap-7">
@@ -36,12 +38,12 @@ export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
       </div>
 
       {/* Definition */}
-      <Section title="Definition">
+      <Section title={t('definition')}>
         <p className="text-[#667EEA] text-xs md:text-sm lg:text-base">{word?.definition}</p>
       </Section>
 
       {/* Example */}
-      <Section title="Example">
+      <Section title={t('example')}>
         <p className="text-[#667EEA] text-xs md:text-sm lg:text-base">{word?.example || "No Example"}</p>
       </Section>
 
@@ -57,7 +59,7 @@ export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
       {/*detail card Footer */}
       <div className="pt-7 border-t border-[#3F51B5] flex justify-between items-center">
         <p className="text-slate-500 text-xs lg:text-base font-medium">
-          Added: {word?.createdAt?.slice(0, 10) || "N/A"}
+          {t('added')}: {word?.createdAt?.slice(0, 10) || "N/A"}
         </p>
 
         <button 
@@ -83,7 +85,7 @@ export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
               fill="white"
             />
           </svg>
-          Request
+          {t('request')}
         </button>
       </div>
     </div>
