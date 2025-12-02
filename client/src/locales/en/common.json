@@ -27,5 +27,8 @@
   "continue_with_google": "Continue with Google",
   "reference": "Reference",
   "added":"Added",
-  "rightReserved":"2025 Domra. All rights reserved."
+  "rightReserved":"2025 Domra. All rights reserved.",
+  "definition": "Definition",
+  "example": "Example",
+  "request": "Request"
 }
