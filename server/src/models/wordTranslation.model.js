@@ -14,11 +14,11 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING(255),
     },
     KhmerWord: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.TEXT,
       allowNull: false
     },
     normalizedWord: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.TEXT,
     },
     definition: {
       type: DataTypes.TEXT
