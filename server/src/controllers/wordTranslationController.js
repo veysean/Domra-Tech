@@ -205,6 +205,14 @@ const getPublicWordCard = async (req, res) => {
         const word = await WordTranslation.findByPk(req.params.wordId, {
             // Include only necessary fields for public view
             attributes: ['wordId', 'EnglishWord', 'FrenchWord', 'KhmerWord', 'definition', 'example', 'reference'],
+              include: [
+                {
+                  model: Category,
+                  as: 'Categories',
+                  attributes: ['categoryId', 'categoryName'],
+                  through: { attributes: [] }, // hide join table
+                },
+              ],
         });
 
         if (!word) {
@@ -266,7 +274,16 @@ const getPublicWordCard = async (req, res) => {
 
 const findById = async (req, res) => {
     try {
-        const word = await WordTranslation.findByPk(req.params.wordId);
+        const word = await WordTranslation.findByPk(req.params.wordId, {
+          attributes: ['wordId','EnglishWord','KhmerWord','FrenchWord','definition','example','reference'],
+          include: [
+            { model: Category, 
+              as: 'Categories', 
+              attributes: ['categoryId','categoryName'], 
+              through: { attributes: [] } 
+            }
+          ]
+        });
         if (!word) {
             return res.status(404).json({ error: 'Word not found' });
         }

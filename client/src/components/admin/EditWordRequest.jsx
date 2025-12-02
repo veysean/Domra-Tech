@@ -14,12 +14,41 @@ const WordRequestEdit = ({ request, onClose, onSave, saving, error, success }) =
     check: request?.check || false,
   };
 
-  const [form, setForm] = useState(initialForm);
+  // const [form, setForm] = useState(initialForm);
 
-  // Reset form when request changes or after successful save
+  // // Reset form when request changes or after successful save
+  // useEffect(() => {
+  //   setForm(initialForm);
+  // }, [request, success]);
+
+  const [form, setForm] = useState({
+    wordRequestId: "",
+    newEnglishWord: "",
+    newKhmerWord: "",
+    newFrenchWord: "",
+    newDefinition: "",
+    newExample: "",
+    reference: "",
+    status: "pending",
+    check: false,
+  });
+
+  // Whenever request changes, update the form state
   useEffect(() => {
-    setForm(initialForm);
-  }, [request, success]);
+    if (request) {
+      setForm({
+        wordRequestId: request.wordRequestId || "",
+        newEnglishWord: request.newEnglishWord || "",
+        newKhmerWord: request.newKhmerWord || "",
+        newFrenchWord: request.newFrenchWord || "",
+        newDefinition: request.newDefinition || "",
+        newExample: request.newExample || "",
+        reference: request.reference || "",
+        status: request.status || "pending",
+        check: request.check || false,
+      });
+    }
+  }, [request]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
