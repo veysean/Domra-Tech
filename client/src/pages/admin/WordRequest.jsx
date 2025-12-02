@@ -17,6 +17,10 @@ const WordRequestPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchTimeout, setSearchTimeout] = useState(null);
 
+  // NEW: filters
+  const [statusFilter, setStatusFilter] = useState(""); // pending, accepted, denied, deleted
+  const [checkFilter, setCheckFilter] = useState("");   // "checked" or "unchecked"
+
   const [showAdd, setShowAdd] = useState(false);
   const [addSaving, setAddSaving] = useState(false);
   const [addError, setAddError] = useState(null);
@@ -26,7 +30,13 @@ const WordRequestPage = () => {
   const fetchRequests = async (page = 1, limit = 10) => {
     setLoading(true);
     try {
-      const res = await WordRequestServices.getWordRequests(page, limit, "", searchQuery);
+      const res = await WordRequestServices.getWordRequests(
+        page,
+        limit,
+        statusFilter,   // pass status filter
+        searchQuery,
+        checkFilter     // pass check filter
+      );
       setRequests(res.data.data || []);
       setCurrentPage(res.data.currentPage || page);
       setTotalPages(res.data.totalPages || 1);
@@ -43,11 +53,11 @@ const WordRequestPage = () => {
     fetchRequests();
   }, []);
 
-  // Refetch on search
+  // Refetch on search or filters
   useEffect(() => {
     fetchRequests(1, 10);
     setCurrentPage(1);
-  }, [searchQuery]);
+  }, [searchQuery, statusFilter, checkFilter]);
 
   // Handle page change
   const handlePageChange = (page) => {
@@ -68,13 +78,21 @@ const WordRequestPage = () => {
   };
 
   return (
+    <div className="max-w-7xl mx-auto">
+      {/* Header */}
+      <h1 className="text-2xl font-bold my-5 text-[#4A5568]">
+        Welcome to Domra, Admin!
+      </h1>
     <div className="bg-white rounded-lg shadow p-6">
       <div className="mb-4 flex flex-col md:flex-row md:justify-between md:items-center">
         <div className="mb-6">
           <h1 className="text-2xl font-semibold mb-4">Word Requests</h1>
-          <p className="text-gray-600">Manage user-submitted word requests for review and approval.</p>
+          <p className="text-gray-600">
+            Manage user-submitted word requests for review and approval.
+          </p>
         </div>
         <div className="mb-4 flex flex-col sm:flex-row sm:items-center gap-4">
+          {/* Search */}
           <div className="relative flex items-center">
             <input
               type="text"
@@ -85,6 +103,32 @@ const WordRequestPage = () => {
             />
             <FaSearch className="absolute ml-45 text-gray-400" />
           </div>
+
+          {/* Status Filter */}
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="border border-gray-300 rounded-lg p-2"
+          >
+            <option value="">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="accepted">Accepted</option>
+            <option value="denied">Denied</option>
+            <option value="deleted">Deleted</option>
+          </select>
+
+          {/* Check Filter */}
+          <select
+            value={checkFilter}
+            onChange={(e) => setCheckFilter(e.target.value)}
+            className="border border-gray-300 rounded-lg p-2"
+          >
+            <option value="">All</option>
+            <option value="checked">Checked</option>
+            <option value="unchecked">Unchecked</option>
+          </select>
+
+          {/* Add Request */}
           <button
             className="bg-blue-500 font-semibold text-white rounded-lg px-4 py-2 flex items-center"
             onClick={() => setShowAdd(true)}
@@ -126,7 +170,7 @@ const WordRequestPage = () => {
             setAddError(null);
             setAddSuccess(null);
             try {
-              const res = await WordRequestServices.createWordRequest(form);
+              await WordRequestServices.createWordRequest(form);
               setAddSuccess("Request added successfully.");
               setShowAdd(false);
               fetchRequests(currentPage, 10); // refresh
@@ -140,8 +184,8 @@ const WordRequestPage = () => {
           error={addError}
           success={addSuccess}
         />
-        
       )}
+    </div>
     </div>
   );
 };

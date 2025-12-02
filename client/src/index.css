@@ -27,6 +27,6 @@
   scrollbar-width: none;     /* Firefox */
 }
 html, body {
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   font-family: 'Noto Sans Khmer', Inter;
 }

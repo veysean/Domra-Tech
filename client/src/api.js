@@ -83,6 +83,10 @@ export const WordRequestServices = {
   updateWordRequest: (id, data) => API.put(`/wordRequests/${id}`, data),
   deleteWordRequest: (id) => API.delete(`/wordRequests/${id}`),
   getTodayWordRequests: () => API.get('/wordRequests/today').then((res) => res.data),
+  getWordRequests: (page = 1, limit = 10, status = "", search = "", check = "") =>
+    API.get('/wordRequests', {
+      params: { page, limit, status, search, check }
+    }),
 };
 
 

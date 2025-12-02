@@ -37,13 +37,6 @@ const WordRequestTable = ({ requests, setRequests }) => {
     // Define allowed status values
     const validStatuses = ['pending', 'accepted', 'denied', 'deleted'];
 
-    // // Validate status before sending
-    // if (!validStatuses.includes(updatedRequest.status)) {
-    //   setError(`Invalid status: "${updatedRequest.status}". Must be one of ${validStatuses.join(', ')}.`);
-    //   setSaving(false);
-    //   return;
-    // }
-
     try {
       const res = await WordRequestServices.updateWordRequest(
         editRequest.wordRequestId,
@@ -60,20 +53,17 @@ const WordRequestTable = ({ requests, setRequests }) => {
 
       setSuccess("Request updated successfully.");
       setEditRequest(null);
-    } catch (err) {
-      console.error("Update error:", err);
-      setError("Failed to update request.");
-    } finally {
-      setSaving(false);
-    }
-  };
-
+      } catch (err) {
+        console.error("Update error:", err);
+        setError("Failed to update request.");
+      } finally {
+        setSaving(false);
+      }
+    };
 
     const handleToggleCheck = (e) => {
         setIsChecked(e.target.checked);
     };
-
-
 
   return (
     <div className="overflow-x-auto">
@@ -85,7 +75,7 @@ const WordRequestTable = ({ requests, setRequests }) => {
             <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">French</th>
             <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Khmer</th>
             <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Status</th>
-            <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Check</th>
+            {/* <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Check</th> */}
             <th className="px-6 py-3 text-center text-sm font-medium text-gray-700">Actions</th>
           </tr>
         </thead>
@@ -100,14 +90,14 @@ const WordRequestTable = ({ requests, setRequests }) => {
                 <td className="px-6 py-4 text-sm text-gray-700">{req.newFrenchWord || "-"}</td>
                 <td className="px-6 py-4 text-sm text-gray-700">{req.newKhmerWord || "-"}</td>
                 <td className="px-6 py-4 text-sm text-gray-700 capitalize">{req.status || "pending"}</td>
-                <td className="px-6 py-4 text-sm text-gray-700">
+                {/* <td className="px-6 py-4 text-sm text-gray-700">
                     <input
                         type="checkbox"
                         checked={req.check}
                         onChange={() => handleToggleCheck(req)}
                         className="cursor-pointer"
                     />
-                </td>
+                </td> */}
                 <td className="px-6 py-4 text-center flex justify-center gap-2">
                   <button
                     className="text-green-300 hover:text-green-700 text-xl p-1"
