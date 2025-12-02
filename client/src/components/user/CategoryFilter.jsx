@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { CategoryServices } from "../../api";
 import { FiMenu, FiX } from "react-icons/fi";
+import { useTranslation } from "react-i18next";
 
 export default function Categories({ onCategoryChange }) {
 
@@ -8,6 +9,7 @@ export default function Categories({ onCategoryChange }) {
     const [activeCategory, setActiveCategory] = useState("Categories");
     const [openCat, setOpenCat] = useState(false);
     const dropdownRef = useRef(null);
+    const { t } = useTranslation();
 
     const toggleCategory = () => setOpenCat((prev) => !prev);
 
@@ -120,7 +122,7 @@ export default function Categories({ onCategoryChange }) {
     return (
         <div className="w-[1076px] self-stretch inline-flex flex-col justify-start items-start gap-5">
             <div className="p-0.5 lg:p-2.5 inline-flex justify-center items-center gap-2.5">
-                <div className="justify-start text-slate-600 text-sm lg:text-base font-bold font-['Inter']">Filter by  category</div>
+                <div className="justify-start text-slate-600 text-sm lg:text-base font-bold font-['Inter']">{t('filterByCat')}</div>
                  <div className="lg:hidden" ref={dropdownRef}>
 
                 <button
@@ -149,7 +151,7 @@ export default function Categories({ onCategoryChange }) {
                         activeCategory === "All Category" ? "bg-[#667EEA] text-white" : "hover:bg-gray-100 text-gray-700"
                         }`}
                     >
-                        All Category
+                        {t('allCat')}
                     </li>
 
                     {/* Other categories from API */}
@@ -190,7 +192,7 @@ export default function Categories({ onCategoryChange }) {
                                 </svg>
                             </div>
                         </div>
-                        <div className="justify-start text-base font-medium font-['Inter']">All Categories</div>
+                        <div className="justify-start text-base font-medium font-['Inter']">{t('allCat')}</div>
                     </button>
                     {/* Category button */}
                     {categories.map((cat) =>  {

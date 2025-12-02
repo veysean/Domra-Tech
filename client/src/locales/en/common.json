@@ -30,5 +30,12 @@
   "rightReserved":"2025 Domra. All rights reserved.",
   "definition": "Definition",
   "example": "Example",
-  "request": "Request"
+  "request": "Request",
+  "addToFav" : "Added to Favorites",
+  "rmFromFav" : "Removed from Favorites",
+  "fav" : "Favorites",
+  "prev" : "Prev",
+  "goto" : "Go to",
+  "filterByCat" : "Filter by category",
+  "allCat" : "All Categories"
 }
