@@ -17,6 +17,7 @@ import AuthPage from "./pages/user/AuthPage";
 import Profile from "./pages/user/Profile";
 import ForgotPassword from "./pages/user/ForgetPassword";
 import ResetPassword from "./pages/user/ResetPassword";
+import VerifyEmail from "./pages/user/VerifyEmail";
 
 // Admin Pages
 import UsersPage from "./pages/admin/User";
@@ -91,6 +92,15 @@ function AppRoutes() {
           element={
             <MainLayout>
               <ResetPassword />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/auth/verify-email"
+          element={
+            <MainLayout>
+              <VerifyEmail />
             </MainLayout>
           }
         />
