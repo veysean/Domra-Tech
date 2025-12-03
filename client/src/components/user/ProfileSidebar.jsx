@@ -1,8 +1,9 @@
 import { LogOut, History, Heart, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 export default function ProfileSidebar({ setActiveTab, userData, logout }) {
   const navigate = useNavigate();
-
+  const { t } = useTranslation('profilePage');
 
 
   return (
@@ -29,7 +30,7 @@ export default function ProfileSidebar({ setActiveTab, userData, logout }) {
           onClick={() => setActiveTab("profile")}
         >
           <User size={22} color="#2D3748" />
-          <span className="text-gray-700 text-base font-medium">Edit Profile</span>
+          <span className="text-gray-700 text-base font-medium">{t('editPf')}</span>
         </button>
 
         <button
@@ -37,7 +38,7 @@ export default function ProfileSidebar({ setActiveTab, userData, logout }) {
           onClick={() => setActiveTab("history")}
         >
           <History size={22} color="#2D3748" />
-          <span className="text-gray-700 text-base font-medium">Request History</span>
+          <span className="text-gray-700 text-base font-medium">{t('reqHt')}</span>
         </button>
 
         <button
@@ -45,7 +46,7 @@ export default function ProfileSidebar({ setActiveTab, userData, logout }) {
           onClick={() => setActiveTab("favorites")}
         >
           <Heart size={22} color="#2D3748" />
-          <span className="text-gray-700 text-base font-medium">Favorites</span>
+          <span className="text-gray-700 text-base font-medium">{t('fav')}</span>
         </button>
 
         <button
@@ -56,7 +57,7 @@ export default function ProfileSidebar({ setActiveTab, userData, logout }) {
           }}
         >
           <LogOut size={22} color="#DC2626" />
-          <span className="text-red-600 text-base font-medium">Logout</span>
+          <span className="text-red-600 text-base font-medium">{t('logout')}</span>
         </button>
       </div>
     </div>
