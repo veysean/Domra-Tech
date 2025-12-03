@@ -5,7 +5,7 @@
   "aboutUs": "អំពីយើង",
   "login": "ចូលប្រើ",
   "signup": "ចុះឈ្មោះ",
-  "email" : "អុីម៉ែល",
+  "email" : "អ៊ីម៉ែល",
   "password" : "លេខសម្ងាត់", 
   "password_placehoder" : "បញ្ចូលពាក្យសម្ងាត់", 
   "email_placehoder" : "បញ្ចូលលេខអុិម៉ែល", 
@@ -26,5 +26,16 @@
   "enter_your_name":"បញ្ចុលឈ្មោះ",
   "continue_with_google": "បន្តជាមួយ Google",
   "reference": "ឯកសារយោង",
-   "added":"បញ្ចូល"
+  "added":"បញ្ចូល",
+  "rightReserved":"២០២៥​ តម្រា។​ រក្សាសិទ្ធិគ្រប់យ៉ាង។",
+  "definition": "និយមន័យ",
+  "example": "ឧទាហរណ៍",
+  "request": "ស្នើសុំ",
+  "addToFav" : "បានរក្សាទុកជាចំណូលចិត្ត",
+  "rmFromFav" : "បានដកចេញពីចំណូលចិត្ត",
+  "fav" : "ចំណូលចិត្ត",
+  "prev" : "ទំព័រមុន",
+  "goto" : "ទៅ",
+  "filterByCat" : "ច្រោះតាមប្រភេទ",
+  "allCat" : "ប្រភេទទាំងអស់"
 }

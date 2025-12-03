@@ -88,6 +88,11 @@ const UserPage = () => {
   };
 
   return (
+    <div className="max-w-7xl mx-auto">
+      {/* Header */}
+      <h1 className="text-2xl font-bold my-5 text-[#4A5568]">
+        Welcome to Domra, Admin!
+      </h1>
     <div className="bg-white rounded-lg shadow p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold mb-4">User Management</h1>
@@ -119,7 +124,7 @@ const UserPage = () => {
               <th className="px-4 py-4 text-left text-gray-700 font-semibold">First Name</th>
               <th className="px-4 py-4 text-left text-gray-700 font-semibold">Last Name</th>
               <th className="px-4 py-4 text-left text-gray-700 font-semibold">Email</th>
-              <th className="px-4 py-4 text-left text-gray-700 font-semibold">Actions</th>
+              <th className="px-4 py-4 text-center text-gray-700 font-semibold">Actions</th>
             </tr>
           </thead>
 
@@ -132,20 +137,20 @@ const UserPage = () => {
                 <td className="px-4 py-4 border-b border-gray-200 text-gray-600">{user.firstName}</td>
                 <td className="px-4 py-4 border-b border-gray-200 text-gray-600">{user.lastName}</td>
                 <td className="px-4 py-4 border-b border-gray-200 text-gray-600">{user.email}</td>
-                <td className="px-4 py-4 border-b border-gray-200">
-                  <div className="flex gap-5">
+                <td className="px-4 py-4 border-b border-gray-200 text-center">
+                  <div className="flex justify-center gap-5">
                     <button
                       onClick={() => handleEdit(user)}
-                      className="text-gray-600 hover:text-green-700"
+                      className="text-gray-600 hover:text-green-700 "
                     >
                       <BsPencilSquare />
                     </button>
-                    <button
+                    {/* <button
                       onClick={() => handleDelete(user.userId)}
                       className="text-red-500 hover:text-red-700"
                     >
                       <BsTrash />
-                    </button>
+                    </button> */}
                   </div>
                 </td>
               </tr>
@@ -217,6 +222,7 @@ const UserPage = () => {
         />
       )}
     
+    </div>
     </div>
   );
 };

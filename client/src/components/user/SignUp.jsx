@@ -76,7 +76,7 @@ const SignUpCard = () => {
   return (
     <div className="w-[505px] h-[549px] relative bg-white rounded-[30px] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.25)] overflow-hidden">
       
-      <h2 className="absolute left-[217px] top-[47px] text-3xl font-['Righteous'] gradient-text">
+      <h2 className="absolute left-[217px] top-[47px] text-3xl font-['Righteous'] text-main-color">
         {t("signup")}
       </h2>
     {/* step one for sign up */}
@@ -87,19 +87,19 @@ const SignUpCard = () => {
       >
         {/* Email */}
         <div className="flex flex-col gap-2.5">
-          <label className="text-indigo-500 text-xl font-['Inter']">{t("email")}: </label>
+          <label className="text-main-color text-xl font-['Inter']">{t("email")}: </label>
           <input
             type="email"
             placeholder={t("email_placehoder")}
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light"
+            className="p-2.5 bg-white rounded-xl outline-1 outline-[#3F51B5] text-slate-500 text-sm font-light"
           />
         </div>
 
         {/* Password */}
         <div className="flex flex-col gap-2.5 relative">
-          <label className="text-indigo-500 text-xl font-['Inter']">
+          <label className="text-main-color text-xl font-['Inter']">
             {t("password")}:
           </label>
 
@@ -110,7 +110,7 @@ const SignUpCard = () => {
             onChange={(e) =>
               setFormData({ ...formData, password: e.target.value })
             }
-            className="p-2.5 pr-10 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light"
+            className="p-2.5 pr-10 bg-white rounded-xl outline-1 outline-[#3F51B5] text-slate-500 text-sm font-light"
           />
 
           {/* Toggle button */}
@@ -192,7 +192,7 @@ const SignUpCard = () => {
         {/* Sign up Button */}
         <button
           type="submit"
-          className="self-stretch p-2.5 bg-indigo-500 rounded-xl text-white text-sm font-extrabold mt-3 hover:bg-indigo-500/80"
+          className="self-stretch p-2.5 main-color2 rounded-xl text-white text-sm font-extrabold mt-3 hover:bg-[#DD9229]"
         >
           {t('next')}
         </button>
@@ -207,32 +207,32 @@ const SignUpCard = () => {
           >
           <div
             onClick={handleBack}
-            className="text-indigo-500 cursor-pointer text-xl flex items-center gap-1"
+            className="text-main-color cursor-pointer text-xl flex items-center gap-1"
             >
             <HiArrowLeft />
           </div>
             {/* First Name */}
             <div className="flex flex-col gap-2.5">
-              <label className="text-indigo-500 text-xl font-['Inter']">First Name:</label>
+              <label className="text-main-color text-xl font-['Inter']">First Name:</label>
               <input
                 type="text"
                 placeholder="Enter your first name"
                 value={formData.firstName}
                 onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                 autoComplete="current-password"
-                className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light leading-snug"
+                className="p-2.5 bg-white rounded-xl outline-1 outline-[#3F51B5] text-slate-500 text-sm font-light leading-snug"
               />
             </div>
 
             {/* Last Name */}
             <div className="flex flex-col gap-2.5">
-              <label className="text-indigo-500 text-xl font-['Inter']">Last Name:</label>
+              <label className="text-main-color text-xl font-['Inter']">Last Name:</label>
               <input
                 type="text"
                 placeholder={('enter_your_name')}
                 value={formData.lastName}
                 onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light leading-snug"
+                className="p-2.5 bg-white rounded-xl outline-1 outline-[#3F51B5] text-slate-500 text-sm font-light leading-snug"
               />
             </div>
             {/* Error Message */}
@@ -244,7 +244,7 @@ const SignUpCard = () => {
             {/* Sign Up Button */}
             <button
               type="submit"
-              className="p-2.5 bg-indigo-500 rounded-xl text-white text-sm font-extrabold hover:bg-indigo-500/80"
+              className="p-2.5 main-color2 rounded-xl text-white text-sm font-extrabold hover:bg-[#DD9229]"
             >
               {t('signup')}
             </button>

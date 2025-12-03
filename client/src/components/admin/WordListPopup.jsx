@@ -47,6 +47,25 @@ const WordListPopup = ({ word, onClose }) => {
             </div>
         </div>
 
+        {/* Assigned Categories */}
+        <div className="mb-4">
+          <label className="text-sm font-semibold text-gray-500 mb-2 block">Categories</label>
+          <div className="flex flex-wrap gap-2 mt-3">
+            {word.Categories && word.Categories.length > 0 ? (
+              word.Categories.map((cat) => (
+                <span
+                  key={cat.categoryId}
+                  className="flex items-center gap-1 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 px-3 py-2 rounded-lg text-xs font-medium shadow-sm hover:from-blue-200 hover:to-blue-300 transition"
+                >
+                  {cat.categoryName}
+                </span>
+              ))
+            ) : (
+              <span className="text-gray-400 text-xs italic">No categories assigned</span>
+            )}
+          </div>
+        </div>
+
         {/* Definition */}
         <div>
           <h2 className="text-sm font-semibold text-gray-500 mb-3">Definition</h2>

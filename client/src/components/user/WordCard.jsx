@@ -51,10 +51,10 @@ export default function WordCard({word}){
         try {
             if (isFav) {
                 await FavoriteServices.deleteFavorite(word.wordId, auth.token);
-                setMessage("Removed from favorites");
+                setMessage(t('rmFromFav'));
             } else {
                 await FavoriteServices.createFavorite(word.wordId, auth.token);
-                setMessage("Added to favorites");
+                setMessage(t('addToFav'));
             }
             setIsFav(!isFav);
             setShowMessage(true);
@@ -150,7 +150,7 @@ export default function WordCard({word}){
                     className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 text-xs text-black bg-[#E9ECEF] rounded"
                     onClick={handleTooltipClick}
                 >
-                    Favorite
+                    {t('fav')}
                 </span>
                 )}
             </div>
@@ -202,7 +202,7 @@ export default function WordCard({word}){
         )}
 
         {showMessage && (
-            <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-[#764BA2] text-white px-6 py-3 rounded-lg shadow-lg z-50">
+            <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 main-color text-white px-6 py-3 rounded-lg shadow-lg z-50">
             {message}
             </div>
         )}

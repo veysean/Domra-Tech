@@ -1,0 +1,20 @@
+{
+    "urPf" : "Your Profile",
+    "editPf" : "Edit Profile",
+    "reqHt" : "Request Histroy",
+    "fav" : "Favorites",
+    "logout" : "Logout",
+    "fname" : "First Name",
+    "lname" : "Last Name",
+    "email" : "Email",
+    "savechange" : "Save Changes",
+    "changePw" : "Change Password",
+    "oldPw" : "Old Password",
+    "newPw" : "New Password",
+    "cfPw" : "Confirm New Password",
+    "correctionRequests": "Correction Requests" ,
+    "newWordRequests":"New Word Requests",
+    "noCorrectionRequests": "No correction requests yet.",
+    "noNewWordRequests":"No new word request yet.",
+    "yourfavourite":"Your Favorites"
+}

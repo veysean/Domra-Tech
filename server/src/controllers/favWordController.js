@@ -135,7 +135,9 @@ const getAllFavorites = async (req, res) => {
           'KhmerWord',
           'definition',
           'example',
-          'reference'
+          'reference',
+          'referenceText',
+          'createdAt'
         ]
       }]
     });

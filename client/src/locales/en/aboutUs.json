@@ -10,5 +10,21 @@
     "translateDes" : "View its meaning in English, Khmer, and French",
     "contribute" : "Contribute",
     "contributeDes" : "Suggest new terms to improve our dictionary",
-    "MeetdomraTeam" : "Meet Domra Team"
+    "MeetdomraTeam" : "Meet Domra Team",
+
+    "how":"How",
+    "domra":"Domra",
+    "work":"Work",
+    "meet":"Meet",
+    "team":"Team",
+    "himSoklong":"Mr. Him Soklong",
+    "kemVeysean":"Ms. Kem Veysean",
+    "tangSonika":"Ms. Tang Sonika",
+    "inChanaliza":"Ms. In Chanaliza",
+    "oengGechty":"Ms. Oeng Gechty",
+    "sarSovannita":"Ms. Sar Sovannita",
+    "chumChanlinna":"Ms. Chum Chanlinna",
+    "advisor":"Project Advisor",
+    "backend":"Backend Developer",
+    "frontend":"Frontend Developer"
 }
