@@ -56,7 +56,7 @@ const ForgotPassword = () => {
       // Auto-redirect after 4 seconds
       setTimeout(() => {
         navigate("/auth");
-      }, 15000);
+      }, 4000);
     } catch (err) {
       const errorMsg = err.response?.data?.message || "Failed to send reset link. Please try again.";
       setError(errorMsg);

@@ -151,7 +151,7 @@ const ResetPassword = () => {
       // Auto-redirect to login after 3 seconds
       setTimeout(() => {
         navigate("/auth");
-      }, 15000);
+      }, 3000);
     } catch (err) {
       const errorMsg = err.response?.data?.message || "Failed to reset password. Please try again later.";
       setError(errorMsg);
