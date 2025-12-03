@@ -19,6 +19,8 @@ export const authServices = {
   // Reset password with token + confirmation
   resetPassword: (data) => API.post('/auth/reset-password', data),
   googleRegister: (data) => API.post("/auth/google-register", data),
+  // verify email
+  verifyEmail: (token) => API.get(`/auth/verify-email?token=${token}`),
 };
 
 // word translation services
@@ -29,7 +31,7 @@ export const WordTranslationServices = {
     }),
 
   findById: (id) => API.get(`/words/${id}`),
-
+  getFullWord: (id) => API.get(`/admin/words/${id}`), // full word details with categories
   searchWords: (query, page = 1, limit = 10, categoryId = "") =>
     API.get("/words/search", {
       params: { q: query, page, limit, ...(categoryId && categoryId !== "all" && { categoryId }) },
@@ -83,6 +85,10 @@ export const WordRequestServices = {
   updateWordRequest: (id, data) => API.put(`/wordRequests/${id}`, data),
   deleteWordRequest: (id) => API.delete(`/wordRequests/${id}`),
   getTodayWordRequests: () => API.get('/wordRequests/today').then((res) => res.data),
+  getWordRequests: (page = 1, limit = 10, status = "", search = "", check = "") =>
+    API.get('/wordRequests', {
+      params: { page, limit, status, search, check }
+    }),
 };
 
 

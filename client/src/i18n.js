@@ -8,12 +8,16 @@ import aboutUsEn from './locales/en/aboutUs.json';
 import aboutUsKh from './locales/kh/aboutUs.json';
 import ourCategoryEn from './locales/en/ourCategory.json';
 import ourCategoryKh from './locales/kh/ourCategory.json';
+import contributeCardEn from './locales/en/contributeCard.json';
+import contributeCardKh from './locales/kh/contributeCard.json';
+import profilePageEn from './locales/en/profilePage.json';
+import profilePageKh from './locales/kh/profilePage.json';
 i18n
   .use(initReactI18next)
   .init({
     resources: {
-      en: { translation: en, contributeTerm: conEn, aboutUs: aboutUsEn, ourCategory: ourCategoryEn },
-      kh: { translation: kh, contributeTerm: conKh, aboutUs: aboutUsKh, ourCategory: ourCategoryKh },
+      en: { translation: en, contributeTerm: conEn, aboutUs: aboutUsEn, ourCategory: ourCategoryEn, contributeCard: contributeCardEn, profilePage: profilePageEn},
+      kh: { translation: kh, contributeTerm: conKh, aboutUs: aboutUsKh, ourCategory: ourCategoryKh, contributeCard: contributeCardKh, profilePage: profilePageKh},
     },
     lng: 'en', // default language
     fallbackLng: 'en',

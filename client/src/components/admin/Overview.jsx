@@ -11,11 +11,10 @@ import { userServices } from "../../api.js";
 
 const Overview = () => {
   const [requests, setRequests] = useState([]);
-  const [unCheck, setUnCheck] = useState([]);
   const [users, setUsers] = useState([]);
   const [stats, setStats] = useState({
     todaysRequests: 0,
-    uncheckedRequests: 0,
+    pendingRequests: 0,
     overallUsers: 0,
   });
   const [loading, setLoading] = useState(true);
@@ -23,18 +22,20 @@ const Overview = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Today's requests
         const todayRes = await WordRequestServices.getTodayWordRequests();
         const todayData = todayRes.data || [];
-        const uncheckedToday = todayData.filter(req => req.check === false).length;
 
+        // All requests
         const allRes = await WordRequestServices.getWordRequests();
-        const allData = Array.isArray(allRes.data?.requests)
-          ? allRes.data.requests
-          : Array.isArray(allRes.data)
-          ? allRes.data
+        const allData = Array.isArray(allRes.data?.data)
+          ? allRes.data.data
           : [];
-        const totalUnchecked = allData.filter(req => req.check === false).length;
 
+        // Filter pending requests (status === "pending")
+        const totalPending = allData.filter(req => req.status?.toLowerCase() === "pending").length;
+
+        // Users
         const userRes = await userServices.getAll();
         const allUsers = Array.isArray(userRes.data?.users)
           ? userRes.data.users
@@ -44,11 +45,10 @@ const Overview = () => {
 
         setRequests(todayData);
         setUsers(allUsers);
-        setUnCheck(totalUnchecked);
 
         setStats({
           todaysRequests: todayData.length,
-          uncheckedRequests: totalUnchecked,
+          pendingRequests: totalPending,
           overallUsers: allUsers.length,
         });
 
@@ -62,14 +62,16 @@ const Overview = () => {
     fetchData();
   }, []);
 
-
   return (
     <div className="max-w-7xl mx-auto">
       {/* Header */}
-      <h1 className="text-2xl font-bold my-5 text-[#4A5568]">Welcome, Nita!</h1>
+      <h1 className="text-2xl font-bold my-5 text-[#4A5568]">
+        Welcome to Domra, Admin!
+      </h1>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {/* Today's Requests */}
         <div className="bg-[#667EEA] rounded-lg shadow p-8">
           <div className="flex items-center justify-between">
             <div>
@@ -83,19 +85,23 @@ const Overview = () => {
             </div>
           </div>
         </div>
+
+        {/* All Pending Requests */}
         <div className="bg-white rounded-lg shadow p-8">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold text-gray mb-4">
-                {stats.uncheckedRequests}
+                {stats.pendingRequests}
               </h2>
-              <p className="text-gray">Uncheck Requests</p>
+              <p className="text-gray">Pending Requests</p>
             </div>
             <div className="text-[#667EEA]">
               <BsClockHistory size={40} />
             </div>
           </div>
         </div>
+
+        {/* Overall Users */}
         <div className="bg-white rounded-lg shadow p-8">
           <div className="flex items-center justify-between">
             <div>

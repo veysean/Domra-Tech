@@ -6,6 +6,7 @@ import {
     updateWordRequest,
     getWordRequestById,
     getTodayWordRequests,
+    getWordRequests,
 }
 from "../controllers/wordRequestController.js"
 import authMiddleware from '../middleware/authMiddleware.js';
@@ -14,7 +15,8 @@ const { verifyAuth } = authMiddleware;
 
 const WordRequestRouter = express.Router();
 
-WordRequestRouter.get('/', verifyAuth, getAllWordRequests);
+WordRequestRouter.get('/all', verifyAuth, getAllWordRequests);
+WordRequestRouter.get('/', verifyAuth, getWordRequests);
 WordRequestRouter.get('/today', verifyAuth, getTodayWordRequests);
 WordRequestRouter.get('/:id', verifyAuth, getWordRequestById);
 WordRequestRouter.post('/', verifyAuth, createWordRequest);

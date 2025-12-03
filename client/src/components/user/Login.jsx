@@ -71,7 +71,7 @@ const Login = () => {
     <div className="m-auto lg:w-[505px] h-[549px] lg:relative rounded-[30px]">
       <div className="w-full flex flex-col gap-4 p-10 align-middle lg:w-[505px] h-[549px] left-0 top-0 lg:absolute bg-white rounded-[30px] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.25)] overflow-hidden">
         {/* Title */}
-        <h2 className="lg:absolute text-center left-[217px] top-[47px] text-3xl font-['Righteous'] gradient-text">
+        <h2 className="lg:absolute text-center left-[217px] top-[47px] text-3xl font-['Righteous'] text-main-color">
           {t('login')}
         </h2>
 
@@ -82,7 +82,7 @@ const Login = () => {
         >
           {/* Email */}
           <div className="flex flex-col gap-2.5">
-            <label className="text-indigo-500 text-xl">
+            <label className="text-main-color text-xl">
               {t('email')}:
             </label>
             <input
@@ -91,13 +91,13 @@ const Login = () => {
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               autoComplete="current-password"
-              className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light leading-snug"
+              className="p-2.5 bg-white rounded-xl outline-1 outline-[#3F51B5] text-slate-500 text-sm font-light leading-snug"
             />
           </div>
 
           {/* Password */}
           <div className="flex flex-col gap-2.5">
-            <label className="text-indigo-500 text-xl">
+            <label className="text-main-color text-xl">
               {t('password')}:
             </label>
             <input
@@ -105,7 +105,7 @@ const Login = () => {
               placeholder={t('password_placehoder')}
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="p-2.5 bg-white rounded-xl outline-1 outline-indigo-500 text-slate-500 text-sm font-light leading-snug"
+              className="p-2.5 bg-white rounded-xl outline-1 outline-[#3F51B5] text-slate-500 text-sm font-light leading-snug"
             />
           {/* Toggle button */}
           {formData.password && (
@@ -130,7 +130,7 @@ const Login = () => {
           {/* Login Button */}
           <button
             type="submit"
-            className="p-2.5 bg-indigo-500 rounded-xl text-white text-sm font-extrabold hover:bg-indigo-500/80"
+            className="p-2.5 main-color2 rounded-xl text-white text-sm font-extrabold hover:bg-[#DD9229]"
           >
             {t('login')}
           </button>

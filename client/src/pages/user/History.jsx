@@ -1,12 +1,14 @@
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import { CorrectionServices, WordRequestServices } from "../../api";
+import { useTranslation } from 'react-i18next';
 
 export default function RequestHistory() {
   const { auth } = useContext(AuthContext);
   const [corrections, setCorrections] = useState([]);
   const [wordRequests, setWordRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation('profilePage');
 
   useEffect(() => {
     if (auth) {
@@ -31,13 +33,13 @@ export default function RequestHistory() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-indigo-500 mb-6 hidden lg:block">Request History</h2>
+      <h2 className="text-2xl font-bold text-indigo-500 mb-6 hidden lg:block">{t('reqHt')}</h2>
       <div className="w-full max-w-screen mx-auto p-6 bg-white rounded-2xl shadow-md">
 
       {/* Correction Requests */}
-      <h3 className="text-lg font-semibold text-gray-700 mb-3">Correction Requests</h3>
+      <h3 className="text-lg font-semibold text-gray-700 mb-3">{t('correctionRequests')}</h3>
       {corrections.length === 0 ? (
-        <div className="text-gray-500 mb-6">No correction requests yet.</div>
+        <div className="text-gray-500 mb-6">{t('noCorrectionRequests')}</div>
       ) : (
         <ul className="mb-6 space-y-3">
           {corrections.map((req) => (
@@ -65,9 +67,9 @@ export default function RequestHistory() {
       )}
 
       {/* New Word Requests */}
-      <h3 className="text-lg font-semibold text-gray-700 mb-3">New Word Requests</h3>
+      <h3 className="text-lg font-semibold text-gray-700 mb-3">{t('newWordRequests')}</h3>
       {wordRequests.length === 0 ? (
-        <div className="text-gray-500">No new word requests yet.</div>
+        <div className="text-gray-500">{t('noNewWordRequests')}</div>
       ) : (
         <ul className="space-y-3">
           {wordRequests.map((req) => (

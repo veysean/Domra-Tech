@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { userServices } from "../../api";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function ProfileForm({ userData, setUserData }) {
+  const { t } = useTranslation('profilePage');
   const [formData, setFormData] = useState({
     firstName: userData?.firstName || "",
     lastName: userData?.lastName || ""
@@ -85,7 +87,7 @@ export default function ProfileForm({ userData, setUserData }) {
 
   return (
     <>
-      <div className="text-indigo-500 text-2xl font-bold hidden lg:block">Your Profile</div>
+      <div className="text-main-color text-2xl font-bold hidden lg:block">{t('urPf')}</div>
 
       {/* Show messages */}
       {message && (
@@ -100,10 +102,10 @@ export default function ProfileForm({ userData, setUserData }) {
 
       {/* Edit Profile */}
       <div className="w-full max-w-lg my-10 p-6 bg-white rounded-2xl shadow-md">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Edit Profile</h2>
+        <h2 className="text-2xl font-semibold text-gray-800 mb-6">{t('editPf')}</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div className="flex flex-col">
-            <label className="text-gray-700 font-medium mb-2">First Name</label>
+            <label className="text-gray-700 font-medium mb-2">{t('fname')}</label>
             <input
               type="text"
               name="firstName"
@@ -114,7 +116,7 @@ export default function ProfileForm({ userData, setUserData }) {
           </div>
 
           <div className="flex flex-col">
-            <label className="text-gray-700 font-medium mb-2">Last Name</label>
+            <label className="text-gray-700 font-medium mb-2">{t('lname')}</label>
             <input
               type="text"
               name="lastName"
@@ -125,7 +127,7 @@ export default function ProfileForm({ userData, setUserData }) {
           </div>
 
           <div className="flex flex-col">
-            <label className="text-gray-700 font-medium mb-2">Email</label>
+            <label className="text-gray-700 font-medium mb-2">{t('email')}</label>
             <input
               type="email"
               name="email"
@@ -137,19 +139,19 @@ export default function ProfileForm({ userData, setUserData }) {
 
           <button
             type="submit"
-            className="mt-4 w-full py-2 bg-indigo-500 hover:bg-indigo-600 text-white font-medium rounded-lg shadow-md transition"
+            className="mt-4 w-full py-2 main-color hover:bg-[#233BC3] text-white font-medium rounded-lg shadow-md transition"
           >
-            Save Changes
+            {t('savechange')}
           </button>
         </form>
       </div>
 
       {/* Change Password */}
       <div className="w-full max-w-lg my-10 p-6 bg-white rounded-2xl shadow-md">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Change Password</h2>
+        <h2 className="text-2xl font-semibold text-gray-800 mb-6">{t('changePw')}</h2>
         <form onSubmit={handleChangePassword} className="flex flex-col gap-5">
           <div className="flex flex-col">
-            <label className="text-gray-700 font-medium mb-2">Old Password</label>
+            <label className="text-gray-700 font-medium mb-2">{t('oldPw')}</label>
             <input
               type="password"
               name="oldPassword"
@@ -160,7 +162,7 @@ export default function ProfileForm({ userData, setUserData }) {
           </div>
 
           <div className="flex flex-col">
-            <label className="text-gray-700 font-medium mb-2">New Password</label>
+            <label className="text-gray-700 font-medium mb-2">{t('newPw')}</label>
             <input
               type="password"
               name="newPassword"
@@ -171,7 +173,7 @@ export default function ProfileForm({ userData, setUserData }) {
           </div>
 
           <div className="flex flex-col">
-            <label className="text-gray-700 font-medium mb-2">Confirm New Password</label>
+            <label className="text-gray-700 font-medium mb-2">{t('cfPw')}</label>
             <input
               type="password"
               name="confirmPassword"
@@ -183,9 +185,9 @@ export default function ProfileForm({ userData, setUserData }) {
 
           <button
             type="submit"
-            className="mt-4 w-full py-2 bg-indigo-500 hover:bg-indigo-600 text-white font-medium rounded-lg shadow-md transition"
+            className="mt-4 w-full py-2 main-color hover:bg-[#233BC3] text-white font-medium rounded-lg shadow-md transition"
           >
-            Change Password
+            {t('changePw')}
           </button>
         </form>
       </div>
