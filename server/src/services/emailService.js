@@ -1,5 +1,5 @@
 // server/src/services/emailService.js
-
+import fs from 'fs';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 dotenv.config({ path: '../.env' });
@@ -27,6 +27,7 @@ export const sendVerificationEmail = async (email, verificationToken) => {
         console.log('Verification email sent successfully to:', email);
     } catch (error) {
         console.error('Failed to send verification email:', error);
+        console.error(error);
         throw new Error('Failed to send email.');
     }
 };
