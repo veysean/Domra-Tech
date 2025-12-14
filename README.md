@@ -69,6 +69,8 @@ Make sure you have the following installed:
 - npm
 
 ## Folder Structure
+This document outlines the folder structure of the **Domra-Tech** project, formatted for clarity and easy navigation.
+
 ```plaintext
 Domra-Tech/
 │
