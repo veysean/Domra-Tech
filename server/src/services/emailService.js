@@ -12,14 +12,19 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-export const sendVerificationEmail = async (email, verificationToken) => {
+export const sendVerificationEmail = async (email, firstName, lastName, verificationToken) => {
     const verificationURL = `http://localhost:5173/auth/verify-email?token=${verificationToken}`;
 
     const mailOptions = {
         from: process.env.EMAIL_USERNAME,
         to: email,
         subject: 'Email Verification',
-        html: `<p>Hello,</p><p>Thank you for registering. Please click on the link below to verify your email address:</p><a href="${verificationURL}">Verify Email Address</a>`
+        html: `<p>Dear ${firstName && lastName ? `${firstName} ${lastName}` : firstName || lastName || 'User'},</p>
+            <p>Thank you for creating an account with us. To complete your registration and activate your account, please confirm your email address by clicking the link below:</p>
+            <p><a href="${verificationURL}" style="display:inline-block;padding:10px 20px;background-color:#3F51B5;color:#fff;text-decoration:none;border-radius:5px;">Verify My Email</a></p>
+            <p>If you did not create this account, you can safely ignore this email.</p>
+            <p>We are excited to have you on board!</p>
+            <p>Best regards,<br/>The Support Team</p>`
     };
 
     try {
@@ -33,14 +38,16 @@ export const sendVerificationEmail = async (email, verificationToken) => {
 };
 
 // Function to send a password reset email
-export const sendPasswordResetEmail = async (email, resetURL) => {
+export const sendPasswordResetEmail = async (email, firstName, lastName, resetURL) => {
     const mailOptions = {
         from: process.env.EMAIL_USERNAME,
         to: email,
         subject: 'Password Reset Request',
-        html: `<p>Hello,</p>
-        <p>You are receiving this because you (or someone else) have requested the reset of the password for your account.</p>
-        <p>Please click on the following link, or paste this into your browser to complete the process:</p><a href="${resetURL}">Reset Password</a><p>If you did not request this, please ignore this email and your password will remain unchanged.</p>`
+        html: `<p>Dear ${firstName && lastName ? `${firstName} ${lastName}` : firstName || lastName || 'User'},</p>
+       <p>We received a request to reset the password associated with your account. If you made this request, please click the button below to set a new password:</p>
+       <p><a href="${resetURL}" style="display:inline-block;padding:10px 20px;background-color:#3F51B5;color:#fff;text-decoration:none;border-radius:5px;">Reset Your Password</a></p>
+       <p>For security reasons, this link will expire shortly. If you did not request a password reset, you can safely ignore this email and your account will remain unchanged.</p>
+       <p>Thank you,<br/>The Support Team</p>`
     };
 
     try {

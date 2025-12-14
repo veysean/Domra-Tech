@@ -150,29 +150,6 @@ const SignUpCard = () => {
           }}
           onError={() => setError("Google sign-up failed")}
         />
-{/*         
-        <div className="w-96 px-5 py-2.5 bg-slate-200 rounded-xl flex items-center gap-5 cursor-pointer">
-          <FcGoogle className="w-5 h-5 text-gray-600" />
-          <span className="text-gray-600 text-sm font-['Inter']">
-            {t('continue_with_google')}
-          </span>
-
-          <GoogleLogin
-            clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}
-            onSuccess={async (credentialResponse) => {
-              try {
-                const res = await authServices.googleRegister({
-                  token: credentialResponse.credential,
-                });
-                login(res.data.token);
-                navigate('/');
-              } catch (err) {
-                setError(err.response?.data?.message || 'Google sign-up failed');
-              }
-            }}
-            onError={() => setError('Google sign-up failed')}
-          />
-        </div> */}
 
         {/* Continue as Guest */}
         <Link to={"/"}>
@@ -216,7 +193,7 @@ const SignUpCard = () => {
               <label className="text-main-color text-xl font-['Inter']">First Name:</label>
               <input
                 type="text"
-                placeholder="Enter your first name"
+                placeholder={t('firstname')}
                 value={formData.firstName}
                 onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                 autoComplete="current-password"
@@ -229,7 +206,7 @@ const SignUpCard = () => {
               <label className="text-main-color text-xl font-['Inter']">Last Name:</label>
               <input
                 type="text"
-                placeholder={('enter_your_name')}
+                placeholder={t('lastname')}
                 value={formData.lastName}
                 onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                 className="p-2.5 bg-white rounded-xl outline-1 outline-[#3F51B5] text-slate-500 text-sm font-light leading-snug"

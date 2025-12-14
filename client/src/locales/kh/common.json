@@ -9,6 +9,8 @@
   "password" : "លេខសម្ងាត់", 
   "password_placehoder" : "បញ្ចូលពាក្យសម្ងាត់", 
   "email_placehoder" : "បញ្ចូលលេខអ៊ីមែល", 
+  "firstname" : "បញ្ចូលនាមខ្លួន", 
+  "lastname" : "បញ្ចូលនាមត្រកូល", 
   "eng": "ភាសា",
   "profile": "ប្រវត្តិរូប",
   "seeMore": "មើល​បន្ថែម",
