@@ -37,5 +37,9 @@
   "prev" : "Prev",
   "goto" : "Go to",
   "filterByCat" : "Filter by category",
-  "allCat" : "All Categories"
+  "allCat" : "All Categories",
+  "found":"found",
+  "term": "term",
+  "terms": "terms",
+  "noExample":"No Example"
 }
