@@ -69,7 +69,7 @@ Make sure you have the following installed:
 - npm
 
 ## Folder Structure
-
+```plaintext
 Domra-Tech/
 │
 ├── client/                     # React frontend (Vite + Tailwind)
@@ -98,6 +98,7 @@ Domra-Tech/
 │       ├── services/           # Utility services (e.g., Gmail)
 │       ├── server.js           # Backend entry point
 │       └── sync.js             # DB sync script
+```
 
 ## Installation
 
@@ -140,6 +141,7 @@ Base URL: `http://localhost:3000/api`
 Protected routes require JWT in the header:
 ```http
 Authorization: Bearer <token>
+```
 
 - Swagger docs: `http://localhost:3000/api-docs`
 
