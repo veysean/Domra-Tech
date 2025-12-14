@@ -11,7 +11,6 @@
 - [API Documentation](#api-documentation)
 - [Contributors](#contributors)
 - [Acknowledgements](#acknowledgements)
-- [License](#license)
 
 ## Project Overview
 
@@ -80,7 +79,7 @@ Domra-Tech/
 │       ├── components/         # Reusable UI components
 │       ├── contexts/           # React Context providers (global state)
 │       ├── layouts/            # Page layouts (e.g., dashboard, auth layout)
-│       ├── locales/            # i18n translation files (English/Khmer)
+│       ├── locales/            # i18n translation files (English/French/Khmer)
 │       ├── pages/              # Page-level views (Home, Login, Admin)
 │       ├── utils/              # Helper functions (API wrappers, formatters)
 │       ├── apijs               # API integration logic
@@ -99,7 +98,6 @@ Domra-Tech/
 │       ├── services/           # Utility services (e.g., Gmail)
 │       ├── server.js           # Backend entry point
 │       └── sync.js             # DB sync script
-
 
 ## Installation
 
@@ -138,9 +136,12 @@ Base URL: `http://localhost:3000/api`
 - **Update word** → `PUT /words/:id`
 - **Delete word** → `DELETE /words/:id`
 
+### Notes
 Protected routes require JWT in the header:
-`Authorization: Bearer <token>`
-Swagger docs: `http://localhost:3000/api-docs`
+```http
+Authorization: Bearer <token>
+
+- Swagger docs: `http://localhost:3000/api-docs`
 
 
 
