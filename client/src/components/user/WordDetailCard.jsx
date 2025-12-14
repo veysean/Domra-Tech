@@ -44,7 +44,7 @@ export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
 
       {/* Example */}
       <Section title={t('example')}>
-        <p className="text-[#667EEA] text-xs md:text-sm lg:text-base">{word?.example || "No Example"}</p>
+        <p className="text-[#667EEA] text-xs md:text-sm lg:text-base">{word?.example || (t('noExample'))}</p>
       </Section>
 
       {/* Reference (collapsible) */}

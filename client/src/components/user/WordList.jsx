@@ -174,7 +174,7 @@ export default function WordList({ words: propWords, isHomepage = false, searchQ
         <div className="word-list-container w-full">
             {/*show found terms*/}
             <div className="text-base md:text-xl lg:text-xl text-gray-700 mb-10 font-semibold">
-                {words.length} {words.length === 1 ? 'term' : 'terms'} found
+                {words.length} {words.length === 1 ? (t('term')) : (t('terms'))} {t('found')}
             </div>
             {/*word card */}
             <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 justify-center items-start pb-10">
