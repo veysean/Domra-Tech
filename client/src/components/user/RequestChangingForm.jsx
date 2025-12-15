@@ -26,6 +26,14 @@ export default function RequestChangingForm({ onCancel, wordId }) {
   // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (
+      !formData.correctEnglishWord.trim() &&
+      !formData.correctFrenchWord.trim() &&
+      !formData.correctKhmerWord.trim()
+  ) {
+    setErrorMessage("Please fill at least one word field.");
+    return;
+  }
     try {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("User not authenticated");
