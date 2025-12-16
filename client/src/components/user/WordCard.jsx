@@ -178,7 +178,7 @@ export default function WordCard({word}){
         {/* Modal */}
         {open && (
             <div
-            className="fixed inset-0 bg-black/50 flex justify-center items-start overflow-y-auto z-50"
+            className="fixed inset-0 bg-black/50 flex justify-center items-center overflow-y-auto z-50"
             onClick={(e) => {
                 if (e.target === e.currentTarget) setOpen(false); // close only if clicked on overlay
             }}
