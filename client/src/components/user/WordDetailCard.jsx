@@ -44,7 +44,7 @@ export default function WordDetailCard({ word, onRequest, isFav, toggleFav }) {
 
       {/* Example */}
       <Section title={t('example')}>
-        <p className="text-[#667EEA] text-xs md:text-sm lg:text-base">{word?.example || "No Example"}</p>
+        <p className="text-[#667EEA] text-xs md:text-sm lg:text-base">{word?.example || t('no_example')}</p>
       </Section>
 
       {/* Reference (collapsible) */}
@@ -103,9 +103,10 @@ function Section({ title, children }) {
 }
 
 function CollapsedReference() {
+  const { t } = useTranslation();
   return (
     <div className="h-10 p-5 bg-gray-50 rounded-[20px] border-l-4 border-indigo-500 flex items-center justify-between">
-      <p className="text-[#4A5568] text-xs md:text-sm lg:text-base font-medium">Reference</p>
+      <p className="text-[#4A5568] text-xs md:text-sm lg:text-base font-medium">{t('reference')}</p>
       <svg
         width="10"
         height="18"
@@ -140,6 +141,7 @@ export const renderReference = ({reference}) => {
 };
 
 function ExpandedReference({ reference, referenceText }) {
+  const { t } = useTranslation();
   if(!reference){
     return null;
   }
@@ -147,7 +149,7 @@ function ExpandedReference({ reference, referenceText }) {
   return (
     <div className="min-h-20 lg:min-h-36 p-5 bg-[#E9ECEF] rounded-[20px] border-l-4 border-indigo-500 flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <p className="text-slate-500 text-xs md:text-sm lg:text-base font-medium">Reference</p>
+        <p className="text-slate-500 text-xs md:text-sm lg:text-base font-medium">{t('reference')}</p>
         <svg
           width="21"
           height="11"

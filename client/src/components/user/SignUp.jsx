@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { FcGoogle } from "react-icons/fc"; // Google icon
 import { FaUser } from "react-icons/fa";   // Guest/User icon
 import { HiArrowLeft } from "react-icons/hi"; // arrow icon
 import { Eye, EyeOff } from "lucide-react";
@@ -87,7 +86,7 @@ const SignUpCard = () => {
       >
         {/* Email */}
         <div className="flex flex-col gap-2.5">
-          <label className="text-main-color text-xl font-['Inter']">{t("email")}: </label>
+          <label className="text-main-color text-xl ">{t("email")}: </label>
           <input
             type="email"
             placeholder={t("email_placehoder")}
@@ -99,7 +98,7 @@ const SignUpCard = () => {
 
         {/* Password */}
         <div className="flex flex-col gap-2.5 relative">
-          <label className="text-main-color text-xl font-['Inter']">
+          <label className="text-main-color text-xl ">
             {t("password")}:
           </label>
 
@@ -126,9 +125,9 @@ const SignUpCard = () => {
         </div>
 
         {/* Divider */}
-        <div className="flex items-center gap-3.5 mt-2">
+        <div className="flex items-center justify-center gap-3.5 mt-2">
           <div className="w-28 h-px bg-slate-500" />
-            <span className="w-28 text-center text-slate-500 text-sm font-['Inter']">
+            <span className="w-28 text-center text-slate-500 text-sm ">
               {t("continue_with")}
             </span>
           <div className="w-28 h-px bg-slate-500" /></div>
@@ -178,7 +177,7 @@ const SignUpCard = () => {
         <Link to={"/"}>
         <div className="w-96 px-5 py-2.5 bg-slate-200 rounded-xl flex items-center gap-20 cursor-pointer">
          <FaUser className="w-5 h-5 text-gray-600" />
-          <span className="text-gray-600 text-sm font-['Inter']">
+          <span className="text-gray-600 text-sm">
             {t('continue_as_guest')}
           </span>
         </div>
@@ -213,7 +212,7 @@ const SignUpCard = () => {
           </div>
             {/* First Name */}
             <div className="flex flex-col gap-2.5">
-              <label className="text-main-color text-xl font-['Inter']">First Name:</label>
+              <label className="text-main-color text-xl ">First Name:</label>
               <input
                 type="text"
                 placeholder="Enter your first name"
@@ -226,7 +225,7 @@ const SignUpCard = () => {
 
             {/* Last Name */}
             <div className="flex flex-col gap-2.5">
-              <label className="text-main-color text-xl font-['Inter']">Last Name:</label>
+              <label className="text-main-color text-xl ">Last Name:</label>
               <input
                 type="text"
                 placeholder={('enter_your_name')}
