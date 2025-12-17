@@ -23,6 +23,14 @@ const ResetPassword = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [tokenValid, setTokenValid] = useState(true);
 
+  //change language to kh
+  useEffect(() => {
+    const lang = searchParams.get("lang");
+    if (lang) {
+      i18n.changeLanguage(lang);
+    }
+  }, [searchParams]);
+
   // Password strength
   const [passwordStrength, setPasswordStrength] = useState({
     score: 0,
@@ -64,22 +72,22 @@ const ResetPassword = () => {
 
     let label, color;
     if (score === 0) {
-      label = "Very Weak";
+      label = t('very_weak');
       color = "bg-red-500";
     } else if (score === 1) {
-      label = "Weak";
+      label = t('weak');
       color = "bg-orange-500";
     } else if (score === 2) {
-      label = "Fair";
+      label = t('fair');
       color = "bg-yellow-500";
     } else if (score === 3) {
-      label = "Good";
+      label = t('good');
       color = "bg-lime-500";
     } else if (score === 4) {
-      label = "Strong";
+      label = t('strong');
       color = "bg-green-500";
     } else {
-      label = "Very Strong";
+      label = t('very_strong');
       color = "bg-emerald-600";
     }
 
@@ -108,19 +116,19 @@ const ResetPassword = () => {
   const validateForm = () => {
     // Check if passwords are filled
     if (!password || !confirmPassword) {
-      setError("Both password fields are required");
+      setError(t('both_pass_required'));
       return false;
     }
 
     // Check if passwords match
     if (password !== confirmPassword) {
-      setError("Passwords do not match. Please try again.");
+      setError(t('pass_not_match'));
       return false;
     }
 
     // Check password strength
     if (passwordStrength.score < 3) {
-      setError("Password is not strong enough. Please meet all requirements.");
+      setError(t('pass_strength'));
       return false;
     }
 
@@ -145,7 +153,7 @@ const ResetPassword = () => {
         confirmPassword
       });
       
-      setMessage(res.data?.message || "Password reset successfully!");
+      setMessage(res.data?.message || t('pass_reset_sucessfully'));
       setResetSuccess(true);
 
       // Auto-redirect to login after 3 seconds
@@ -153,7 +161,7 @@ const ResetPassword = () => {
         navigate("/auth");
       }, 3000);
     } catch (err) {
-      const errorMsg = err.response?.data?.message || "Failed to reset password. Please try again later.";
+      const errorMsg = err.response?.data?.message || t('fail_reset_pass');
       setError(errorMsg);
       setResetSuccess(false);
     } finally {
@@ -181,7 +189,7 @@ const ResetPassword = () => {
           <div className="bg-white rounded-[30px] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.25)] p-8">
             <div className="flex flex-col items-center gap-4">
               <Loader className="w-8 h-8 text-[#3F51B5] animate-spin" />
-              <p className="text-slate-600 font-medium">Resetting your password...</p>
+              <p className="text-slate-600 font-medium">{t('reset_pass_loading')}</p>
             </div>
           </div>
         </div>
@@ -201,14 +209,14 @@ const ResetPassword = () => {
                   <AlertCircle className="w-8 h-8 text-red-600" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-slate-800 mb-2">Invalid Link</h2>
+                  <h2 className="text-2xl font-bold text-slate-800 mb-2">{t('reset_pass_invalid_link')}</h2>
                   <p className="text-slate-600 mb-4">{error || "This password reset link is invalid or has expired."}</p>
                 </div>
                 <button
                   onClick={() => navigate("/forgot-password")}
                   className="w-full py-3 bg-[#E4A54D] hover:bg-[#d79a42] text-white font-semibold rounded-xl transition-all duration-200"
                 >
-                  Reset
+                  {t('reset_pass_btn_reset')}
                 </button>
               </div>
             </div>
@@ -233,9 +241,9 @@ const ResetPassword = () => {
 
                 {/* Success Message */}
                 <div>
-                  <h2 className="text-3xl font-bold text-slate-800 mb-2">Password Reset Successful!</h2>
+                  <h2 className="text-3xl font-bold text-slate-800 mb-2">{t('reset_pass_sucess_message_title')}</h2>
                   <p className="text-slate-600 mb-4">
-                    Your password has been changed successfully. You can now log in with your new password.
+                    {t('reset_pass_sucess_message_desc')}
                   </p>
                 </div>
 
@@ -248,7 +256,7 @@ const ResetPassword = () => {
 
                 {/* Redirect Notice */}
                 <div className="text-center py-4">
-                  <p className="text-sm text-slate-600 mb-3">Redirecting to login...</p>
+                  <p className="text-sm text-slate-600 mb-3">{t('redirecting_to_login')}</p>
                   <div className="flex justify-center gap-1">
                     <div className="w-2 h-2 bg-[#3F51B5] rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
                     <div className="w-2 h-2 bg-[#3F51B5] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
@@ -261,7 +269,7 @@ const ResetPassword = () => {
                   onClick={() => navigate("/auth")}
                   className="w-full py-3 bg-[#E4A54D] hover:bg-[#d79a42] text-white font-semibold rounded-xl transition-all duration-200"
                 >
-                  Go to Login Now
+                  {t('go_to_login_now')}
                 </button>
               </div>
             </div>
@@ -281,10 +289,10 @@ const ResetPassword = () => {
           {/* Header */}
           <div className="p-8 border-b border-slate-200">
             <h1 className="text-3xl font-['Noto Sans Khmer'] gradient-text text-center">
-              Reset Password
+              {t('reset_pass')}
             </h1>
             <p className="text-center text-slate-600 text-sm mt-2">
-              Create a strong password to secure your account
+              {t('create_a_strong_password')}
             </p>
           </div>
 
@@ -295,13 +303,13 @@ const ResetPassword = () => {
               {/* New Password Field */}
               <div className="flex flex-col gap-3">
                 <label className="text-[#3F51B5] text-base font-semibold">
-                  New Password
+                  {t('new_pass')}
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-600 w-5 h-5" />
                   <input
                     type={showPassword ? "text" : "password"}
-                    placeholder="Enter new password"
+                    placeholder={t('new_password_placeholder')}
                     value={password}
                     onChange={handlePasswordChange}
                     disabled={loading}
@@ -323,7 +331,7 @@ const ResetPassword = () => {
                 <div className="flex flex-col gap-2 animate-fadeIn">
                   <div className="flex items-center justify-between">
                     <label className="text-xs font-semibold text-slate-600">
-                      Password Strength
+                      {t('password_strength')}
                     </label>
                     <span className={`text-xs font-bold ${
                       passwordStrength.color === 'bg-red-500' ? 'text-red-600' :
@@ -347,12 +355,12 @@ const ResetPassword = () => {
 
                   {/* Requirements Checklist */}
                   <div className="space-y-2 pt-2">
-                    <p className="text-xs font-semibold text-slate-600">Requirements:</p>
-                    <RequirementItem met={passwordStrength.requirements.length} text="At least 8 characters" />
-                    <RequirementItem met={passwordStrength.requirements.uppercase} text="One uppercase letter (A-Z)" />
-                    <RequirementItem met={passwordStrength.requirements.lowercase} text="One lowercase letter (a-z)" />
-                    <RequirementItem met={passwordStrength.requirements.number} text="One number (0-9)" />
-                    <RequirementItem met={passwordStrength.requirements.special} text="One special character (@$!%*?&)" />
+                    <p className="text-xs font-semibold text-slate-600">{t('requirement')}</p>
+                    <RequirementItem met={passwordStrength.requirements.length} text={t('requirement_item_1')} />
+                    <RequirementItem met={passwordStrength.requirements.uppercase} text={t('requirement_item_2')} />
+                    <RequirementItem met={passwordStrength.requirements.lowercase} text={t('requirement_item_3')} />
+                    <RequirementItem met={passwordStrength.requirements.number} text={t('requirement_item_4')} />
+                    <RequirementItem met={passwordStrength.requirements.special} text={t('requirement_item_5')} />
                   </div>
                 </div>
               )}
@@ -360,13 +368,13 @@ const ResetPassword = () => {
               {/* Confirm Password Field */}
               <div className="flex flex-col gap-3">
                 <label className="text-[#3F51B5] text-base font-semibold">
-                  Confirm Password
+                  {t('confirm_password')}
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
                   <input
                     type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Confirm new password"
+                    placeholder={t('confirm_new_password_placeholder')}
                     value={confirmPassword}
                     onChange={handleConfirmPasswordChange}
                     disabled={loading}
@@ -387,7 +395,7 @@ const ResetPassword = () => {
                   <div className="flex items-center gap-2">
                     <div className={`w-4 h-4 rounded-full ${password === confirmPassword ? 'bg-green-500' : 'bg-red-500'}`}></div>
                     <span className={`text-sm ${password === confirmPassword ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}`}>
-                      {password === confirmPassword ? 'Passwords match' : 'Passwords do not match'}
+                      {password === confirmPassword ? t('pass_match') : t('password_not_match')}
                     </span>
                   </div>
                 )}
@@ -412,12 +420,12 @@ const ResetPassword = () => {
                 {loading ? (
                   <>
                     <Loader className="w-5 h-5 animate-spin" />
-                    <span>Resetting...</span>
+                    <span>{t('resetting')}</span>
                   </>
                 ) : (
                   <>
                     <Lock className="w-5 h-5" />
-                    <span>Reset Password</span>
+                    <span>{t('reset_pass')}</span>
                   </>
                 )}
               </button>
@@ -429,7 +437,7 @@ const ResetPassword = () => {
                   onClick={() => navigate("/auth")}
                   className="text-[#3F51B5] hover:text-indigo-600 font-medium text-sm underline transition-colors"
                 >
-                  ← Back to Login
+                  ← {t('back_to_login')}
                 </button>
               </div>
             </form>
