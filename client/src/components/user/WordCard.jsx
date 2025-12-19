@@ -193,7 +193,7 @@ export default function WordCard({word}){
                 />
                 ) : (
                 <RequestChangingForm
-                    wordId={word.wordId}
+                    word={word}
                     onCancel={() => setShowRequestForm(false)}
                 />
                 )}
