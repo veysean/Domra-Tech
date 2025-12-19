@@ -19,11 +19,11 @@ export default function AboutUs() {
             <div className="w-full max-w-[1156px] flex flex-col justify-center items-center gap-10 md:gap-20">
                 <div className="text-center text-2xl lg:text-4xl font-extrabold text-main-color">{t('visionMissionHeader')}</div>
                 <div className="flex flex-col md:flex-row justify-between items-center gap-5 md:gap-10 w-full">
-                    <div className="group w-full md:w-150 h-72 p-7 bg-white rounded-[30px] outline-1 outline-slate-200 flex flex-col gap-10 hover:shadow-lg transition-shadow duration-300">
+                    <div className="group w-full md:w-150 h-65 p-7 bg-white rounded-[30px] outline-1 outline-slate-200 flex flex-col gap-10 transition-shadow duration-300">
                         <div className="text-center text-3xl font-medium text-main-color group-hover:font-bold">{t('vision')}</div>
                         <div className="text-center lg:text-xl text-slate-600">{t('visionDes')}</div>
                     </div>
-                    <div className="group w-full md:w-150 h-72 p-7 bg-white rounded-[30px] outline-1 outline-slate-200 flex flex-col gap-10 hover:shadow-lg transition-shadow duration-300">
+                    <div className="group w-full md:w-150 h-65 p-7 bg-white rounded-[30px] outline-1 outline-slate-200 flex flex-col gap-10 transition-shadow duration-300">
                         <div className="text-center text-3xl font-medium text-main-color group-hover:font-bold">{t('mission')}</div>
                         <div className="text-center lg:text-xl text-slate-600">{t('missionDes')}</div>
                     </div>
