@@ -127,7 +127,7 @@ const SignUpCard = () => {
         {/* Divider */}
         <div className="flex px-5 items-center gap-3 mt-2">
           <div className="flex-1 h-px bg-slate-500" />
-            <span className="text-center text-slate-500 text-sm font-['Inter']">
+            <span className="w-28 text-center text-slate-500 text-sm">
               {t("continue_with")}
             </span>
           <div className="flex-1 h-px bg-slate-500" /></div>
@@ -152,7 +152,7 @@ const SignUpCard = () => {
 
         {/* Continue as Guest */}
         <Link to={"/"}>
-        <div className="px-5 py-2.5 bg-slate-200 rounded-xl flex items-center gap-20 cursor-pointer">
+        <div className="w-106 px-3 py-2.5 bg-slate-200 rounded-xl flex cursor-pointer">
          <FaUser className="w-5 h-5 text-gray-600" />
           <span className="w-full text-gray-600 text-sm text-center">
             {t('continue_as_guest')}

@@ -346,50 +346,6 @@ const verifyEmail = async (req, res) => {
  *         description: Server error
  */
 
-// const login = async (req, res) => {
-//   try {
-//     const { email, password, googleId } = req.body;
-    
-//     const user = await User.findOne({ where: { email } });
-
-//     if (!user) {
-//       return res.status(404).json({ message: 'User not found.' });
-//     }
-
-//     // Check if it's a traditional login (with password)
-//     if (password) {
-//       const isMatch = await bcrypt.compare(password, user.password);
-//       if (!isMatch) {
-//         return res.status(401).json({ message: 'Invalid credentials.' });
-//       }
-//     } else if (googleId && user.googleId === googleId) {
-//       // Google login
-//     } else {
-//       return res.status(401).json({ message: 'Invalid credentials.' });
-//     }
-
-//     // Generate JWT for both types of login
-//     const token = jwt.sign(
-//       { userId: user.userId, role: user.role },
-//       process.env.JWT_SECRET,
-//       { expiresIn: '1h' }
-//     );
-    
-//     const userResponse = {
-//       userId: user.userId,
-//       firstName: user.firstName,
-//       lastName: user.lastName,
-//       email: user.email,
-//       role: user.role,
-//     };
-
-//     return res.status(200).json({ message: 'Logged in successfully!', user: userResponse , token });
-
-//   } catch (error) {
-//     console.error('Login error:', error);
-//     return res.status(500).json({ message: 'Failed to log in.', error: error.message });
-//   }
-// };
 
   const login = async (req, res) => {
     try {
