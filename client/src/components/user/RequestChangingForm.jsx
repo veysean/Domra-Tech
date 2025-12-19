@@ -1,21 +1,54 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { CorrectionServices } from "../../api";
 import {jwtDecode} from 'jwt-decode';
 import { useTranslation } from "react-i18next";
 
-export default function RequestChangingForm({ onCancel, wordId }) {
-  const [formData, setFormData] = useState({
-    wordId: wordId,
-    correctEnglishWord: "",
-    correctFrenchWord: "",
-    correctKhmerWord: "",
-    reference: "",
-    status: "pending",
-  });
+export default function RequestChangingForm({ onCancel, word }) {
 
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const { t } = useTranslation('contributeCard');
+  const [originalWord, setOriginalWord] = useState(null);
+  const [formData, setFormData] = useState({
+        wordId: "",
+        correctEnglishWord: "",
+        correctFrenchWord: "",
+        correctKhmerWord: "",
+        reference: "",
+        status: "pending",
+      });
+
+  useEffect(() => {
+  if (!word) return;
+
+  const initialData = {
+    wordId: word.wordId ?? "",
+    correctEnglishWord: word.EnglishWord ?? "",
+    correctFrenchWord: word.FrenchWord ?? "",
+    correctKhmerWord: word.KhmerWord ?? "",
+    reference: word.reference ?? "",
+    status: "pending",
+  };
+
+  setOriginalWord(initialData);
+  setFormData(initialData);
+  setErrorMessage("");
+  setSuccessMessage("");
+}, [word]);
+
+
+  const hasModifiedAtLeastOneField = () => {
+    if (!originalWord || !formData) return false;
+
+    return (
+      originalWord.correctEnglishWord !== formData.correctEnglishWord ||
+      originalWord.correctFrenchWord !== formData.correctFrenchWord ||
+      originalWord.correctKhmerWord !== formData.correctKhmerWord ||
+      originalWord.reference !== formData.reference
+    );
+  };
+
+
 
   // Handle input changes
   const handleChange = (e) => {
@@ -26,54 +59,49 @@ export default function RequestChangingForm({ onCancel, wordId }) {
   // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (
-      !formData.correctEnglishWord.trim() &&
-      !formData.correctFrenchWord.trim() &&
-      !formData.correctKhmerWord.trim()
-  ) {
-    setErrorMessage("Please fill at least one word field.");
-    return;
-  }
-    try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("User not authenticated");
-    
-    const decoded = jwtDecode(token);
-    const userId = decoded.userId;
-    
-    if (!userId) throw new Error("Invalid token: missing userId");
+     if (!hasModifiedAtLeastOneField()) {
+        setErrorMessage("Please modify at least one field before submitting.");
+        return;
+      }
 
-    const payload = { ...formData, userId };
-      const response = await CorrectionServices.requestCorrection(payload);
-      console.log("Form Submitted:", response.data);
-      setSuccessMessage("Request submitted successfully!");
-      setErrorMessage("");
+      if (
+        !formData.correctEnglishWord.trim() &&
+        !formData.correctFrenchWord.trim() &&
+        !formData.correctKhmerWord.trim()
+      ) {
+        setErrorMessage("Please fill at least one word field.");
+        return;
+      }
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("User not authenticated");
+      
+        const decoded = jwtDecode(token);
+        const userId = decoded.userId;
+      
+        if (!userId) throw new Error("Invalid token: missing userId");
 
-      // Reset form
-      setFormData({
-        wordId: wordId,
-        correctEnglishWord: "",
-        correctFrenchWord: "",
-        correctKhmerWord: "",
-        reference: "",
-        status: "pending",
-      });
+        const payload = { ...formData, userId };
+          const response = await CorrectionServices.requestCorrection(payload);
+          console.log("Form Submitted:", response.data);
+          setSuccessMessage("Request submitted successfully!");
+          setErrorMessage("");
 
-      // Auto-close form after a delay
-      setTimeout(() => {
-        setSuccessMessage("");
-        onCancel();
-      }, 2000);
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      setErrorMessage("Failed to submit request. Please try again.");
-      setSuccessMessage("");
-    }
+        // Reset form
+        setFormData(originalWord); 
+        // Auto-close form after a delay
+        setTimeout(() => {
+          setSuccessMessage("");
+          onCancel();
+        }, 2000);
+      } catch (error) {
+        setErrorMessage(error.message || "Submission failed");
+      }
   };
 
   return (
-    <div className="bg-white w-[450px] md:w-[600px] lg:w-[657px] rounded-[30px]">
-      <div className="w-[450px] md:w-[600px] lg:w-[657px] p-7 main-color from-indigo-500/50 to-purple-800/50 rounded-[30px] shadow-lg inline-flex flex-col justify-center items-center gap-7">
+    <div className="bg-white w-[400px] md:w-[600px] lg:w-[657px] rounded-[30px]">
+      <div className="w-[400px] md:w-[600px] lg:w-[657px] p-7 main-color from-indigo-500/50 to-purple-800/50 rounded-[30px] shadow-lg inline-flex flex-col justify-center items-center gap-7">
         <div className="self-stretch h-10 text-center justify-start text-white text-2xl lg:text-3xl font-bold">
           {t('requestTitle')}
         </div>
@@ -160,14 +188,7 @@ export default function RequestChangingForm({ onCancel, wordId }) {
               type="button"
               className="w-24 h-10 rounded-[20px] bg-gray-500 text-white text-sm lg:text-base font-medium hover:bg-gray-600"
               onClick={() => {
-                setFormData({
-                  wordId: wordId,
-                  correctEnglishWord: "",
-                  correctFrenchWord: "",
-                  correctKhmerWord: "",
-                  reference: "",
-                  status: "pending",
-                });
+                setFormData(originalWord);
                 onCancel();
               }}
             >
@@ -175,7 +196,12 @@ export default function RequestChangingForm({ onCancel, wordId }) {
             </button>
             <button
               type="submit"
-              className="w-24 h-10 rounded-[20px] main-color2 text-white text-sm lg:text-base font-medium hover:bg-[#DD9229]"
+              disabled={!hasModifiedAtLeastOneField()}
+              className={`w-24 h-10 rounded-[20px] text-white text-sm lg:text-base font-medium
+              ${hasModifiedAtLeastOneField()
+                ? "main-color2 hover:bg-[#DD9229]"
+                : "bg-gray-400 cursor-not-allowed"}
+            `}
             >
               {t('submit')}
             </button>
