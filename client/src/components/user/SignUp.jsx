@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { FcGoogle } from "react-icons/fc"; // Google icon
 import { FaUser } from "react-icons/fa";   // Guest/User icon
 import { HiArrowLeft } from "react-icons/hi"; // arrow icon
 import { Eye, EyeOff } from "lucide-react";
@@ -43,8 +42,6 @@ const SignUpCard = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-   // console.log("Sign Up data:", { firstName, lastName, email, password });
-    // connect to sign-up API here
     if(!formData.firstName && !formData.lastName) {
       setError("First Name and Last Name are required");
       return;
@@ -63,7 +60,9 @@ const SignUpCard = () => {
       navigate("/");
       setError(null);
     } catch (error) {
-      console.error("Error during sign-up:", error);
+      if(error.response?.status === 409){
+        setError(error.response.data.message);
+      }
     }
 
   };
@@ -87,7 +86,7 @@ const SignUpCard = () => {
       >
         {/* Email */}
         <div className="flex flex-col gap-2.5">
-          <label className="text-main-color text-xl font-['Inter']">{t("email")}: </label>
+          <label className="text-main-color text-xl ">{t("email")}: </label>
           <input
             type="email"
             placeholder={t("email_placehoder")}
@@ -99,7 +98,7 @@ const SignUpCard = () => {
 
         {/* Password */}
         <div className="flex flex-col gap-2.5 relative">
-          <label className="text-main-color text-xl font-['Inter']">
+          <label className="text-main-color text-xl ">
             {t("password")}:
           </label>
 
@@ -126,9 +125,9 @@ const SignUpCard = () => {
         </div>
 
         {/* Divider */}
-        <div className="flex items-center gap-3.5 mt-2">
+        <div className="flex items-center justify-center gap-3.5 mt-2">
           <div className="w-28 h-px bg-slate-500" />
-            <span className="w-28 text-center text-slate-500 text-sm font-['Inter']">
+            <span className="w-28 text-center text-slate-500 text-sm ">
               {t("continue_with")}
             </span>
           <div className="w-28 h-px bg-slate-500" /></div>
@@ -150,35 +149,12 @@ const SignUpCard = () => {
           }}
           onError={() => setError("Google sign-up failed")}
         />
-{/*         
-        <div className="w-96 px-5 py-2.5 bg-slate-200 rounded-xl flex items-center gap-5 cursor-pointer">
-          <FcGoogle className="w-5 h-5 text-gray-600" />
-          <span className="text-gray-600 text-sm font-['Inter']">
-            {t('continue_with_google')}
-          </span>
-
-          <GoogleLogin
-            clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}
-            onSuccess={async (credentialResponse) => {
-              try {
-                const res = await authServices.googleRegister({
-                  token: credentialResponse.credential,
-                });
-                login(res.data.token);
-                navigate('/');
-              } catch (err) {
-                setError(err.response?.data?.message || 'Google sign-up failed');
-              }
-            }}
-            onError={() => setError('Google sign-up failed')}
-          />
-        </div> */}
 
         {/* Continue as Guest */}
         <Link to={"/"}>
-        <div className="w-96 px-5 py-2.5 bg-slate-200 rounded-xl flex items-center gap-20 cursor-pointer">
+        <div className="w-96 px-3 py-2.5 bg-slate-200 rounded-xl flex cursor-pointer">
          <FaUser className="w-5 h-5 text-gray-600" />
-          <span className="text-gray-600 text-sm font-['Inter']">
+          <span className="w-full text-gray-600 text-sm text-center">
             {t('continue_as_guest')}
           </span>
         </div>
@@ -213,10 +189,10 @@ const SignUpCard = () => {
           </div>
             {/* First Name */}
             <div className="flex flex-col gap-2.5">
-              <label className="text-main-color text-xl font-['Inter']">First Name:</label>
+              <label className="text-main-color text-xl ">First Name:</label>
               <input
                 type="text"
-                placeholder="Enter your first name"
+                placeholder={t('firstname')}
                 value={formData.firstName}
                 onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                 autoComplete="current-password"
@@ -226,10 +202,10 @@ const SignUpCard = () => {
 
             {/* Last Name */}
             <div className="flex flex-col gap-2.5">
-              <label className="text-main-color text-xl font-['Inter']">Last Name:</label>
+              <label className="text-main-color text-xl ">Last Name:</label>
               <input
                 type="text"
-                placeholder={('enter_your_name')}
+                placeholder={t('lastname')}
                 value={formData.lastName}
                 onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                 className="p-2.5 bg-white rounded-xl outline-1 outline-[#3F51B5] text-slate-500 text-sm font-light leading-snug"

@@ -1,5 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
 import en from './locales/en/common.json';
 import kh from './locales/kh/common.json';
 import conEn from './locales/en/contributeTerm.json';
@@ -13,15 +14,20 @@ import contributeCardKh from './locales/kh/contributeCard.json';
 import profilePageEn from './locales/en/profilePage.json';
 import profilePageKh from './locales/kh/profilePage.json';
 i18n
+  .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     resources: {
       en: { translation: en, contributeTerm: conEn, aboutUs: aboutUsEn, ourCategory: ourCategoryEn, contributeCard: contributeCardEn, profilePage: profilePageEn},
       kh: { translation: kh, contributeTerm: conKh, aboutUs: aboutUsKh, ourCategory: ourCategoryKh, contributeCard: contributeCardKh, profilePage: profilePageKh},
     },
-    lng: 'en', // default language
+    //lng: 'en', // default language
     fallbackLng: 'en',
     interpolation: { escapeValue: false },
+    detection: {
+      order: ['localStorage', 'cookie', 'navigator'],
+      caches: ['localStorage', 'cookie']
+    }
   });
 
 export default i18n;
