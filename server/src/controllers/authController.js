@@ -127,7 +127,7 @@ const { User } = db;
       const newUser = await User.create(userData);
 
       if (!googleId) {
-        await emailService.sendVerificationEmail(newUser.email, userData.emailVerificationToken);
+        await emailService.sendVerificationEmail(newUser.email, newUser.firstName, newUser.lastName, newUser.emailVerificationToken);
         return res.status(201).json({ message: 'User registered successfully. Please check your email to verify your account.' });
       }
 
@@ -145,6 +145,7 @@ const { User } = db;
       return res.status(500).json({ message: 'Failed to register user.', error: error.message });
     }
   };
+  
 
 // Controller for google register
 import { OAuth2Client } from "google-auth-library";
@@ -272,7 +273,7 @@ const verifyEmail = async (req, res) => {
     );
 
     return res.status(200).json({
-      message: 'Email verified successfully. You are now logged in.',
+      message: 'Email verified successfully!',
       token: jwtToken
     });
 
@@ -512,7 +513,7 @@ const forgotPassword = async (req, res) => {
 
         const resetURL = `${process.env.FRONTEND_URL}/auth/reset-password?token=${resetToken}`;
 
-        await emailService.sendPasswordResetEmail(user.email, resetURL);
+        await emailService.sendPasswordResetEmail(user.email,user.firstName, user.lastName, resetURL);
 
         return res.status(200).json({ message: 'Password reset link sent to your email.' });
 

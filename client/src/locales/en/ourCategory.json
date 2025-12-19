@@ -13,5 +13,7 @@
     "webDevDefinition":"Creating websites and web apps through front-end design, back-end logic, and web technologies like HTML, CSS, and JavaScript.",
     "aiDefinition":"Designing systems that simulate human intelligence, including reasoning, learning, and decision-making.",
     "mlDefinition":"Training algorithms to learn patterns from data and make predictions or decisions without explicit programming.",
-    "generalDefinition":"Broad concepts and tools across computing, electronics, and digital systems that support innovation and everyday tech use."
+    "generalDefinition":"Broad concepts and tools across computing, electronics, and digital systems that support innovation and everyday tech use.",
+    "filterByCat" : "Filter by category",
+    "allCat" : "All Categories"
 }
