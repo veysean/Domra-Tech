@@ -81,18 +81,14 @@ function AppRoutes() {
         <Route
           path="/forgot-password"
           element={
-            <MainLayout>
-              <ForgotPassword />
-            </MainLayout>
+            <ForgotPassword />
           }
         />
 
         <Route
           path="/auth/reset-password"
           element={
-            <MainLayout>
-              <ResetPassword />
-            </MainLayout>
+            <ResetPassword />
           }
         />
 

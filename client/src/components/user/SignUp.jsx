@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { FcGoogle } from "react-icons/fc"; // Google icon
 import { FaUser } from "react-icons/fa";   // Guest/User icon
 import { HiArrowLeft } from "react-icons/hi"; // arrow icon
 import { Eye, EyeOff } from "lucide-react";
@@ -87,7 +86,7 @@ const SignUpCard = () => {
       >
         {/* Email */}
         <div className="flex flex-col gap-2.5">
-          <label className="text-main-color text-xl font-['Inter']">{t("email")}: </label>
+          <label className="text-main-color text-xl ">{t("email")}: </label>
           <input
             type="email"
             placeholder={t("email_placehoder")}
@@ -99,7 +98,7 @@ const SignUpCard = () => {
 
         {/* Password */}
         <div className="flex flex-col gap-2.5 relative">
-          <label className="text-main-color text-xl font-['Inter']">
+          <label className="text-main-color text-xl ">
             {t("password")}:
           </label>
 
@@ -126,9 +125,9 @@ const SignUpCard = () => {
         </div>
 
         {/* Divider */}
-        <div className="flex items-center gap-3.5 mt-2">
+        <div className="flex items-center justify-center gap-3.5 mt-2">
           <div className="w-28 h-px bg-slate-500" />
-            <span className="w-28 text-center text-slate-500 text-sm">
+            <span className="w-28 text-center text-slate-500 text-sm ">
               {t("continue_with")}
             </span>
           <div className="w-28 h-px bg-slate-500" /></div>
@@ -190,7 +189,7 @@ const SignUpCard = () => {
           </div>
             {/* First Name */}
             <div className="flex flex-col gap-2.5">
-              <label className="text-main-color text-xl font-['Inter']">First Name:</label>
+              <label className="text-main-color text-xl ">First Name:</label>
               <input
                 type="text"
                 placeholder={t('firstname')}
@@ -203,7 +202,7 @@ const SignUpCard = () => {
 
             {/* Last Name */}
             <div className="flex flex-col gap-2.5">
-              <label className="text-main-color text-xl font-['Inter']">Last Name:</label>
+              <label className="text-main-color text-xl ">Last Name:</label>
               <input
                 type="text"
                 placeholder={t('lastname')}

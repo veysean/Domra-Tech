@@ -19,10 +19,10 @@ const ForgotPassword = () => {
 
   const validateEmail = (value) => {
     if (!value) {
-      return "Email is required";
+      return t('email_required');
     }
     if (!emailRegex.test(value)) {
-      return "Please enter a valid email address";
+      return t('email_validation');
     }
     return "";
   };
@@ -50,7 +50,7 @@ const ForgotPassword = () => {
 
     try {
       const res = await authServices.forgotPassword(email);
-      setMessage(res.data?.message || "Password reset link has been sent to your email. Please check your inbox.");
+      setMessage(res.data?.message || t('res_mes_success'));
       setEmailSent(true);
       
       // Auto-redirect after 4 seconds
@@ -58,7 +58,7 @@ const ForgotPassword = () => {
         navigate("/auth");
       }, 4000);
     } catch (err) {
-      const errorMsg = err.response?.data?.message || "Failed to send reset link. Please try again.";
+      const errorMsg = err.response?.data?.message || t('res_mes_fail');
       setError(errorMsg);
       setEmailSent(false);
     } finally {
@@ -82,10 +82,10 @@ const ForgotPassword = () => {
           {/* Header */}
           <div className="p-8 border-b border-slate-200">
             <h1 className="text-3xl font-['Noto Sans Khmer'] text-[#3F51B5] text-center">
-              Forgot Password
+              {t('forgotPassword')}
             </h1>
             <p className="text-center text-slate-600 text-sm mt-2">
-              No worried!! We will help you reset your password.
+              {t('forgot_desc')}
             </p>
           </div>
 
@@ -96,13 +96,13 @@ const ForgotPassword = () => {
                 {/* Email Input Field */}
                 <div className="flex flex-col gap-3">
                   <label className="text-[#3F51B5] text-base font-semibold">
-                    Email Address
+                    {t('email')}
                   </label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
                     <input
                       type="email"
-                      placeholder="Enter your registered email"
+                      placeholder={t('email_placehoder')}
                       value={email}
                       onChange={handleEmailChange}
                       disabled={loading}
@@ -130,12 +130,12 @@ const ForgotPassword = () => {
                   {loading ? (
                     <>
                       <Loader className="w-5 h-5 animate-spin" />
-                      <span>Sending...</span>
+                      <span>{t('sending')}</span>
                     </>
                   ) : (
                     <>
                       <Mail className="w-5 h-5" />
-                      <span>Send Reset Link</span>
+                      <span>{t('send_reset_link')}</span>
                     </>
                   )}
                 </button>
@@ -147,7 +147,7 @@ const ForgotPassword = () => {
                     onClick={() => navigate("/auth")}
                     className="text-[#3F51B5] hover:text-indigo-600 font-medium text-sm underline transition-colors"
                   >
-                    ← Back to Login
+                    ← {t('back_to_login')}
                   </button>
                 </div>
               </form>
@@ -159,27 +159,27 @@ const ForgotPassword = () => {
                 </div>
                 
                 <div className="flex flex-col gap-2">
-                  <h2 className="text-2xl font-bold text-slate-800">Check Your Email!</h2>
+                  <h2 className="text-2xl font-bold text-slate-800">{t('check_email')}</h2>
                   <p className="text-slate-600">
-                    We've sent a password reset link to <span className="font-semibold text-[#3F51B5]">{email}</span>
+                    {t('email_send_to')} <span className="font-semibold text-[#3F51B5]">{email}</span>
                   </p>
                 </div>
 
                 {/* Success Message */}
                 <div className="w-full p-4 bg-green-50 border-l-4 border-green-500 rounded-lg">
                   <p className="text-green-700 font-medium text-sm">
-                    {message || "Please check your email and click the reset link. It will expire in 1 hour."}
+                    {message || t('sucess_message')}
                   </p>
                 </div>
 
                 {/* Next Steps */}
                 <div className="w-full text-left bg-slate-50 rounded-lg p-4 space-y-2">
-                  <p className="text-sm font-semibold text-slate-700">Next steps:</p>
+                  <p className="text-sm font-semibold text-slate-700">{t('next_step')}</p>
                   <ol className="text-xs text-slate-600 space-y-1 list-decimal list-inside">
-                    <li>Check your email inbox (and spam folder)</li>
-                    <li>Click the password reset link</li>
-                    <li>Enter and confirm your new password</li>
-                    <li>You'll be able to log in with your new password</li>
+                    <li>{t('next_step_li_1')}</li>
+                    <li>{t('next_step_li_2')}</li>
+                    <li>{t('next_step_li_3')}</li>
+                    <li>{t('next_step_li_4')}</li>
                   </ol>
                 </div>
 
@@ -190,20 +190,20 @@ const ForgotPassword = () => {
                     onClick={handleReset}
                     className="flex-1 py-2.5 text-[#3F51B5] border-2 border-indigo-300 hover:bg-indigo-50 font-semibold rounded-lg transition-all duration-200"
                   >
-                    Try Another Email
+                    {t('try_another_email')}
                   </button>
                   <button
                     type="button"
                     onClick={() => navigate("/auth")}
                     className="flex-1 py-2.5 bg-[#3F51B5] hover:bg-indigo-600 text-white font-semibold rounded-lg transition-all duration-200"
                   >
-                    Back to Login
+                    {t('back_to_login')}
                   </button>
                 </div>
 
                 {/* Auto-redirect notice */}
                 <p className="text-xs text-slate-500 pt-2">
-                  Redirecting to login...
+                  {t('redirecting_to_login')}
                 </p>
               </div>
             )}
