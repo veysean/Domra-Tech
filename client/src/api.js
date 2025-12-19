@@ -5,7 +5,7 @@ const API = axios.create({
     // baseURL: 'http://localhost:3000/api', // backend URL
     // baseURL: 'https://domra-tech.onrender.com/api', // backend URL
     // baseURL: 'https://domra-tech-production-4129.up.railway.app', // backend URL
-    baseURL: import.meta.env.VITE_API_URL + '/api',
+    baseURL: process.env.NEXT_PUBLIC_API_URL + '/api',
 });
 
 const token = localStorage.getItem('token');
