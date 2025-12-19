@@ -145,6 +145,7 @@ const { User } = db;
       return res.status(500).json({ message: 'Failed to register user.', error: error.message });
     }
   };
+  
 
 // Controller for google register
 import { OAuth2Client } from "google-auth-library";

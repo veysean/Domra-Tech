@@ -42,8 +42,6 @@ const SignUpCard = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-   // console.log("Sign Up data:", { firstName, lastName, email, password });
-    // connect to sign-up API here
     if(!formData.firstName && !formData.lastName) {
       setError("First Name and Last Name are required");
       return;
@@ -62,7 +60,9 @@ const SignUpCard = () => {
       navigate("/");
       setError(null);
     } catch (error) {
-      console.error("Error during sign-up:", error);
+      if(error.response?.status === 409){
+        setError(error.response.data.message);
+      }
     }
 
   };
