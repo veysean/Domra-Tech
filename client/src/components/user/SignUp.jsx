@@ -152,7 +152,7 @@ const SignUpCard = () => {
 
         {/* Continue as Guest */}
         <Link to={"/"}>
-        <div className="w-106 px-3 py-2.5 bg-slate-200 rounded-xl flex cursor-pointer">
+        <div className="px-5 py-2.5 bg-slate-200 rounded-xl flex items-center gap-1 cursor-pointer">
          <FaUser className="w-5 h-5 text-gray-600" />
           <span className="w-full text-gray-600 text-sm text-center">
             {t('continue_as_guest')}
