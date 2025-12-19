@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import guidline1 from "../../assets/guidline1.png";
-import guidline2 from "../../assets/guidline2.png";
-import guidline3 from "../../assets/guidline3.png";
+import guidline1 from "../../assets/guidline-one.png";
+import guidline2 from "../../assets/guidline-two.png";
+import guidline3 from "../../assets/guidline-three.png";
 import { useTranslation } from 'react-i18next';
 export default function GuidLine() {
   const { t } = useTranslation('contributeTerm');
