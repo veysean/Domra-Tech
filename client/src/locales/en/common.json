@@ -9,6 +9,8 @@
   "password" : "Password",
   "email_placehoder" : "Enter your email",
   "password_placehoder" : "Enter your password", 
+  "firstname" : "Enter your firstname", 
+  "lastname" : "Enter your lastname", 
   "eng" : "ENG",
   "profile" : "Profile",
   "seeMore" : "See more",
