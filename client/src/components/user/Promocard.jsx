@@ -8,9 +8,9 @@ const PromoCard = ({ isSignUp, handleToggle }) => {
   const { t } = useTranslation();
 
   return (
-    <div className="w-[700px] h-[690px] relative bg-white/70 rounded-[30px] shadow-lg overflow-hidden">
+    <div className="w-[700px] h-[690px] relative bg-white rounded-[30px] shadow-lg overflow-hidden">
       {/* Tagline */}
-      <div className="w-[519px] h-16 left-[90px] top-[588px] absolute text-center text-main-color text-xl">
+      <div className="w-[519px] h-16 left-[120px] top-[580px] absolute text-center text-main-color text-l">
        {t("login_des")}
       </div>
 
@@ -39,9 +39,9 @@ const PromoCard = ({ isSignUp, handleToggle }) => {
       {/* Toggle Button */}
       <button
         onClick={handleToggle}
-        className="w-52 h-11 p-2.5 left-[276px] top-[523px] absolute rounded-xl border border-[#3F51B5] flex justify-center items-center gap-2.5 text-main-color hover:main-colro2 hover:text-white"
+        className="w-52 h-10 p-2.5 left-[276px] top-[490px] absolute rounded-xl main-color2 flex justify-center items-center gap-2.5 text-white hover:bg-[#DD9229]"
       >
-        <span className=" text-2xl">
+        <span className=" text-xl">
           {isSignUp ? t("login") : t("signup")}
         </span>
       </button>
