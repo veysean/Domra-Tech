@@ -73,16 +73,16 @@ const SignUpCard = () => {
   };
 
   return (
-    <div className="w-[505px] h-[549px] relative bg-white rounded-[30px] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.25)] overflow-hidden">
+    <div className="m-auto w-[380px] lg:w-[505px] h-[549px] p-10 relative bg-white rounded-[30px] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.25)] overflow-hidden">
       
-      <h2 className="absolute left-[217px] top-[47px] text-3xl font-['Righteous'] text-main-color">
+      <h2 className="text-center text-3xl font-['Righteous'] text-main-color">
         {t("signup")}
       </h2>
     {/* step one for sign up */}
     {step === 1 && (
       <form
         onSubmit={handleNext}
-        className="w-96 h-80 left-[69px] top-[113px] absolute flex flex-col gap-2.5"
+        className="flex flex-col gap-5"
       >
         {/* Email */}
         <div className="flex flex-col gap-2.5">
@@ -125,12 +125,12 @@ const SignUpCard = () => {
         </div>
 
         {/* Divider */}
-        <div className="flex items-center justify-center gap-3.5 mt-2">
-          <div className="w-28 h-px bg-slate-500" />
-            <span className="w-28 text-center text-slate-500 text-sm ">
+        <div className="flex px-5 items-center gap-3 mt-2">
+          <div className="flex-1 h-px bg-slate-500" />
+            <span className="w-28 text-center text-slate-500 text-sm">
               {t("continue_with")}
             </span>
-          <div className="w-28 h-px bg-slate-500" /></div>
+          <div className="flex-1 h-px bg-slate-500" /></div>
 
         {/* Continue with Google */}
         <GoogleLogin
@@ -152,7 +152,7 @@ const SignUpCard = () => {
 
         {/* Continue as Guest */}
         <Link to={"/"}>
-        <div className="w-96 px-3 py-2.5 bg-slate-200 rounded-xl flex cursor-pointer">
+        <div className="w-106 px-3 py-2.5 bg-slate-200 rounded-xl flex cursor-pointer">
          <FaUser className="w-5 h-5 text-gray-600" />
           <span className="w-full text-gray-600 text-sm text-center">
             {t('continue_as_guest')}

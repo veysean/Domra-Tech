@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import WordList from "../../components/user/WordList";
 import CategorySearch from "../../components/user/CategorySearch";
 import { WordTranslationServices } from "../../api";
+import Snowfall from 'react-snowfall';
 
 // Custom debounce hook
 function useDebounce(value, delay) {
@@ -111,6 +112,7 @@ export default function Home() {
 
     return (
         <div className="home-page flex flex-col gap-10 md:px-0 overflow-x-hidden">
+            <Snowfall color="#9370db"></Snowfall>
         <div className="w-full mx-auto">
             <HomeHeroSection header={t("header")} desc={t("desc")} />
         </div>
