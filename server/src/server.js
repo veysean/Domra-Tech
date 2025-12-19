@@ -20,16 +20,15 @@ import correctionRequestRoutes from './routes/correctionRequestRoutes.js';
 const app = express();
 const PORT = process.env.PORT || 3002;
 app.use(express.json());
-// app.use(cors(
-//     {
-//         origin:[
-//             "https://domra-tech.vercel.app",
-//             "http://localhost:5173"
-//         ],
-//         credentials: true
-//     }
-// ));
-app.use(cors({ origin: 'https://domra-tech.vercel.app', methods: ['GET','POST','PUT','DELETE'], allowedHeaders: ['Content-Type','Authorization'] }));
+app.use(cors({
+  origin: [
+    'https://domra-tech.vercel.app',
+    'http://localhost:5173'
+  ],
+  methods: ['GET','POST','PUT','DELETE'],
+  allowedHeaders: ['Content-Type','Authorization'],
+  credentials: true
+}));
 app.use(cors({ origin: "*" }));
 app.use(session({ secret: 'some_secret_key', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
