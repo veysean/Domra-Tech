@@ -12,8 +12,8 @@
     "oldPw" : "ពាក្យសម្ងាត់ចាស់",
     "newPw" : "ពាក្យសម្ងាត់ថ្មី",
     "cfPw" : "បញ្ជាក់ពាក្យសម្ងាត់ថ្មី",
-    "correctionRequests": " ស្នើរសុំកែតម្រូវ",
-    "newWordRequests":"ស្នើរសុំពាក្យថ្មី",
+    "correctionRequests": " ស្នើសុំកែតម្រូវ",
+    "newWordRequests":"ស្នើសុំពាក្យថ្មី",
     "noCorrectionRequests": "មិនទាន់មានការស្នើសុំកែតម្រូវ",
     "noNewWordRequests":"មិនទាន់មានការស្នើសុំពាក្យថ្មី",
     "yourfavourite":"ចំណូលចិត្តរបស់អ្នក"
