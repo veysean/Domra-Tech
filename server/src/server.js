@@ -20,15 +20,15 @@ import correctionRequestRoutes from './routes/correctionRequestRoutes.js';
 const app = express();
 const PORT = process.env.PORT || 3002;
 app.use(express.json());
-app.use(cors(
-    {
-        origin:[
-            "https://domra-tech.vercel.app",
-            "http://localhost:5173"
-        ],
-        credentials: true
-    }
-));
+app.use(cors({
+  origin: [
+    'https://domra-tech.vercel.app',
+    'http://localhost:5173'
+  ],
+  methods: ['GET','POST','PUT','DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  credentials: true
+}));
 app.use(cors({ origin: "*" }));
 app.use(session({ secret: 'some_secret_key', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
@@ -45,10 +45,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use('/api/categories', CategoryRouter);
 app.use('/api/wordRequests',WordRequestRouter);
-
-app.use('/api/categories', CategoryRouter);
-app.use('/api/wordRequests',WordRequestRouter);
-app.use('/api', wordTranslationRoutes);
 const startServer = async () => {
     try {
         await db.sequelize.authenticate();
