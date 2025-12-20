@@ -33,10 +33,14 @@ export const WordTranslationServices = {
 
   findById: (id) => API.get(`/words/${id}`),
   getFullWord: (id) => API.get(`/admin/words/${id}`), // full word details with categories
-  searchWords: (query, page = 1, limit = 10, categoryId = "") =>
+  searchWords: (query, lang = "EnglishWord", page = 1, limit = 10, categoryId = "") =>
     API.get("/words/search", {
-      params: { q: query, page, limit, ...(categoryId && categoryId !== "all" && { categoryId }) },
+      params: { q: query, lang, page, limit, ...(categoryId && categoryId !== "all" && { categoryId }) },
     }),
+  // searchWords: (query, page = 1, limit = 10, categoryId = "") =>
+  //   API.get("/words/search", {
+  //     params: { q: query, page, limit, ...(categoryId && categoryId !== "all" && { categoryId }) },
+  //   }),
 
   create: (wordData) => API.post('/admin/words', wordData),
   update: (id, updatedData) => API.put(`/admin/words/${id}`, updatedData),

@@ -75,68 +75,126 @@ const { WordTranslation, Category } = db;
  *                   type: string
  *                   example: Failed to search for words
  */
+// 
+
 const searchWords = async (req, res) => {
   try {
-    const searchTerm = req.query.q;
-    const categoryId = req.query.categoryId;
+    const { q, lang = "EnglishWord", categoryId } = req.query;
 
-    if (!searchTerm) {
-      return res.status(400).json({ error: 'Search term is required' });
+    if (!q) {
+      return res.status(400).json({ error: "Search term is required" });
     }
 
-    const rawSearchTerm = searchTerm.toLowerCase(); 
-    const normalizedSearchTerm = khnormal(searchTerm); 
+    const raw = q.toLowerCase();
+    const normalized = khnormal(q);
 
-    let include = [];
+    const isKhmer = lang === "normalizedWord";
 
+    // Category filter
+    const include = [];
     if (categoryId && categoryId !== "all") {
       include.push({
         model: Category,
-        as: 'Categories',
+        as: "Categories",
         attributes: [],
         through: { attributes: [] },
-        where: { categoryId: categoryId }
+        where: { categoryId },
       });
     }
 
+    const where = isKhmer
+      ? {
+          normalizedWord: {
+            [Op.like]: `${normalized}%`,
+          },
+        }
+      : db.sequelize.where(
+          db.sequelize.fn("LOWER", db.sequelize.col(lang)),
+          {
+            [Op.like]: `${raw}%`,
+          }
+        );
+
     const words = await WordTranslation.findAll({
-      where: {
-        [Op.or]: [
-          db.sequelize.where(
-            db.sequelize.fn('lower', db.sequelize.col('EnglishWord')),
-            { [Op.like]: `%${rawSearchTerm}%` }
-          ),
-          db.sequelize.where(
-            db.sequelize.fn('lower', db.sequelize.col('FrenchWord')),
-            { [Op.like]: `%${rawSearchTerm}%` }
-          ),
-          db.sequelize.where(
-            db.sequelize.col('normalizedWord'),
-            { [Op.like]: `%${normalizedSearchTerm}%` }
-          )
-        ]
-      },
+      where,
       include,
-      order: [
-        [db.sequelize.literal(`CASE 
-          WHEN lower("EnglishWord") = '${rawSearchTerm}' THEN 0
-          WHEN lower("FrenchWord") = '${rawSearchTerm}' THEN 1
-          WHEN "normalizedWord" = '${normalizedSearchTerm}' THEN 2
-          WHEN lower("EnglishWord") LIKE '${rawSearchTerm}%' THEN 3
-          WHEN lower("FrenchWord") LIKE '${rawSearchTerm}%' THEN 4
-          WHEN "normalizedWord" LIKE '${normalizedSearchTerm}%' THEN 5
-          ELSE 6 END`), 'ASC'],
-        [db.sequelize.fn('length', db.sequelize.col('EnglishWord')), 'ASC']
-      ]
+      order: [[lang, "ASC"]],
     });
 
-    return res.status(200).json(words);
-
+    return res.json(words);
   } catch (error) {
-    console.error('Search query failed:', error);
-    return res.status(500).json({ error: 'Failed to search for words' });
+    console.error("SEARCH ERROR:", error);
+    res.status(500).json({ error: error.message });
   }
 };
+
+
+
+// const searchWords = async (req, res) => {
+//   try {
+//     const searchTerm = req.query.q;
+//     const categoryId = req.query.categoryId;
+
+//     if (!searchTerm) {
+//       return res.status(400).json({ error: 'Search term is required' });
+//     }
+
+//     const rawSearchTerm = searchTerm.toLowerCase(); 
+//     const normalizedSearchTerm = khnormal(searchTerm); 
+
+//     let include = [];
+
+//     if (categoryId && categoryId !== "all") {
+//       include.push({
+//         model: Category,
+//         as: 'Categories',
+//         attributes: [],
+//         through: { attributes: [] },
+//         where: { categoryId: categoryId }
+//       });
+//     }
+
+//     const words = await WordTranslation.findAll({
+//       where: {
+//         [Op.or]: [
+//           db.sequelize.where(
+//             db.sequelize.fn('lower', db.sequelize.col('EnglishWord')),
+//             { [Op.like]: `%${rawSearchTerm}%` }
+//           ),
+//           db.sequelize.where(
+//             db.sequelize.fn('lower', db.sequelize.col('FrenchWord')),
+//             { [Op.like]: `%${rawSearchTerm}%` }
+//           ),
+//           db.sequelize.where(
+//             db.sequelize.col('normalizedWord'),
+//             { [Op.like]: `%${normalizedSearchTerm}%` }
+//           )
+//         ]
+//       },
+//       include,
+//       order: [
+//         [db.sequelize.literal(`CASE 
+//           WHEN lower("EnglishWord") = '${rawSearchTerm}' THEN 0
+//           WHEN lower("FrenchWord") = '${rawSearchTerm}' THEN 1
+//           WHEN "normalizedWord" = '${normalizedSearchTerm}' THEN 2
+//           WHEN lower("EnglishWord") LIKE '${rawSearchTerm}%' THEN 3
+//           WHEN lower("FrenchWord") LIKE '${rawSearchTerm}%' THEN 4
+//           WHEN "normalizedWord" LIKE '${normalizedSearchTerm}%' THEN 5
+//           ELSE 6 END`), 'ASC'],
+//         [db.sequelize.fn('length', db.sequelize.col('EnglishWord')), 'ASC']
+//       ]
+//     });
+
+//     return res.status(200).json(words);
+
+//   } catch (error) {
+//     console.error('Search query failed:', error);
+//     return res.status(500).json({ error: 'Failed to search for words' });
+//   }
+// };
+
+
+
 
 //wordcard for share feature 
 /**
