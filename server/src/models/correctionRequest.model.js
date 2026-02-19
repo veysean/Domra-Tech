@@ -24,6 +24,9 @@ export default (sequelize, DataTypes) => sequelize.define('CorrectionRequest', {
   reference: {
     type: DataTypes.TEXT
   },
+  imageURL: {
+    type: DataTypes.TEXT,
+  },
   status: {
     type: DataTypes.ENUM('pending', 'accepted', 'denied', 'deleted')
   }
