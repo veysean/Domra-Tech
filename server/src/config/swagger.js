@@ -1,7 +1,7 @@
 import swaggerJSDoc from 'swagger-jsdoc';
 
 const swaggerOptions = {
-  swaggerDefinition: {
+  definition: {   
     openapi: '3.0.0',
     info: {
       title: 'Domra Tech API',
@@ -27,7 +27,7 @@ const swaggerOptions = {
       },
     },
   },
-  apis: ['./routes/*.js', './controllers/*.js'],
+  apis: ['./src/routes/*.js', './src/controllers/*.js'], 
 };
 
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
