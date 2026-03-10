@@ -1,5 +1,6 @@
 // // server/src/server.js
 import 'dotenv/config';
+import './init.js';
 import cors from 'cors';
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';

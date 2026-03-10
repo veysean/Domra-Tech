@@ -8,6 +8,7 @@ import userModel from "./user.model.js";
 import wordCategoryModel from "./wordCategory.model.js";
 import wordRequestModel from "./wordRequest.model.js";
 import wordTranslationModel from "./wordTranslation.model.js";
+import paymentModel from "./payment.model.js";
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     host: dbConfig.HOST,
@@ -26,7 +27,8 @@ const db = {
     User: userModel(sequelize, Sequelize),
     WordCategory: wordCategoryModel(sequelize, Sequelize),
     WordRequest: wordRequestModel(sequelize, Sequelize),
-    WordTranslation: wordTranslationModel(sequelize, Sequelize)
+    WordTranslation: wordTranslationModel(sequelize, Sequelize),
+    Payment: paymentModel(sequelize, Sequelize)
 };
 
 // Define associations
@@ -71,5 +73,9 @@ db.Feedback.belongsTo(db.User, { foreignKey: 'userId' });
 
 db.WordTranslation.hasMany(db.Feedback, { foreignKey: 'wordId' });
 db.Feedback.belongsTo(db.WordTranslation, { foreignKey: 'wordId' });
+
+// User - Payment (One-to-Many)
+db.User.hasMany(db.Payment, { foreignKey: 'userId' });
+db.Payment.belongsTo(db.User, { foreignKey: 'userId' });
 
 export default db;
