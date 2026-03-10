@@ -1,3 +1,17 @@
+import db from '../models/index.js';
+import { Op } from 'sequelize';
+import { khnormal } from 'khmer-normalizer';
+import path from 'path';
+import { bucket } from "../services/firebaseService.js";
+import multer from "multer";
+
+
+
+const upload = multer({ storage: multer.memoryStorage() });
+
+const { WordTranslation, Category } = db;
+
+
 // server/controllers/wordController.js
 /**
  * @swagger
@@ -5,13 +19,6 @@
  *   name: WordTranslations
  *   description: API for managing word translations
  */
-import db from '../models/index.js';
-import { Op } from 'sequelize';
-import { khnormal } from 'khmer-normalizer';
-import path from 'path';
-
-const { WordTranslation, Category } = db;
-
 // Function to search for words (case-insensitive)
 /**
  * @swagger
@@ -54,6 +61,9 @@ const { WordTranslation, Category } = db;
  *                     type: string
  *                   normalizedWord:
  *                     type: string
+ *                   imageURL:
+ *                     type: string
+ *                     format: uri
  *       400:
  *         description: Missing search term
  *         content:
@@ -204,7 +214,7 @@ const getPublicWordCard = async (req, res) => {
     try {
         const word = await WordTranslation.findByPk(req.params.wordId, {
             // Include only necessary fields for public view
-            attributes: ['wordId', 'EnglishWord', 'FrenchWord', 'KhmerWord', 'definition', 'example', 'reference'],
+            attributes: ['wordId', 'EnglishWord', 'FrenchWord', 'KhmerWord', 'definition', 'example', 'reference','imageURL'],
               include: [
                 {
                   model: Category,
@@ -275,7 +285,7 @@ const getPublicWordCard = async (req, res) => {
 const findById = async (req, res) => {
     try {
         const word = await WordTranslation.findByPk(req.params.wordId, {
-          attributes: ['wordId','EnglishWord','KhmerWord','FrenchWord','definition','example','reference'],
+          attributes: ['wordId','EnglishWord','KhmerWord','FrenchWord','definition','example','reference','imageURL'],
           include: [
             { model: Category, 
               as: 'Categories', 
@@ -520,7 +530,7 @@ const findAll = async (req, res) => {
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
@@ -538,6 +548,9 @@ const findAll = async (req, res) => {
  *                 type: string
  *               reference:
  *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary 
  *     responses:
  *       201:
  *         description: Word created successfully
@@ -545,28 +558,42 @@ const findAll = async (req, res) => {
  *         description: Server error while creating word
  */
 
-const create = async (req, res) => {
+// wordTranslationController.js
+export const create = async (req, res) => {
   try {
     const { categories, ...wordData } = req.body;
-    // Create the word
+
+    // Handle image upload if provided
+    if (req.file) {
+      const file = bucket.file(Date.now() + "-" + req.file.originalname);
+      await file.save(req.file.buffer, {
+        metadata: { contentType: req.file.mimetype }
+      });
+
+      const [url] = await file.getSignedUrl({
+        action: "read",
+        expires: "03-01-2030"
+      });
+
+      wordData.imageURL = url;
+    }
+
     const newWord = await WordTranslation.create(wordData);
-    // Assign categories if provided
+
     if (categories && Array.isArray(categories) && categories.length > 0) {
-      if (typeof newWord.setCategories === 'function') {
+      if (typeof newWord.setCategories === "function") {
         await newWord.setCategories(categories);
-        console.log('Assigned categories to new word', newWord.wordId, categories);
-      } else {
-        console.error('No setCategories method found on newWord instance');
       }
     }
-    // Return the new word with categories
+
     const wordWithCategories = await WordTranslation.findByPk(newWord.wordId, {
       include: [{ model: db.Category }],
     });
+
     return res.status(201).json(wordWithCategories);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: 'Failed to create word' });
+    return res.status(500).json({ error: "Failed to create word" });
   }
 };
 
@@ -589,7 +616,7 @@ const create = async (req, res) => {
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -605,6 +632,9 @@ const create = async (req, res) => {
  *                 type: string
  *               reference:
  *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       200:
  *         description: Word updated successfully
@@ -617,6 +647,19 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   try {
     const { categories, ...wordData } = req.body;
+    // Handle image upload 
+    if (req.file) {
+      const file = bucket.file(Date.now() + "-" + req.file.originalname);
+      await file.save(req.file.buffer, {
+        metadata: { contentType: req.file.mimetype }
+      });
+
+      const [url] = await file.getSignedUrl({
+        action: "read",
+        expires: "03-01-2030"
+      });
+      wordData.imageURL = url;
+    }
     // Update word fields
     const [updated] = await WordTranslation.update(wordData, {
       where: { wordId: req.params.wordId },
@@ -704,5 +747,5 @@ export default {
   remove,
   searchWords,
   getPublicWordCard, 
-  renderSharedCardPage,
+  renderSharedCardPage,
 };

@@ -1,4 +1,8 @@
 import db from '../models/index.js';
+import { bucket } from "../services/firebaseService.js";
+import multer from "multer";
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 const { CorrectionRequest } = db;
 
@@ -22,7 +26,7 @@ const { CorrectionRequest } = db;
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
@@ -47,6 +51,9 @@ const { CorrectionRequest } = db;
  *               reference:
  *                 type: string
  *                 example: "https://dictionary.cambridge.org/"
+ *               image:
+ *                 type: string
+ *                 format: binary
  *               status:
  *                 type: string
  *                 enum: [pending, approved, rejected]
@@ -67,6 +74,21 @@ const createCorrectionRequest = async (req, res) => {
 
     if (!payload.userId || !payload.wordId) {
       return res.status(400).json({ message: 'userId and wordId are required.' });
+    }
+
+    // Handle image upload
+    if (req.file) {
+      const file = bucket.file(Date.now() + "-" + req.file.originalname);
+      await file.save(req.file.buffer, {
+        metadata: { contentType: req.file.mimetype },
+      });
+
+      const [url] = await file.getSignedUrl({
+        action: "read",
+        expires: "03-01-2030",
+      });
+
+      payload.imageURL = url;
     }
 
     const newRequest = await CorrectionRequest.create(payload);
@@ -119,8 +141,6 @@ const createCorrectionRequest = async (req, res) => {
  *                   type: integer
  *                 data:
  *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/CorrectionRequest'
  *       500:
  *         description: Failed to retrieve correction requests.
  */
@@ -130,6 +150,9 @@ const getAllCorrectionRequests = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
 
+    const userRole = req.user?.role || "user";
+    const userId = req.user?.userId;
+    
     // Apply filter: if not admin, only fetch user's own requests
     const whereCondition = req.user.role === 'admin'
       ? {} // no filter for admin
@@ -215,7 +238,7 @@ const getCorrectionRequestById = async (req, res) => {
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -231,6 +254,9 @@ const getCorrectionRequestById = async (req, res) => {
  *               reference:
  *                 type: string
  *                 example: "https://merriam-webster.com/"
+ *               image:
+ *                 type: string
+ *                 format: binary
  *               status:
  *                 type: string
  *                 enum: [pending, accepted, denied, deleted]
@@ -250,6 +276,30 @@ const updateCorrectionRequest = async (req, res) => {
 
     if (!request) {
       return res.status(404).json({ message: 'Correction request not found.' });
+    }
+
+    // Handle the image
+    if (req.file) {
+      if (request.imageURL) {
+        try {
+          const oldFileName = request.imageURL.split("/").pop().split("?")[0];
+          await bucket.file(oldFileName).delete();
+        } catch (err) {
+          console.warn("Could not delete old image:", err.message);
+        }
+      }
+
+      const file = bucket.file(Date.now() + "-" + req.file.originalname);
+      await file.save(req.file.buffer, {
+        metadata: { contentType: req.file.mimetype },
+      });
+
+      const [url] = await file.getSignedUrl({
+        action: "read",
+        expires: "03-01-2030",
+      });
+
+      req.body.imageURL = url;
     }
 
     await request.update(req.body);
