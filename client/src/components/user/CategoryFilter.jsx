@@ -17,7 +17,13 @@ export default function Categories({ onCategoryChange }) {
         const fetchCategories = async () => {
         try {
             const res = await CategoryServices.findAll();
-            setCategories(res.data || []); 
+           const list = Array.isArray(res.data)
+  ? res.data
+  : Array.isArray(res.data?.data)
+  ? res.data.data
+  : [];
+
+setCategories(list);
         } catch (err) {
             console.error("Failed to fetch categories:", err);
         }
@@ -131,11 +137,11 @@ export default function Categories({ onCategoryChange }) {
                 >
                     {openCat ? <div className="text-[#667EEA] font-bold">
                                     <svg width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M1 1C2.91168 2.74775 4.87954 4.25225 6.79122 6L13 1.3125" stroke="#4A5568" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M1 1C2.91168 2.74775 4.87954 4.25225 6.79122 6L13 1.3125" stroke="#4A5568" strokeWidth="2" strokeLinecap="round"/>
                                     </svg>
                                 </div>: <div className="w-[19px]">
                                     <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M1 1C2.95262 3.34315 4.04738 4.65685 6 7L1 13" stroke="#4A5568" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M1 1C2.95262 3.34315 4.04738 4.65685 6 7L1 13" stroke="#4A5568" strokeWidth="2" strokeLinecap="round"/>
                                     </svg>
                                 </div>}
                 </button>
@@ -155,7 +161,7 @@ export default function Categories({ onCategoryChange }) {
                     </li>
 
                     {/* Other categories from API */}
-                    {categories.map((cat) => {
+                    {Array.isArray(categories) && categories.map((cat) => {
                     const isActive = activeCategory === cat.categoryName;
                     return (
                         <li

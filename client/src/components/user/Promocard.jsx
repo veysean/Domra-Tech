@@ -10,7 +10,7 @@ const PromoCard = ({ isSignUp, handleToggle }) => {
   return (
     <div className="w-[700px] h-[690px] relative bg-white rounded-[30px] shadow-lg overflow-hidden">
       {/* Tagline */}
-      <div className="w-[519px] h-16 left-[120px] top-[580px] absolute text-center text-main-color text-l">
+      <div className="w-[519px] h-16 left-[100px] top-[580px] absolute text-center text-main-color text-l">
        {t("login_des")}
       </div>
 

@@ -59,7 +59,7 @@ const AuthPage = () => {
               {/* SignUp card */}
               <motion.div
                 key="signup-form"
-                className="flex items-center justify-center z-10"
+                className="flex items-center justify-center z-10 lg:-ml-9"
                 variants={formVariants}
                 initial="hiddenLeft"
                 animate="visibleLeft"
@@ -74,7 +74,7 @@ const AuthPage = () => {
               {/* Login card */}
               <motion.div
                 key="login-form"
-                className="flex items-center justify-center z-10"
+                className="flex items-center justify-center z-10 lg:-mr-9"
                 variants={formVariants}
                 initial="hiddenRight"
                 animate="visibleRight"

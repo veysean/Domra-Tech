@@ -68,17 +68,17 @@ const Login = () => {
   }
 
   return (
-    <div className="m-auto lg:w-[505px] h-[549px] lg:relative rounded-[30px]">
-      <div className="w-full flex flex-col gap-4 p-10 align-middle lg:w-[505px] h-[549px] left-0 top-0 lg:absolute bg-white rounded-[30px] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.25)] overflow-hidden">
+    <div className="m-auto w-[380px] lg:w-[505px] lg:relative rounded-[30px]">
+      <div className="flex flex-col gap-4 p-10 align-middle h-[549px] bg-white rounded-[30px] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.25)]">
         {/* Title */}
-        <h2 className="lg:absolute text-center left-[217px] top-[47px] text-3xl font-['Righteous'] text-main-color">
+        <h2 className="text-center text-3xl font-['Righteous'] text-main-color">
           {t('login')}
         </h2>
 
         {/* Form */}
         <form
           onSubmit={handleSubmit}
-          className="w-96 left-[69px] top-[113px] lg:absolute flex flex-col gap-5"
+          className="flex flex-col gap-5"
         >
           {/* Email */}
           <div className="flex flex-col gap-2.5">
@@ -91,7 +91,7 @@ const Login = () => {
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               autoComplete="current-password"
-              className="p-2.5 bg-white rounded-xl outline-1 outline-[#3F51B5] text-slate-500 text-sm font-light leading-snug"
+              className="p-2.5 bg-white rounded-xl outline-1 outline-[#3F51B5] text-slate-500 text-sm font-light"
             />
           </div>
 
@@ -112,10 +112,12 @@ const Login = () => {
           <button
             type="button"
             onClick={() => setShowPassword((prev) => !prev)}
-            className="absolute right-3 top-36 text-gray-500 hover:text-indigo-500"
+            className=" text-gray-500 hover:text-indigo-500"
           >
+          
           {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
+          
           )}
         
         </div>
