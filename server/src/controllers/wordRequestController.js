@@ -77,7 +77,7 @@ import { Op } from 'sequelize';
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
@@ -95,6 +95,9 @@ import { Op } from 'sequelize';
  *                 type: string
  *               reference:
  *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
  *               status:
  *                 type: string
  *                 enum: [pending, accepted, denied, deleted]
@@ -227,7 +230,7 @@ import { Op } from 'sequelize';
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -246,6 +249,9 @@ import { Op } from 'sequelize';
  *               status:
  *                 type: string
  *                 enum: [pending, accepted, denied, deleted]
+ *               image:
+ *                 type: string
+ *                 format: binary
  *               check:
  *                 type: boolean
  *     responses:
@@ -415,6 +421,11 @@ export const getWordRequests = async (req, res) => {
   }
 };
 
+
+  import { bucket } from "../services/firebaseService.js";
+  import multer from "multer";
+  const upload = multer({ storage: multer.memoryStorage() });
+  
 // Controller for making word requests from both user and admin
 export const createWordRequest = async (req, res) => {
   try {
@@ -435,6 +446,21 @@ export const createWordRequest = async (req, res) => {
       check: req.body.check ?? false,
       userId: req.user.userId
     };
+
+    // Handle image upload
+    if (req.file) {
+      const file = bucket.file(Date.now() + "-" + req.file.originalname);
+      await file.save(req.file.buffer, {
+        metadata: { contentType: req.file.mimetype },
+      });
+
+      const [url] = await file.getSignedUrl({
+        action: "read",
+        expires: "03-01-2030",
+      });
+
+      payload.imageURL = url;
+    }
 
     const newRequest = await db.WordRequest.create(payload);
     res.status(201).json(newRequest);
@@ -460,6 +486,30 @@ export const updateWordRequest = async (req, res) => {
 
     if (!request) {
       return res.status(404).json({ error: "Word request not found." });
+    }
+
+    // Handle the image
+    if (req.file) {
+      if (request.imageURL) {
+        try {
+          const oldFileName = request.imageURL.split("/").pop().split("?")[0];
+          await bucket.file(oldFileName).delete();
+        } catch (err) {
+          console.warn("Could not delete old image:", err.message);
+        }
+      }
+
+      const file = bucket.file(Date.now() + "-" + req.file.originalname);
+      await file.save(req.file.buffer, {
+        metadata: { contentType: req.file.mimetype },
+      });
+
+      const [url] = await file.getSignedUrl({
+        action: "read",
+        expires: "03-01-2030",
+      });
+
+      req.body.imageURL = url;
     }
 
     // Update the request with incoming data

@@ -26,6 +26,9 @@ export default (sequelize, DataTypes) => sequelize.define('WordRequest', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
+  imageURL: {
+    type: DataTypes.TEXT,
+  },
   status: {
     type: DataTypes.ENUM('pending', 'accepted', 'denied', 'deleted')
   },
