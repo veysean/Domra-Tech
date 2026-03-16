@@ -1,6 +1,14 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
+    { "source": "/(.*)", "destination": "/" },
+    {
+      "source": "/(.*)",
+      "destination": "http://18.136.212.149:8080/api/categories"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "http://18.136.212.149:8080/api/words"
+    }
   ],
   "headers": [
     {
