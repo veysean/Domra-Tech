@@ -13,8 +13,12 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:3000/api',
-        description: 'Local development server',
+        url: process.env.NODE_ENV === 'production'
+          ? `http://${process.env.SERVER_URL}/api`
+          : 'http://localhost:8080/api',
+        description: process.env.NODE_ENV === 'production'
+          ? 'Production server'
+          : 'Local development server',
       },
     ],
     components: {
@@ -27,7 +31,7 @@ const swaggerOptions = {
       },
     },
   },
-  apis: ['./routes/*.js', './controllers/*.js'],
+  apis: ['./src/routes/*.js', './src/controllers/*.js'],
 };
 
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
