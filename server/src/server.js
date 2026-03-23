@@ -16,6 +16,7 @@ import CategoryRouter from './routes/categoryRoutes.js';
 import WordRequestRouter from './routes/wordRequestRoutes.js';
 import correctionRequestRoutes from './routes/correctionRequestRoutes.js';
 import { bucket } from './services/firebaseService.js';
+import jwt from "jsonwebtoken";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -45,6 +46,21 @@ app.use('/api/correctionRequests', correctionRequestRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use('/api/categories', CategoryRouter);
 app.use('/api/wordRequests', WordRequestRouter);
+
+
+function authenticate(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ error: "Missing token" });
+
+  const token = authHeader.split(" ")[1];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    res.status(401).json({ error: "Invalid backend token" });
+  }
+}
 
 // Upload route using Firebase Storage
 app.post('/api/upload-url', async (req, res) => {

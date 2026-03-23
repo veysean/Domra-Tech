@@ -574,6 +574,79 @@ const forgotPassword = async (req, res) => {
 //   }
 // };
 
+
+// POST /auth/firebase-login
+export const firebaseLogin = async (req, res) => {
+  try {
+    // 1. Read Firebase ID token from Authorization header
+    const authHeader = req.headers.authorization;
+    if (!authHeader)
+      return res.status(401).json({ message: "Missing Authorization header" });
+
+    const firebaseToken = authHeader.replace("Bearer ", "");
+
+    // 2. Verify Firebase token
+    const decoded = await admin.auth().verifyIdToken(firebaseToken);
+
+    const {
+      uid,
+      email,
+      name,
+      picture,
+    } = decoded;
+
+    if (!email) {
+      return res.status(400).json({ message: "Firebase token missing email" });
+    }
+
+    // 3. Check if user exists in SQL DB
+    let user = await User.findOne({ where: { email } });
+
+    // 4. If user does not exist → create one
+    if (!user) {
+      user = await User.create({
+        firstName: name || "User",
+        lastName: "",
+        email,
+        firebaseUid: uid,
+        avatar: picture || null,
+        role: "user",
+        status: "verified",
+        authProvider: "firebase",
+      });
+    }
+
+    // 5. Create backend JWT
+    const backendJwt = jwt.sign(
+      {
+        userId: user.userId,
+        role: user.role,
+        provider: "firebase",
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    return res.status(200).json({
+      message: "Firebase login successful",
+      token: backendJwt,
+      user: {
+        userId: user.userId,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        avatar: user.avatar,
+        role: user.role,
+        status: user.status,
+      },
+    });
+
+  } catch (error) {
+    console.error("Firebase login error:", error);
+    return res.status(500).json({ message: "Firebase login failed", error: error.message });
+  }
+};
+
   const resetPassword = async (req, res) => {
     try {
       const { token, password, confirmPassword } = req.body;

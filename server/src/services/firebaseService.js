@@ -31,6 +31,6 @@ if (!admin.apps.length) {
 // Export reusable Firebase services
 const bucket = admin.storage().bucket();
 const db = admin.firestore();
-const auth = admin.firestore;
+const auth = admin.auth();
 
 export { bucket, db, auth };

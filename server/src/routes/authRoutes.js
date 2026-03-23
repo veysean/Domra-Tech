@@ -68,6 +68,8 @@ import validation from "../middleware/validation.js";
 import passport from "passport";
 // import aithentication from "../middleware/authMiddleware.js";
 import { verifyFirebaseToken } from "../middleware/authMiddleware.js";
+import jwt from "jsonwebtoken";
+import { auth } from "../services/firebaseService.js";
 import db from "../models/index.js";
 
 const router = express.Router();
@@ -81,27 +83,83 @@ router.post("/forgot-password", authController.forgotPassword);
 router.post("/reset-password", authController.resetPassword);
 router.post("/google-register", authController.googleRegister);
 
-// Firebase-protected route
-router.post("/firebase-login", verifyFirebaseToken, async (req, res) => {
-  const firebaseUser = req.user; // decoded token
+
+// Firebase signup with extra fields
+router.post("/firebase-signup", async (req, res) => {
+  const { uid, email, firstName, lastName, gender, dob, firebaseToken } = req.body;
 
   try {
-    // Find user by email or Firebase UID
-    let user = await User.findOne({ where: { email: firebaseUser.email } });
+    const decoded = await auth.verifyIdToken(firebaseToken);
 
+    let user = await User.findOne({ where: { uid } });
     if (!user) {
-      // Create a new user record if not found
+      user = await User.create({ uid: decoded.uid, email, firstName, lastName, gender, dob });
+    }
+
+    const backendToken = jwt.sign(
+      { uid: decoded.uid, email: decoded.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.json({ jwt: backendToken, user });
+  } catch (err) {
+    res.status(401).json({ error: "Invalid Firebase token" });
+  }
+});
+
+// Firebase login
+router.post("/firebase-login", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(400).json({ error: "Missing token" });
+
+  const idToken = authHeader.split(" ")[1];
+  console.log("Received token:", idToken);
+  try {
+    const decoded = await auth.verifyIdToken(idToken);
+    console.log("Decoded:", decoded);
+
+    const user = await User.findOne({ where: { uid: decoded.uid } });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const backendToken = jwt.sign(
+      { uid: decoded.uid, email: decoded.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.json({ jwt: backendToken, user });
+  } catch (err) {
+    console.error("Token verification failed:", err);
+    res.status(401).json({ error: "Invalid Firebase token" });
+  }
+});
+
+// Google register/login
+router.post("/googleRegister", async (req, res) => {
+  const { token } = req.body;
+  try {
+    const decoded = await auth.verifyIdToken(token);
+
+    let user = await User.findOne({ where: { uid: decoded.uid } });
+    if (!user) {
       user = await User.create({
-        email: firebaseUser.email,
-        role: "user",
-        status: "unverified",
+        uid: decoded.uid,
+        email: decoded.email,
+        firstName: decoded.name?.split(" ")[0] || "",
+        lastName: decoded.name?.split(" ")[1] || "",
       });
     }
 
-    res.json({ message: "Firebase login successful", user });
-  } catch (error) {
-    console.error("DB error:", error);
-    res.status(500).json({ error: "Server error" });
+    const backendToken = jwt.sign(
+      { uid: decoded.uid, email: decoded.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.json({ jwt: backendToken, user });
+  } catch (err) {
+    res.status(401).json({ error: "Invalid Firebase token" });
   }
 });
 
