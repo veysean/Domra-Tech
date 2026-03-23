@@ -86,14 +86,22 @@ router.post("/google-register", authController.googleRegister);
 
 // Firebase signup with extra fields
 router.post("/firebase-signup", async (req, res) => {
-  const { uid, email, firstName, lastName, gender, dob, firebaseToken } = req.body;
+  const { email, firstName, lastName, gender, dob, firebaseToken } = req.body;
 
   try {
     const decoded = await auth.verifyIdToken(firebaseToken);
 
-    let user = await User.findOne({ where: { uid } });
+    // Always use decoded.uid, not req.body.uid
+    let user = await User.findOne({ where: { uid: decoded.uid } });
     if (!user) {
-      user = await User.create({ uid: decoded.uid, email, firstName, lastName, gender, dob });
+      user = await User.create({
+        uid: decoded.uid,
+        email: decoded.email || email, 
+        firstName,
+        lastName,
+        gender,
+        dob,
+      });
     }
 
     const backendToken = jwt.sign(
