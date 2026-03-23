@@ -26,7 +26,6 @@ import { bucket } from './services/firebaseService.js';
 import jwt from "jsonwebtoken";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 console.log("Attempting to run server...");
 console.log("Checking DB User:", process.env.DB_USER); // Debug line to verify loading
