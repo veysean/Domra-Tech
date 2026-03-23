@@ -23,16 +23,33 @@ const PORT = process.env.PORT || 8080;
 
 app.use(express.json());
 app.use(cors({
-  origin: [
-    'https://domra-tech.vercel.app',
-    'http://localhost:5173',
-    'http://localhost:51102'
-  ],
-  methods: ['GET','POST','PUT','DELETE'],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (Flutter mobile apps, Postman)
+    // Flutter apps on real devices and emulators often send no origin
+    if (!origin) return callback(null, true);
+
+    const allowedOrigins = [
+      // Web browsers local dev
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'http://localhost:8080',
+      'http://localhost:51102',
+      // Vercel
+      'https://domra-tech.vercel.app',
+    ];
+
+    // Allow any vercel.app subdomain
+    if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      return callback(null, true);
+    }
+
+    return callback(new Error('Not allowed by CORS'));
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
   credentials: true
 }));
-app.use(cors({ origin: "*" }));
+// app.use(cors({ origin: "*" }));
 app.use(session({ secret: 'some_secret_key', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
