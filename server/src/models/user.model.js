@@ -8,6 +8,7 @@ export default (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
+        uid: { type: DataTypes.STRING, unique: true },
         googleId: {
             type: DataTypes.STRING(255),
             unique: true,
