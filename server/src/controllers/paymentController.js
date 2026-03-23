@@ -203,6 +203,7 @@ const paymentController = {
             // responseCode 0 = Success in Bakong's system
             if (bakongResponse.data.responseCode === 0) {
                 payment.status = 'success';
+                payment.externalTransactionId = bakongResponse.data.data.external_transaction_id;
                 await payment.save(); // Update database so we don't have to call Bakong again
 
                 return res.status(200).json({
