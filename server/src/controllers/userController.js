@@ -214,27 +214,24 @@ const deleteUser = async (req, res) => {
  *         description: Server error
  */
 
-const getProfile = async (req, res) => {
-  try {
-    // The verifyAuth middleware added the userId to the request object
-    const userId = req.user.userId;
-    
-    // Find the user by their ID
-    const user = await User.findByPk(userId, {
-      attributes: { exclude: ['password'] } 
-    });
+    const getProfile = async (req, res) => {
+      try {
+        const uid = req.user.uid; // Firebase UID from JWT
+        const user = await User.findOne({
+          where: { uid },
+          attributes: { exclude: ["password"] }
+        });
 
-    if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
+        if (!user) {
+          return res.status(404).json({ message: "User not found." });
+        }
 
-    return res.status(200).json(user);
-
-  } catch (error) {
-    console.error('Get profile error:', error);
-    return res.status(500).json({ message: 'Failed to retrieve user profile.' });
-  }
-};
+        return res.status(200).json(user);
+      } catch (error) {
+        console.error("Get profile error:", error);
+        return res.status(500).json({ message: "Failed to retrieve user profile." });
+      }
+    };
 
 // Function to update user profile
 /**
@@ -298,29 +295,31 @@ const getProfile = async (req, res) => {
  */
 
 
-const updateProfile = async (req, res) => {
-  try {
-    const userId = req.userId;
-    const { firstName, lastName, email } = req.body;
-    
-    const [updated] = await User.update({ firstName, lastName, email }, {
-      where: { userId: userId }
-    });
+  const updateProfile = async (req, res) => {
+    try {
+      const uid = req.user.userId; // from JWT payload
+      const { firstName, lastName, email } = req.body;
 
-    if (updated) {
-      const updatedUser = await User.findByPk(userId, {
-        attributes: { exclude: ['password'] }
-      });
-      return res.status(200).json({ message: 'Profile updated successfully!', user: updatedUser });
+      const [updated] = await User.update(
+        { firstName, lastName, email},
+        { where: { uid } } // <-- use uid column
+      );
+
+      if (updated) {
+        const updatedUser = await User.findOne({
+          where: { uid },
+          attributes: { exclude: ["password"] }
+        });
+        return res.status(200).json({ message: "Profile updated successfully!", user: updatedUser });
+      }
+
+      return res.status(404).json({ message: "User not found." });
+    } catch (error) {
+      console.error("Update profile error:", error);
+      return res.status(500).json({ message: "Failed to update user profile.", error: error.message });
     }
+  };
 
-    return res.status(404).json({ message: 'User not found.' });
-
-  } catch (error) {
-    console.error('Update profile error:', error);
-    return res.status(500).json({ message: 'Failed to update user profile.', error: error.message });
-  }
-};
 
 // Function to soft-delete a user account
 /**
