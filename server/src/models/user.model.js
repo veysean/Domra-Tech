@@ -60,6 +60,15 @@ export default (sequelize, DataTypes) => {
             type: DataTypes.ENUM('unverified', 'verified', 'deleted'),
             allowNull: false,
             defaultValue: 'unverified'
+        },
+        searchCount: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
+        },
+        lastSearchAt: {
+            type: DataTypes.DATE,
+            allowNull: true
         }
         }, {
             tableName: 'User'

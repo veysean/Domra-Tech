@@ -17,6 +17,8 @@ const { WordTranslation, Category } = db;
  * @swagger
  * /words/search:
  *    get:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Search for words in English, French, or Khmer (case-insensitive)
  *     description: Returns a list of word translations that match the search query. The search is case-insensitive and supports normalized Khmer input.
  *     tags: [WordTranslations]
