@@ -42,4 +42,4 @@ const loginValidationRules = () => {
 };
 
 
-export default {validate, registerValidationRules, loginValidationRules};
+export default { validate, registerValidationRules, loginValidationRules };

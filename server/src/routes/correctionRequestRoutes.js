@@ -7,10 +7,10 @@ const upload = multer({ storage: multer.memoryStorage() });
 const { verifyAuth } = authMiddleware;
 const router = express.Router();
 
-router.post('/',upload.single("image"), correctionRequestController.createCorrectionRequest);
-router.get('/',verifyAuth, correctionRequestController.getAllCorrectionRequests);
+router.post('/', verifyAuth, upload.single("image"), correctionRequestController.createCorrectionRequest);
+router.get('/', verifyAuth, correctionRequestController.getAllCorrectionRequests);
 router.get('/:id', correctionRequestController.getCorrectionRequestById);
-router.put('/:id',upload.single("image"), correctionRequestController.updateCorrectionRequest);
-router.delete('/:id', correctionRequestController.deleteCorrectionRequest);
+router.put('/:id', verifyAuth, upload.single("image"), correctionRequestController.updateCorrectionRequest);
+router.delete('/:id', verifyAuth, correctionRequestController.deleteCorrectionRequest);
 
 export default router;

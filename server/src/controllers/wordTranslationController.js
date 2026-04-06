@@ -1,17 +1,3 @@
-import db from '../models/index.js';
-import { Op } from 'sequelize';
-import { khnormal } from 'khmer-normalizer';
-import path from 'path';
-import { bucket } from "../services/firebaseService.js";
-import multer from "multer";
-
-
-
-const upload = multer({ storage: multer.memoryStorage() });
-
-const { WordTranslation, Category } = db;
-
-
 // server/controllers/wordController.js
 /**
  * @swagger
@@ -19,11 +5,20 @@ const { WordTranslation, Category } = db;
  *   name: WordTranslations
  *   description: API for managing word translations
  */
+import db from '../models/index.js';
+import { Op } from 'sequelize';
+import { khnormal } from 'khmer-normalizer';
+import path from 'path';
+
+const { WordTranslation, Category } = db;
+
 // Function to search for words (case-insensitive)
 /**
  * @swagger
  * /words/search:
  *    get:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Search for words in English, French, or Khmer (case-insensitive)
  *     description: Returns a list of word translations that match the search query. The search is case-insensitive and supports normalized Khmer input.
  *     tags: [WordTranslations]
@@ -61,9 +56,6 @@ const { WordTranslation, Category } = db;
  *                     type: string
  *                   normalizedWord:
  *                     type: string
- *                   imageURL:
- *                     type: string
- *                     format: uri
  *       400:
  *         description: Missing search term
  *         content:
@@ -85,68 +77,126 @@ const { WordTranslation, Category } = db;
  *                   type: string
  *                   example: Failed to search for words
  */
+// 
+
 const searchWords = async (req, res) => {
   try {
-    const searchTerm = req.query.q;
-    const categoryId = req.query.categoryId;
+    const { q, lang = "EnglishWord", categoryId } = req.query;
 
-    if (!searchTerm) {
-      return res.status(400).json({ error: 'Search term is required' });
+    if (!q) {
+      return res.status(400).json({ error: "Search term is required" });
     }
 
-    const rawSearchTerm = searchTerm.toLowerCase(); 
-    const normalizedSearchTerm = khnormal(searchTerm); 
+    const raw = q.toLowerCase();
+    const normalized = khnormal(q);
 
-    let include = [];
+    const isKhmer = lang === "normalizedWord";
 
+    // Category filter
+    const include = [];
     if (categoryId && categoryId !== "all") {
       include.push({
         model: Category,
-        as: 'Categories',
+        as: "Categories",
         attributes: [],
         through: { attributes: [] },
-        where: { categoryId: categoryId }
+        where: { categoryId },
       });
     }
 
+    const where = isKhmer
+      ? {
+        normalizedWord: {
+          [Op.like]: `${normalized}%`,
+        },
+      }
+      : db.sequelize.where(
+        db.sequelize.fn("LOWER", db.sequelize.col(lang)),
+        {
+          [Op.like]: `${raw}%`,
+        }
+      );
+
     const words = await WordTranslation.findAll({
-      where: {
-        [Op.or]: [
-          db.sequelize.where(
-            db.sequelize.fn('lower', db.sequelize.col('EnglishWord')),
-            { [Op.like]: `%${rawSearchTerm}%` }
-          ),
-          db.sequelize.where(
-            db.sequelize.fn('lower', db.sequelize.col('FrenchWord')),
-            { [Op.like]: `%${rawSearchTerm}%` }
-          ),
-          db.sequelize.where(
-            db.sequelize.col('normalizedWord'),
-            { [Op.like]: `%${normalizedSearchTerm}%` }
-          )
-        ]
-      },
+      where,
       include,
-      order: [
-        [db.sequelize.literal(`CASE 
-          WHEN lower("EnglishWord") = '${rawSearchTerm}' THEN 0
-          WHEN lower("FrenchWord") = '${rawSearchTerm}' THEN 1
-          WHEN "normalizedWord" = '${normalizedSearchTerm}' THEN 2
-          WHEN lower("EnglishWord") LIKE '${rawSearchTerm}%' THEN 3
-          WHEN lower("FrenchWord") LIKE '${rawSearchTerm}%' THEN 4
-          WHEN "normalizedWord" LIKE '${normalizedSearchTerm}%' THEN 5
-          ELSE 6 END`), 'ASC'],
-        [db.sequelize.fn('length', db.sequelize.col('EnglishWord')), 'ASC']
-      ]
+      order: [[lang, "ASC"]],
     });
 
-    return res.status(200).json(words);
-
+    return res.json(words);
   } catch (error) {
-    console.error('Search query failed:', error);
-    return res.status(500).json({ error: 'Failed to search for words' });
+    console.error("SEARCH ERROR:", error);
+    res.status(500).json({ error: error.message });
   }
 };
+
+
+
+// const searchWords = async (req, res) => {
+//   try {
+//     const searchTerm = req.query.q;
+//     const categoryId = req.query.categoryId;
+
+//     if (!searchTerm) {
+//       return res.status(400).json({ error: 'Search term is required' });
+//     }
+
+//     const rawSearchTerm = searchTerm.toLowerCase(); 
+//     const normalizedSearchTerm = khnormal(searchTerm); 
+
+//     let include = [];
+
+//     if (categoryId && categoryId !== "all") {
+//       include.push({
+//         model: Category,
+//         as: 'Categories',
+//         attributes: [],
+//         through: { attributes: [] },
+//         where: { categoryId: categoryId }
+//       });
+//     }
+
+//     const words = await WordTranslation.findAll({
+//       where: {
+//         [Op.or]: [
+//           db.sequelize.where(
+//             db.sequelize.fn('lower', db.sequelize.col('EnglishWord')),
+//             { [Op.like]: `%${rawSearchTerm}%` }
+//           ),
+//           db.sequelize.where(
+//             db.sequelize.fn('lower', db.sequelize.col('FrenchWord')),
+//             { [Op.like]: `%${rawSearchTerm}%` }
+//           ),
+//           db.sequelize.where(
+//             db.sequelize.col('normalizedWord'),
+//             { [Op.like]: `%${normalizedSearchTerm}%` }
+//           )
+//         ]
+//       },
+//       include,
+//       order: [
+//         [db.sequelize.literal(`CASE 
+//           WHEN lower("EnglishWord") = '${rawSearchTerm}' THEN 0
+//           WHEN lower("FrenchWord") = '${rawSearchTerm}' THEN 1
+//           WHEN "normalizedWord" = '${normalizedSearchTerm}' THEN 2
+//           WHEN lower("EnglishWord") LIKE '${rawSearchTerm}%' THEN 3
+//           WHEN lower("FrenchWord") LIKE '${rawSearchTerm}%' THEN 4
+//           WHEN "normalizedWord" LIKE '${normalizedSearchTerm}%' THEN 5
+//           ELSE 6 END`), 'ASC'],
+//         [db.sequelize.fn('length', db.sequelize.col('EnglishWord')), 'ASC']
+//       ]
+//     });
+
+//     return res.status(200).json(words);
+
+//   } catch (error) {
+//     console.error('Search query failed:', error);
+//     return res.status(500).json({ error: 'Failed to search for words' });
+//   }
+// };
+
+
+
 
 //wordcard for share feature 
 /**
@@ -211,29 +261,29 @@ const searchWords = async (req, res) => {
  */
 
 const getPublicWordCard = async (req, res) => {
-    try {
-        const word = await WordTranslation.findByPk(req.params.wordId, {
-            // Include only necessary fields for public view
-            attributes: ['wordId', 'EnglishWord', 'FrenchWord', 'KhmerWord', 'definition', 'example', 'reference','imageURL'],
-              include: [
-                {
-                  model: Category,
-                  as: 'Categories',
-                  attributes: ['categoryId', 'categoryName'],
-                  through: { attributes: [] }, // hide join table
-                },
-              ],
-        });
+  try {
+    const word = await WordTranslation.findByPk(req.params.wordId, {
+      // Include only necessary fields for public view
+      attributes: ['wordId', 'EnglishWord', 'FrenchWord', 'KhmerWord', 'definition', 'example', 'reference'],
+      include: [
+        {
+          model: Category,
+          as: 'Categories',
+          attributes: ['categoryId', 'categoryName'],
+          through: { attributes: [] }, // hide join table
+        },
+      ],
+    });
 
-        if (!word) {
-            return res.status(404).json({ error: 'Word not found' });
-        }
-
-        return res.status(200).json(word);
-    } catch (error) {
-        console.error('Error fetching public word card:', error);
-        return res.status(500).json({ error: 'Failed to retrieve word data' });
+    if (!word) {
+      return res.status(404).json({ error: 'Word not found' });
     }
+
+    return res.status(200).json(word);
+  } catch (error) {
+    console.error('Error fetching public word card:', error);
+    return res.status(500).json({ error: 'Failed to retrieve word data' });
+  }
 };
 
 // pre written snippet, the sharable link (flyer)
@@ -283,34 +333,35 @@ const getPublicWordCard = async (req, res) => {
 
 
 const findById = async (req, res) => {
-    try {
-        const word = await WordTranslation.findByPk(req.params.wordId, {
-          attributes: ['wordId','EnglishWord','KhmerWord','FrenchWord','definition','example','reference','imageURL'],
-          include: [
-            { model: Category, 
-              as: 'Categories', 
-              attributes: ['categoryId','categoryName'], 
-              through: { attributes: [] } 
-            }
-          ]
-        });
-        if (!word) {
-            return res.status(404).json({ error: 'Word not found' });
+  try {
+    const word = await WordTranslation.findByPk(req.params.wordId, {
+      attributes: ['wordId', 'EnglishWord', 'KhmerWord', 'FrenchWord', 'definition', 'example', 'reference'],
+      include: [
+        {
+          model: Category,
+          as: 'Categories',
+          attributes: ['categoryId', 'categoryName'],
+          through: { attributes: [] }
         }
-
-        const LIVE_DOMAIN = process.env.FRONTEND_BASE_URL;
-        const wordString = word.KhmerWord || word.EnglishWord || 'Word Card';
-        const definitionSnippet = word.definition ? word.definition.substring(0, 100) + '...' : 'Check out this word card.';
-
-        return res.status(200).json({
-            url: `${LIVE_DOMAIN}/share/${word.wordId}`, 
-            title: `${wordString} | Domra Lexicon`,
-            text: `Khmer: ${word.KhmerWord || word.EnglishWord} - ${definitionSnippet}`
-        });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'Failed to retrieve word' });
+      ]
+    });
+    if (!word) {
+      return res.status(404).json({ error: 'Word not found' });
     }
+
+    const LIVE_DOMAIN = process.env.FRONTEND_BASE_URL;
+    const wordString = word.KhmerWord || word.EnglishWord || 'Word Card';
+    const definitionSnippet = word.definition ? word.definition.substring(0, 100) + '...' : 'Check out this word card.';
+
+    return res.status(200).json({
+      url: `${LIVE_DOMAIN}/share/${word.wordId}`,
+      title: `${wordString} | Domra Lexicon`,
+      text: `Khmer: ${word.KhmerWord || word.EnglishWord} - ${definitionSnippet}`
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Failed to retrieve word' });
+  }
 };
 
 // render share card page 
@@ -354,31 +405,31 @@ const findById = async (req, res) => {
  *         description: Word not found
  */
 const renderSharedCardPage = async (req, res) => {
-    try {
-        const word = await WordTranslation.findByPk(req.params.wordId);
+  try {
+    const word = await WordTranslation.findByPk(req.params.wordId);
 
-        if (!word) {
-            // Send a basic 404 HTML page
-            res.setHeader('Content-Type', 'text/html');
-            return res.status(404).send('<!DOCTYPE html><html><head><title>Not Found</title></head><body><h1>Word Card Not Found</h1></body></html>');
-        }
+    if (!word) {
+      // Send a basic 404 HTML page
+      res.setHeader('Content-Type', 'text/html');
+      return res.status(404).send('<!DOCTYPE html><html><head><title>Not Found</title></head><body><h1>Word Card Not Found</h1></body></html>');
+    }
 
-        const LIVE_DOMAIN = process.env.FRONTEND_BASE_URL; 
-        
-        // --- Dynamic Meta Tag Preparation ---
-        const wordString = word.KhmerWord || word.EnglishWord || 'Word Card';
-        // Use a default description if none is available
-        const definitionSnippet = word.definition ? word.definition.substring(0, 150) + '...' : 'Check out this word card from Domra Lexicon.';
-        
-        // Final public share URL (used by bots)
-        const pageUrl = `${LIVE_DOMAIN}/share/${word.wordId}`; 
-        // URL for the preview image
-        const imageUrl = `${LIVE_DOMAIN}/Domra-logo.png`; 
-        // The URL where the React app will handle the dynamic view
-        const redirectUrl = `${LIVE_DOMAIN}/word-view/${word.wordId}`; 
+    const LIVE_DOMAIN = process.env.FRONTEND_BASE_URL;
 
-        // 1. Build the Dynamic Meta Tags String
-        const metaTags = `
+    // --- Dynamic Meta Tag Preparation ---
+    const wordString = word.KhmerWord || word.EnglishWord || 'Word Card';
+    // Use a default description if none is available
+    const definitionSnippet = word.definition ? word.definition.substring(0, 150) + '...' : 'Check out this word card from Domra Lexicon.';
+
+    // Final public share URL (used by bots)
+    const pageUrl = `${LIVE_DOMAIN}/share/${word.wordId}`;
+    // URL for the preview image
+    const imageUrl = `${LIVE_DOMAIN}/Domra-logo.png`;
+    // The URL where the React app will handle the dynamic view
+    const redirectUrl = `${LIVE_DOMAIN}/word-view/${word.wordId}`;
+
+    // 1. Build the Dynamic Meta Tags String
+    const metaTags = `
             <meta property="og:title" content="${wordString} | Domra Lexicon">
             <meta property="og:description" content="${definitionSnippet}">
             <meta property="og:type" content="website">
@@ -392,8 +443,8 @@ const renderSharedCardPage = async (req, res) => {
             <meta name="twitter:image" content="${imageUrl}">
         `;
 
-        // 2. Build the full HTML response with redirect
-        const htmlResponse = `
+    // 2. Build the full HTML response with redirect
+    const htmlResponse = `
             <!DOCTYPE html>
             <html lang="en">
             <head>
@@ -411,14 +462,14 @@ const renderSharedCardPage = async (req, res) => {
             </html>
         `;
 
-        // 3. Send the response as raw HTML
-        res.setHeader('Content-Type', 'text/html');
-        res.status(200).send(htmlResponse);
+    // 3. Send the response as raw HTML
+    res.setHeader('Content-Type', 'text/html');
+    res.status(200).send(htmlResponse);
 
-    } catch (error) {
-        console.error('Error rendering shared page:', error);
-        res.status(500).send('<h1>Internal Server Error</h1>');
-    }
+  } catch (error) {
+    console.error('Error rendering shared page:', error);
+    res.status(500).send('<h1>Internal Server Error</h1>');
+  }
 };
 
 
@@ -530,7 +581,7 @@ const findAll = async (req, res) => {
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             required:
@@ -548,9 +599,6 @@ const findAll = async (req, res) => {
  *                 type: string
  *               reference:
  *                 type: string
- *               image:
- *                 type: string
- *                 format: binary 
  *     responses:
  *       201:
  *         description: Word created successfully
@@ -558,42 +606,28 @@ const findAll = async (req, res) => {
  *         description: Server error while creating word
  */
 
-// wordTranslationController.js
-export const create = async (req, res) => {
+const create = async (req, res) => {
   try {
     const { categories, ...wordData } = req.body;
-
-    // Handle image upload if provided
-    if (req.file) {
-      const file = bucket.file(Date.now() + "-" + req.file.originalname);
-      await file.save(req.file.buffer, {
-        metadata: { contentType: req.file.mimetype }
-      });
-
-      const [url] = await file.getSignedUrl({
-        action: "read",
-        expires: "03-01-2030"
-      });
-
-      wordData.imageURL = url;
-    }
-
+    // Create the word
     const newWord = await WordTranslation.create(wordData);
-
+    // Assign categories if provided
     if (categories && Array.isArray(categories) && categories.length > 0) {
-      if (typeof newWord.setCategories === "function") {
+      if (typeof newWord.setCategories === 'function') {
         await newWord.setCategories(categories);
+        console.log('Assigned categories to new word', newWord.wordId, categories);
+      } else {
+        console.error('No setCategories method found on newWord instance');
       }
     }
-
+    // Return the new word with categories
     const wordWithCategories = await WordTranslation.findByPk(newWord.wordId, {
       include: [{ model: db.Category }],
     });
-
     return res.status(201).json(wordWithCategories);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: "Failed to create word" });
+    return res.status(500).json({ error: 'Failed to create word' });
   }
 };
 
@@ -616,7 +650,7 @@ export const create = async (req, res) => {
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             properties:
@@ -632,9 +666,6 @@ export const create = async (req, res) => {
  *                 type: string
  *               reference:
  *                 type: string
- *               image:
- *                 type: string
- *                 format: binary
  *     responses:
  *       200:
  *         description: Word updated successfully
@@ -647,19 +678,6 @@ export const create = async (req, res) => {
 const update = async (req, res) => {
   try {
     const { categories, ...wordData } = req.body;
-    // Handle image upload 
-    if (req.file) {
-      const file = bucket.file(Date.now() + "-" + req.file.originalname);
-      await file.save(req.file.buffer, {
-        metadata: { contentType: req.file.mimetype }
-      });
-
-      const [url] = await file.getSignedUrl({
-        action: "read",
-        expires: "03-01-2030"
-      });
-      wordData.imageURL = url;
-    }
     // Update word fields
     const [updated] = await WordTranslation.update(wordData, {
       where: { wordId: req.params.wordId },
@@ -746,6 +764,6 @@ export default {
   update,
   remove,
   searchWords,
-  getPublicWordCard, 
+  getPublicWordCard,
   renderSharedCardPage,
 };

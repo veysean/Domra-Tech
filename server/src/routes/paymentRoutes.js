@@ -11,7 +11,7 @@ const router = express.Router();
 //router.get('/bakong/status/:paymentId', authMiddleware.verifyAuth, paymentController.checkStatus);
 
 // NEW VERSION (No token for testing):
-router.post('/bakong/generate-qr', paymentController.createBakongQR); 
+router.post('/bakong/generate-qr', paymentController.createBakongQR);
 
 // Do the same for status if you want to test that easily too
 router.get('/bakong/status/:paymentId', paymentController.checkStatus);

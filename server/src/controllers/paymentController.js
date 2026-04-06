@@ -1,7 +1,7 @@
 import db from '../models/index.js';
 import { BakongKHQR, IndividualInfo, khqrData } from 'bakong-khqr';
 import crypto from 'crypto';
-import axios from 'axios'; 
+import axios from 'axios';
 
 const Payment = db.Payment;
 console.log("CHECKING ENV IN CONTROLLER:", process.env.BAKONG_ACCOUNT_USERNAME);
@@ -103,21 +103,21 @@ const paymentController = {
 
         try {
             // 1. Determine the correct currency object from SDK
-            const selectedCurrency = (currency === 'KHR') 
-            ? khqrData.currency.khr 
-            : khqrData.currency.usd;
-            
+            const selectedCurrency = (currency === 'KHR')
+                ? khqrData.currency.khr
+                : khqrData.currency.usd;
+
             // 2. Setup the Info object
             const info = new IndividualInfo(
                 process.env.BAKONG_ACCOUNT_USERNAME,
                 process.env.BAKONG_ACCOUNT_NAME,
                 "Phnom Penh",
-                { 
+                {
                     amount: Number(amount),
                     currency: selectedCurrency, // Use the SDK's internal value
                     billNumber: `INV${Date.now()}`,
                     // Dynamic QRs with an amount REQUIRE an expiration
-                    expirationTimestamp: Date.now() + (60 * 60 * 1000) 
+                    expirationTimestamp: Date.now() + (60 * 60 * 1000)
                 }
             );
 
@@ -127,9 +127,9 @@ const paymentController = {
             console.log("SDK Response:", response);
 
             if (!response || response.status.code !== 0) {
-                return res.status(400).json({ 
-                    success: false, 
-                    message: response?.status?.message || "SDK failed" 
+                return res.status(400).json({
+                    success: false,
+                    message: response?.status?.message || "SDK failed"
                 });
             }
 
@@ -189,14 +189,14 @@ const paymentController = {
 
             // --- CALL REAL BAKONG API ---
             const BAKONG_API_URL = "https://api-bakong.nbc.gov.kh/v1/check_transaction_by_md5";
-            
-            const bakongResponse = await axios.post(BAKONG_API_URL, 
+
+            const bakongResponse = await axios.post(BAKONG_API_URL,
                 { md5: payment.md5Hash },
-                { 
-                    headers: { 
+                {
+                    headers: {
                         'Authorization': `Bearer ${process.env.BAKONG_TOKEN}`,
                         'Content-Type': 'application/json'
-                    } 
+                    }
                 }
             );
 

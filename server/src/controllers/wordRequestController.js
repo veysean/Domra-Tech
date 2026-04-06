@@ -383,7 +383,11 @@ export const getWordRequests = async (req, res) => {
     const { page = 1, limit = 10, status, check, search } = req.query;
 
     const offset = (page - 1) * limit;
-    const where = {};
+
+    // Filter by userId unless admin
+    const where = req.user?.role === 'admin'
+      ? {}
+      : { userId: req.user.userId };
 
     // Apply status filter if provided
     if (status) {
@@ -422,10 +426,10 @@ export const getWordRequests = async (req, res) => {
 };
 
 
-  import { bucket } from "../services/firebaseService.js";
-  import multer from "multer";
-  const upload = multer({ storage: multer.memoryStorage() });
-  
+import { bucket } from "../services/firebaseService.js";
+import multer from "multer";
+const upload = multer({ storage: multer.memoryStorage() });
+
 // Controller for making word requests from both user and admin
 export const createWordRequest = async (req, res) => {
   try {
@@ -442,6 +446,7 @@ export const createWordRequest = async (req, res) => {
       newDefinition: req.body.newDefinition || null,
       newExample: req.body.newExample || null,
       reference: req.body.reference || null,
+      imageURL: req.body.imageURL || null,
       status: req.body.status || 'pending',
       check: req.body.check ?? false,
       userId: req.user.userId

@@ -21,6 +21,12 @@ export default (sequelize, DataTypes) => sequelize.define('CorrectionRequest', {
   correctKhmerWord: {
     type: DataTypes.STRING(255)
   },
+  // definition: {
+  //   type: DataTypes.TEXT
+  // },
+  // example: {
+  //   type: DataTypes.TEXT
+  // },
   reference: {
     type: DataTypes.TEXT
   },
@@ -28,7 +34,8 @@ export default (sequelize, DataTypes) => sequelize.define('CorrectionRequest', {
     type: DataTypes.TEXT,
   },
   status: {
-    type: DataTypes.ENUM('pending', 'accepted', 'denied', 'deleted')
+    type: DataTypes.ENUM('pending', 'accepted', 'denied', 'deleted'),
+    defaultValue: 'pending'
   }
 }, {
   tableName: 'CorrectionRequest'

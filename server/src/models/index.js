@@ -11,24 +11,24 @@ import wordTranslationModel from "./wordTranslation.model.js";
 import paymentModel from "./payment.model.js";
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
-    host: dbConfig.HOST,
-    port: dbConfig.PORT,
-    dialect: dbConfig.dialect,
-    logging: process.env.NODE_ENV === 'development' ? console.log : false 
+  host: dbConfig.HOST,
+  port: dbConfig.PORT,
+  dialect: dbConfig.dialect,
+  logging: process.env.NODE_ENV === 'development' ? console.log : false
 });
 
 const db = {
-    Sequelize,
-    sequelize,
-    Category: categoryModel(sequelize, Sequelize),
-    CorrectionRequest: correctionRequestModel(sequelize, Sequelize),
-    Favorite: favoriteModel(sequelize, Sequelize),
-    Feedback: feedbackModel(sequelize, Sequelize),
-    User: userModel(sequelize, Sequelize),
-    WordCategory: wordCategoryModel(sequelize, Sequelize),
-    WordRequest: wordRequestModel(sequelize, Sequelize),
-    WordTranslation: wordTranslationModel(sequelize, Sequelize),
-    Payment: paymentModel(sequelize, Sequelize)
+  Sequelize,
+  sequelize,
+  Category: categoryModel(sequelize, Sequelize),
+  CorrectionRequest: correctionRequestModel(sequelize, Sequelize),
+  Favorite: favoriteModel(sequelize, Sequelize),
+  Feedback: feedbackModel(sequelize, Sequelize),
+  User: userModel(sequelize, Sequelize),
+  WordCategory: wordCategoryModel(sequelize, Sequelize),
+  WordRequest: wordRequestModel(sequelize, Sequelize),
+  WordTranslation: wordTranslationModel(sequelize, Sequelize),
+  Payment: paymentModel(sequelize, Sequelize)
 };
 
 // Define associations

@@ -1,67 +1,3 @@
-// import express from 'express';
-// import authController from '../controllers/authController.js';
-// import validation from '../middleware/validation.js';
-// import passport from 'passport';
-
-// const router = express.Router();
-
-
-// router.post('/register', validation.registerValidationRules(), validation.validate, authController.register);
-
-// router.post('/login',validation.loginValidationRules(), validation.validate, authController.login);
-// router.get('/verify-email', authController.verifyEmail);
-// router.post('/forgot-password', authController.forgotPassword);
-// router.post('/reset-password', authController.resetPassword);
-// router.post("/google-register", authController.googleRegister);
-// app.post("/auth/firebase-login", async (req, res) => {
-//   const idToken = req.headers.authorization?.split("Bearer ")[1];
-//   try {
-//     const decoded = await admin.auth().verifyIdToken(idToken);
-//     // decoded contains uid, email, etc.
-//     // You can create or fetch a local user record here
-//     res.json({ message: "Authenticated", user: decoded });
-//   } catch (error) {
-//     res.status(401).json({ error: "Invalid token" });
-//   }
-// });
-
-
-// // Route to redirect to Google's login page
-// /**
-//  * @swagger
-//  * /auth/google:
-//  *   get:
-//  *     summary: Redirect to Google's OAuth 2.0 login page
-//  *     tags: [Auth]
-//  *     responses:
-//  *       302:
-//  *         description: Redirects user to Google for authentication
-//  */
-
-// router.get('/google',
-//     passport.authenticate('google', { scope: ['profile', 'email'] })
-// );
-
-// // Route to handle the callback from Google
-// /**
-//  * @swagger
-//  * /auth/google/callback:
-//  *   get:
-//  *     summary: Handle callback from Google OAuth 2.0
-//  *     tags: [Auth]
-//  *     responses:
-//  *       302:
-//  *         description: Redirects user to frontend on successful authentication
-//  *       401:
-//  *         description: Authentication failed, redirects to /login
-//  */
-
-// router.get('/google/callback', passport.authenticate('google'), (req, res) => {
-//     // Redirect to the frontend on success
-//     res.redirect('http://localhost:5173');
-// });
-// export default router;
-
 import express from "express";
 import authController from "../controllers/authController.js";
 import validation from "../middleware/validation.js";
@@ -86,18 +22,26 @@ router.post("/google-register", authController.googleRegister);
 
 // Firebase signup with extra fields
 router.post("/firebase-signup", async (req, res) => {
-  const { uid, email, firstName, lastName, gender, dob, firebaseToken } = req.body;
+  const { email, firstName, lastName, gender, dob, firebaseToken } = req.body;
 
   try {
     const decoded = await auth.verifyIdToken(firebaseToken);
 
-    let user = await User.findOne({ where: { uid } });
+    // Always use decoded.uid, not req.body.uid
+    let user = await User.findOne({ where: { uid: decoded.uid } });
     if (!user) {
-      user = await User.create({ uid: decoded.uid, email, firstName, lastName, gender, dob });
+      user = await User.create({
+        uid: decoded.uid,
+        email: decoded.email || email,
+        firstName,
+        lastName,
+        gender,
+        dob,
+      });
     }
 
     const backendToken = jwt.sign(
-      { uid: decoded.uid, email: decoded.email },
+      { uid: decoded.uid, email: decoded.email, userId: decoded.uid },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
@@ -123,10 +67,16 @@ router.post("/firebase-login", async (req, res) => {
     if (!user) return res.status(404).json({ error: "User not found" });
 
     const backendToken = jwt.sign(
-      { uid: decoded.uid, email: decoded.email },
+      {
+        userId: user.userId,       // numeric PK from DB
+        uid: decoded.uid,          // Firebase UID
+        email: decoded.email,
+        role: "user"
+      },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
+
 
     res.json({ jwt: backendToken, user });
   } catch (err) {
@@ -152,10 +102,16 @@ router.post("/googleRegister", async (req, res) => {
     }
 
     const backendToken = jwt.sign(
-      { uid: decoded.uid, email: decoded.email },
+      {
+        userId: user.userId,       // numeric PK from DB
+        uid: decoded.uid,          // Firebase UID
+        email: decoded.email,
+        role: "user"
+      },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
+
 
     res.json({ jwt: backendToken, user });
   } catch (err) {
@@ -163,10 +119,6 @@ router.post("/googleRegister", async (req, res) => {
   }
 });
 
-// Example of protecting another route
-router.get("/profile", verifyFirebaseToken, (req, res) => {
-  res.json({ message: "Access granted", user: req.user });
-});
 
 // Google OAuth routes
 router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));

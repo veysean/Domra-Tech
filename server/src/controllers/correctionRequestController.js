@@ -66,9 +66,9 @@ const { CorrectionRequest } = db;
  */
 const createCorrectionRequest = async (req, res) => {
   try {
-     
+
     const payload = {
-      userId: req.body.userId,
+      userId: req.user.userId,
       ...req.body
     }
 
@@ -97,7 +97,7 @@ const createCorrectionRequest = async (req, res) => {
 
   } catch (error) {
     console.error('Create correction request error:', error);
-    return res.status(400).json({ message: 'Failed to create correction request.' });
+    return res.status(400).json({ message: 'Failed to create correction request.', error: error.message });
   }
 };
 
@@ -152,7 +152,7 @@ const getAllCorrectionRequests = async (req, res) => {
 
     const userRole = req.user?.role || "user";
     const userId = req.user?.userId;
-    
+
     // Apply filter: if not admin, only fetch user's own requests
     const whereCondition = req.user.role === 'admin'
       ? {} // no filter for admin

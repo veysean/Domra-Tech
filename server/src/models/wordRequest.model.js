@@ -32,7 +32,7 @@ export default (sequelize, DataTypes) => sequelize.define('WordRequest', {
   status: {
     type: DataTypes.ENUM('pending', 'accepted', 'denied', 'deleted')
   },
-  check:{
+  check: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   }

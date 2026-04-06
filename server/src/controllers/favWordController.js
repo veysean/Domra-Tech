@@ -127,7 +127,7 @@ const getAllFavorites = async (req, res) => {
     const userWithFavorites = await User.findByPk(userId, {
       include: [{
         model: WordTranslation,
-        as: 'WordTranslations', 
+        as: 'WordTranslations',
         attributes: [
           'wordId',
           'EnglishWord',

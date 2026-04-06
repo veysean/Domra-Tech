@@ -12,9 +12,11 @@ const verifyAuth = (req, res, next) => {
   try {
     // Verify the token using your JWT secret key
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    
+
     req.user = {
-      userId: decodedToken.userId,
+      userId: decodedToken.userId, // numeric PK
+      uid: decodedToken.uid,       // Firebase UID
+      email: decodedToken.email,
       role: decodedToken.role
     };
 
@@ -49,7 +51,12 @@ export const verifyFirebaseToken = async (req, res, next) => {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     console.log("Decoded Firebase user:", decodedToken);
 
-    req.user = decodedToken; // attach user info to request
+    // req.user = decodedToken; // attach user info to request
+    req.user = {
+      userId: decodedToken.uid,
+      email: decodedToken.email,
+      role: decodedToken.role || 'user'
+    };
     next();
   } catch (error) {
     console.error("Token verification failed:", error.message);
@@ -59,5 +66,28 @@ export const verifyFirebaseToken = async (req, res, next) => {
 
 
 
-export default { verifyAuth, checkAdminRole};
+const optionalAuth = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
 
+  if (!token) {
+    // If no token, proceed as guest
+    return next();
+  }
+
+  try {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = {
+      userId: decodedToken.userId,
+      uid: decodedToken.uid,
+      email: decodedToken.email,
+      role: decodedToken.role
+    };
+    next();
+  } catch (error) {
+    // If token is invalid, they are treated as unauthenticated (or return 401)
+    return res.status(401).json({ message: 'Token is not valid. Authorization denied.' });
+  }
+};
+
+export default { verifyAuth, optionalAuth, checkAdminRole };

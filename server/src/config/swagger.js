@@ -1,4 +1,9 @@
 import swaggerJSDoc from 'swagger-jsdoc';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const swaggerOptions = {
   swaggerDefinition: {
@@ -14,7 +19,7 @@ const swaggerOptions = {
     servers: [
       {
         url: process.env.NODE_ENV === 'production'
-          ? `http://${process.env.SERVER_URL}/api`
+          ? `https://${process.env.SERVER_URL}/api`
           : 'http://localhost:8080/api',
         description: process.env.NODE_ENV === 'production'
           ? 'Production server'
@@ -31,7 +36,10 @@ const swaggerOptions = {
       },
     },
   },
-  apis: ['./src/routes/*.js', './src/controllers/*.js'],
+  apis: [
+    join(__dirname, '../routes/*.js'),
+    join(__dirname, '../controllers/*.js'),
+  ],
 };
 
 const swaggerDocs = swaggerJSDoc(swaggerOptions);

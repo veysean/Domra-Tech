@@ -8,7 +8,11 @@ export default (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
-        uid: { type: DataTypes.STRING, unique: true },
+        uid: {
+            type: DataTypes.STRING,
+            unique: true,
+            allowNull: false,
+        },
         googleId: {
             type: DataTypes.STRING(255),
             unique: true,
@@ -61,10 +65,19 @@ export default (sequelize, DataTypes) => {
             type: DataTypes.ENUM('unverified', 'verified', 'deleted'),
             allowNull: false,
             defaultValue: 'unverified'
+        },
+        searchCount: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
+        },
+        lastSearchAt: {
+            type: DataTypes.DATE,
+            allowNull: true
         }
-        }, {
-            tableName: 'User'
-        });
+    }, {
+        tableName: 'User'
+    });
 
     // Hash password before create
     User.beforeCreate(async (user) => {
@@ -83,7 +96,7 @@ export default (sequelize, DataTypes) => {
     });
 
     // compare passwords
-    User.prototype.comparePassword = async function(candidatePassword) {
+    User.prototype.comparePassword = async function (candidatePassword) {
         return await bcrypt.compare(candidatePassword, this.password);
     };
 

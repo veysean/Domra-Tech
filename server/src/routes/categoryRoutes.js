@@ -6,7 +6,7 @@ import {
     updateCategory,
     deleteCategory,
 }
-from "../controllers/categotyController.js"
+    from "../controllers/categotyController.js"
 //import { verifyAuth, checkAdminRole } from '../middleware/authMiddleware.js';
 
 
